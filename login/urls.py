@@ -10,7 +10,7 @@ urlpatterns = [
   url(
       r'^logout/$', 
       'django.contrib.auth.views.logout',
-      {'template_name': 'login/logout.html'}, 
+      {'template_name': 'login/logout.html', 'next_page': '/'}, 
       name='logout'
   ),
   url(
