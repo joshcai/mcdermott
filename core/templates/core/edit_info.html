@@ -3,4 +3,32 @@
 {% block content %}
 <h2>McDermott Network</h2>
 <p>This is where you can edit your personal information.</p>
+
+{% if form.errors %}
+  There were errors!
+    {% for field in form %}
+        {% for error in field.errors %}
+            <p> {{ errors }} </p>
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+<form method="post" action="{% url 'edit_info' %}">
+{% csrf_token %}
+<table>
+{% for hidden in form.hidden_fields %}
+  {{ hidden }}
+  {{ hidden.errors }}
+{% endfor %}
+{% for field in form.visible_fields %}
+  <tr>
+    <td>{{ field.label_tag }}</td>
+    <td>{{ field }}</td>
+    <td>{{ field.errors }}</td>
+  </tr>
+{% endfor %}
+</table>
+{{ form.user }}
+<input type="submit" />
+</form>
+
 {% endblock %}

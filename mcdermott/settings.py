@@ -132,3 +132,6 @@ STATIC_URL = '/static/'
 
 # Default redirect after logging in successfully
 LOGIN_REDIRECT_URL = '/'
+
+# Default login url
+LOGIN_URL = '/login'
