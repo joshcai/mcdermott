@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>{{ profile.user.get_full_name }}</h2>
+
+<p>Class: {{ profile.class_year }}</p>
+<p>Major: {{ profile.major }}</p>
+<p>Major2: {{ profile.major2 }}</p>
+<p>Minor: {{ profile.minor }}</p>
+<p>Minor2: {{ profile.minor2 }}</p>
+<p>Hometown: {{ profile.hometown }}</p>
+<p>High School: {{ profile.high_school }}</p>
+<p>Phone number: {{ profile.phone_number }}</p>
+
+
+{% endblock %}

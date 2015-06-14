@@ -5,5 +5,11 @@
   </head>
   <body>
     {% block content %}{% endblock content %}
+    {% if not user.is_authenticated %}
+      <a href="/login">Login</a>
+    {% else %}
+      <a href="/logout">Logout</a>
+      <a href="{% url 'edit_info' %}">Edit Profile</a>
+    {% endif %}
   </body>
 </html>
