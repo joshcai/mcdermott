@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p>All scholars:</p>
+
+{% for scholar in scholars %}
+  {# add picture here #}
+  <a href ="/{{ scholar.first_name }}{{ scholar.last_name }}">
+    {{ scholar.get_full_name }}
+  </a>
+  <br>
+{% endfor %}
+<br>
+{% endblock %}
