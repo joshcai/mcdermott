@@ -13,3 +13,13 @@ pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 ```
+
+After someone pushes, you may need to run:
+
+```
+# If a dependency is added:
+pip install -r requirements.txt
+# If a model is changed:
+python manage.py makemigrations
+python manage.py migrate
+```
