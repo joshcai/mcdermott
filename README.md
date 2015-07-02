@@ -23,3 +23,11 @@ pip install -r requirements.txt
 python manage.py makemigrations
 python manage.py migrate
 ```
+
+To access the admin interface, run:
+
+```
+python manage.py createsuperuser
+```
+
+and point your browser to `http://localhost:8000/admin/`. You can also use this account to login to the app.

@@ -9,9 +9,9 @@
     <h2>McDermott Network</h2>
     {% block content %}{% endblock content %}
     {% if not user.is_authenticated %}
-      <a href="/login">Login</a>
+      <a href="{% url 'login' %}">Login</a>
     {% else %}
-      <a href="/logout">Logout</a>
+      <a href="{% url 'logout' %}">Logout</a>
       <br>
       <a href="{% url 'edit_info' %}">Edit Profile</a>
       <br>
