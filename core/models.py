@@ -47,3 +47,4 @@ class McUser(models.Model):
 
 # at bottom for circular dependency
 from views import normalize_name
+import signals
