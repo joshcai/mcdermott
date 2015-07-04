@@ -134,7 +134,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # User uploaded files
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'media'))
 
 # Default redirect after logging in successfully
 LOGIN_REDIRECT_URL = '/'

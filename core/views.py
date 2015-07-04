@@ -17,7 +17,7 @@ def edit_info(request):
   except McUser.DoesNotExist:
     user_info = McUser(user_id=request.user.id)
   if request.method == 'POST':
-    form = McUserForm(request.POST, instance=user_info)
+    form = McUserForm(request.POST, request.FILES, instance=user_info)
     if form.is_valid():
       form.save()
       return redirect('index')
@@ -42,7 +42,7 @@ def normalize_name(name):
 
 @login_required
 def own_profile(request):
-  name = normalize_name(request.user.get_full_name())
+  name = request.user.mcuser.normalized_name
   return redirect('/%s' % name)
 
 @login_required
@@ -52,7 +52,7 @@ def profile(request, name):
   name = normalize_name(name)
   profile = None
   for user in users:
-    if normalize_name(user.user.get_full_name()) == name:
+    if user.normalized_name == name:
       profile = user
       break
   # TODO(joshcai): handle case where more than 1 user (aka users have same name)

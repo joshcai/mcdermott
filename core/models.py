@@ -35,6 +35,15 @@ class McUser(models.Model):
   hometown = models.CharField(max_length=200, blank=True)
   high_school = models.CharField(max_length=200, blank=True)
   phone_number = models.CharField(max_length=200, blank=True)
+  pic = models.ImageField(upload_to='img', blank=True)
   #TODO: add address field
   #TODO: allow multiple phone
   #TODO: allow backup emails
+
+  @property
+  def normalized_name(self):
+    name = self.user.get_full_name()
+    return normalize_name(name)
+
+# at bottom for circular dependency
+from views import normalize_name

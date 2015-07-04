@@ -1,10 +1,13 @@
-from django.forms import ModelForm, HiddenInput
+from django import forms
 
 from models import McUser
 
-class McUserForm(ModelForm):
+class McUserForm(forms.ModelForm):
   class Meta:
     model = McUser
     fields = ['real_name', 'class_year',  'utd_id', 'major', 'major2', 'minor', 
-              'minor2', 'hometown', 'high_school', 'phone_number', 'id']
-    widgets = {'id': HiddenInput()}
+              'minor2', 'hometown', 'high_school', 'phone_number', 'id', 'pic']
+    widgets = {'id': forms.HiddenInput()}
+
+class UploadFileForm(forms.Form):
+  file = forms.FileField()
