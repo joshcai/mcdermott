@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from util import normalize_name
+
 # Create your models here.
 
 class McUser(models.Model):
@@ -36,15 +38,11 @@ class McUser(models.Model):
   high_school = models.CharField(max_length=200, blank=True)
   phone_number = models.CharField(max_length=200, blank=True)
   pic = models.ImageField(upload_to='img', blank=True)
+  # normalized name, e.g. joshcai
+  norm_name = models.CharField(max_length=400, blank=True)
   #TODO: add address field
   #TODO: allow multiple phone
   #TODO: allow backup emails
 
-  @property
-  def normalized_name(self):
-    name = self.user.get_full_name()
-    return normalize_name(name)
-
 # at bottom for circular dependency
-from views import normalize_name
 import signals

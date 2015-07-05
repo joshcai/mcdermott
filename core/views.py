@@ -2,9 +2,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render, redirect
+from rest_framework import viewsets
 
 from forms import McUserForm
 from models import McUser
+from serializers import UserSerializer
+from util import normalize_name
 
 # Create your views here.
 def index(request):
@@ -36,10 +39,6 @@ def scholars(request):
     }
   return render(request, 'core/scholars.html', context)
 
-
-def normalize_name(name):
-  return ''.join([c.lower() for c in name if c.isalpha()])
-
 @login_required
 def own_profile(request):
   name = request.user.mcuser.normalized_name
@@ -47,16 +46,11 @@ def own_profile(request):
 
 @login_required
 def profile(request, name):
-  # TODO(joshcai): make this more efficient by caching or indexing all users
-  users = McUser.objects.all()
   name = normalize_name(name)
-  profile = None
-  for user in users:
-    if user.normalized_name == name:
-      profile = user
-      break
   # TODO(joshcai): handle case where more than 1 user (aka users have same name)
-  if profile is None:
+  try:
+    profile = McUser.objects.get(norm_name=name)
+  except McUser.DoesNotExist:
     raise Http404('Page does not exist')
   # 'user' is already passed in as default (the logged in user), 
   # so use 'profile' as alias 
@@ -64,3 +58,11 @@ def profile(request, name):
       'profile': profile
     }
   return render(request, 'core/profile.html', context)
+
+
+class UserViewSet(viewsets.ModelViewSet):
+  """
+  API endpoint that allows users to be viewed or edited.
+  """
+  queryset = User.objects.all()
+  serializer_class = UserSerializer
