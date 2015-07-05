@@ -41,7 +41,7 @@ def scholars(request):
 
 @login_required
 def own_profile(request):
-  name = request.user.mcuser.normalized_name
+  name = request.user.mcuser.norm_name
   return redirect('/%s' % name)
 
 @login_required
