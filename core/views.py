@@ -44,7 +44,8 @@ def own_profile(request):
   name = request.user.mcuser.norm_name
   return redirect('/%s' % name)
 
-@login_required
+
+# TODO(joshcai): return another function, wrapped with login_required.
 def profile(request, name):
   name = normalize_name(name)
   # TODO(joshcai): handle case where more than 1 user (aka users have same name)
