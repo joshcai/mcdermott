@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
+import watson
 
 from forms import McUserForm
 from models import McUser
@@ -44,6 +45,17 @@ def own_profile(request):
   name = request.user.mcuser.norm_name
   return redirect('/%s' % name)
 
+@login_required
+def search(request):
+  query = request.GET.get('q', '')
+  scholars = []
+  if query:
+    results = watson.search(query)
+    scholars.extend([r.object for r in results])
+  context = {
+    'scholars': scholars
+    }
+  return render(request, 'core/search.html', context)
 
 # TODO(joshcai): return another function, wrapped with login_required.
 def profile(request, name):

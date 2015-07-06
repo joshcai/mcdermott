@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+import watson
 
 from util import normalize_name
 
@@ -44,5 +45,6 @@ class McUser(models.Model):
   #TODO: allow multiple phone
   #TODO: allow backup emails
 
+watson.register(McUser)
 # at bottom for circular dependency
 import signals

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p>Search results:</p>
+
+{% for scholar in scholars %}
+  {# add picture here #}
+  <a href ="/{{ scholar.user.first_name }}{{ scholar.user.last_name }}">
+    {{ scholar.user.get_full_name }}
+  </a>
+  <br>
+{% empty %}
+  <p>No search results found.</p>
+{% endfor %}
+<br>
+{% endblock %}

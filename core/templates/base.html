@@ -18,6 +18,11 @@
       <a href="{% url 'own_profile' %}">My Profile</a>
       <br>
       <a href="{% url 'scholars' %}">All Scholars</a>
+      <br>
+      <form method="get" action="{% url 'search' %}">
+        <input type="text" name="q">
+        <input type="submit" value="Search">
+      </form>
     {% endif %}
   </body>
 </html>
