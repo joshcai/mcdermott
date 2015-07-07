@@ -25,3 +25,11 @@ class CoreTestCase(TestCase):
     response = self.app.get('/search?q=Test')
     self.assertIn('Test Name', response.content)
 
+  def testReindexingWorks(self):
+    self.login()
+    response = self.app.get('/search?q=Test')
+    self.assertIn('Test Name', response.content)
+    self.user.first_name = 'Foo'
+    self.user.save()
+    response = self.app.get('/search?q=Foo')
+    self.assertIn('Foo Name', response.content)
