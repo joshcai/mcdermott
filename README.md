@@ -32,7 +32,7 @@ python manage.py createsuperuser
 
 and point your browser to `http://localhost:8000/admin/`. You can also use this account to login to the app.
 
-To seed the database with some default users (NOTE: this will delete all original users), run:
+To seed the database with some default users, run:
 
 ```
 python manage.py seed
