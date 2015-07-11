@@ -18,16 +18,19 @@
   {{ hidden }}
   {{ hidden.errors }}
 {% endfor %}
+I am here.
 {% for field in form.visible_fields %}
-  <tr>
-    <td>{{ field.label_tag }}</td>
-    <td>{{ field }}</td>
-    <td>{{ field.errors }}</td>
+  <tr class="mdl-data-table mdl-js-data-table">
+
+      <td class="mdl-data-table__cell--non-numeric">{{ field.label_tag }}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{ field }}</td>
+      <td>{{ field.errors }}</td>
+
   </tr>
 {% endfor %}
 </table>
 {{ form.user }}
-<input type="submit" />
+<input class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect" type="submit" />
 </form>
 
 {% endblock %}
