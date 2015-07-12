@@ -13,9 +13,9 @@ class Command(BaseCommand):
     else:
       user = User.objects.create_user(username, password=password)
     first, last = name.split()
-    user.first_name = first
-    user.last_name = last
-    user.save()
+    user.mcuser.first_name = first
+    user.mcuser.last_name = last
+    user.mcuser.save()
     self.stdout.write('Added user %s - username: %s, password: %s' % 
                       (name, username, password))
 

@@ -25,6 +25,8 @@ class McUser(models.Model):
   https://docs.djangoproject.com/en/1.8/ref/contrib/auth/
   """
   user = models.OneToOneField(User)
+  first_name = models.CharField(max_length=200, blank=True)
+  last_name = models.CharField(max_length=200, blank=True)
   # Real first name, use first_name as preferred first name so we don't 
   # have to join on tables when fetching by name.
   real_name = models.CharField(max_length=200, blank=True)
@@ -45,6 +47,13 @@ class McUser(models.Model):
   #TODO: add address field
   #TODO: allow multiple phone
   #TODO: allow backup emails
+
+  def get_full_name(self):
+    return '%s %s' % (self.first_name, self.last_name)
+
+  def save(self, *args, **kwargs):
+    self.norm_name = normalize_name(self.get_full_name())
+    super(McUser, self).save(*args, **kwargs)
 
 watson.register(McUser)
 # at bottom for circular dependency
