@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
+{% load thumbnail %}
+
 {% block content %}
 
 <h2>{{ profile.user.get_full_name }}</h2>
 
-{% if profile.pic %}
-  <img src="{{ profile.pic.url }}" height=250>
-{% endif %}
+{% thumbnail profile.pic "100x100" crop="center" as im %}
+    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+{% endthumbnail %}
 
 <p>Class: {{ profile.class_year }}</p>
 <p>Major: {{ profile.major }}</p>

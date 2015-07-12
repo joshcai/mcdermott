@@ -14,6 +14,14 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+You will also need to install `memcached` for `sorl-thumbnail` to work. Look for instructions on how to install that onto your OS (for Ubuntu/Debian `sudo apt-get install memcached` should work). Also, when installing Pillow from pip make sure there is support for JPEG and ZLIB (PNG/ZIP). If it's not available, you will have to do (on Ubuntu/Debian):
+
+```
+sudo apt-get install libjpeg-dev
+sudo apt-get install zlib1g-dev
+sudo apt-get install libpng12-dev
+```
+
 After someone pushes, you may need to run:
 
 ```

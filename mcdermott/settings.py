@@ -38,6 +38,7 @@ INSTALLED_APPS = (
   'django.contrib.messages',
   'django.contrib.staticfiles',
   'rest_framework',
+  'sorl.thumbnail',
   'watson',
   'login',
   'core',
@@ -113,6 +114,15 @@ DATABASES = {
   }
 }
 
+# Caches
+# https://docs.djangoproject.com/en/dev/topics/cache/
+
+CACHES = {
+  'default': {
+    'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+    'LOCATION': '127.0.0.1:11211',
+  }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -153,3 +163,5 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+THUMBNAIL_DEBUG = True

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 import watson
+from sorl.thumbnail import ImageField
 
 from util import normalize_name
 
@@ -38,7 +39,7 @@ class McUser(models.Model):
   hometown = models.CharField(max_length=200, blank=True)
   high_school = models.CharField(max_length=200, blank=True)
   phone_number = models.CharField(max_length=200, blank=True)
-  pic = models.ImageField(upload_to='img', blank=True)
+  pic = ImageField(upload_to='img', blank=True)
   # normalized name, e.g. joshcai
   norm_name = models.CharField(max_length=400, blank=True)
   #TODO: add address field
