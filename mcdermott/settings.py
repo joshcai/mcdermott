@@ -39,6 +39,7 @@ INSTALLED_APPS = (
   'django.contrib.staticfiles',
   'rest_framework',
   'sorl.thumbnail',
+  'django_jinja',
   'watson',
   'login',
   'core',
@@ -64,23 +65,13 @@ TEMPLATES = [
     'DIRS': [],
     'APP_DIRS': True,
     'OPTIONS': {
-      'context_processors': [
-        'django.template.context_processors.debug',
-        'django.template.context_processors.request',
-        'django.contrib.auth.context_processors.auth',
-        'django.contrib.messages.context_processors.messages',
-      ],
-    },
-  },
-]
-
-TEMPLATES = [
-  {
-    'BACKEND': 'django.template.backends.jinja2.Jinja2',
-    'DIRS': [],
-    'APP_DIRS': True,
-    'OPTIONS': {
       'environment': 'mcdermott.jinja2_config.environment',
+      # 'context_processors': [
+      #   'django.template.context_processors.debug',
+      #   'django.template.context_processors.request',
+      #   'django.contrib.auth.context_processors.auth',
+      #   'django.contrib.messages.context_processors.messages',
+      # ],
     },
   },
   {
@@ -100,6 +91,7 @@ TEMPLATES = [
     },
   },
 ]
+
 
 WSGI_APPLICATION = 'mcdermott.wsgi.application'
 

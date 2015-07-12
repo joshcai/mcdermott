@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 
 class Command(BaseCommand):
-  help = 'Deletes user objects and seeds with some default users'
+  help = 'Seeds with some default users'
 
   def add_user(self, username, password, name, superuser=False, email=None):
     if User.objects.filter(username=username).exists():

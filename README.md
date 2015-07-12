@@ -2,8 +2,6 @@
 
 ---
 
-Base app for authentication and API requests
-
 To run this app do:
 
 ```
@@ -14,13 +12,15 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-You will also need to install `memcached` for `sorl-thumbnail` to work. Look for instructions on how to install that onto your OS (for Ubuntu/Debian `sudo apt-get install memcached` should work). Also, when installing Pillow from pip make sure there is support for JPEG and ZLIB (PNG/ZIP). If it's not available, you will have to do (on Ubuntu/Debian):
+You will also need to install `memcached` for `sorl-thumbnail` to work. Look for instructions on how to install that onto your OS (for Ubuntu/Debian `sudo apt-get install memcached` should work). Also, when installing Pillow from pip make sure there is support for JPEG and ZLIB (PNG/ZIP). If it's not available, you will have to uninstall Pillow, enter the following commands (on Ubuntu/Debian), and reinstall Pillow:
 
 ```
 sudo apt-get install libjpeg-dev
 sudo apt-get install zlib1g-dev
 sudo apt-get install libpng12-dev
 ```
+
+If you can't get it to work, change `THUMBNAIL_DEBUG` to False in `mcdermott/settings.py`, which should ignore errors from that (you won't be able to see any thumbnails though). 
 
 After someone pushes, you may need to run:
 

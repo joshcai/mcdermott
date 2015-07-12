@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<p>This is where you can edit your personal information.</p>
 
 {% if form.errors %}
   There were errors!
@@ -18,7 +17,6 @@
   {{ hidden }}
   {{ hidden.errors }}
 {% endfor %}
-I am here.
 {% for field in form.visible_fields %}
   <tr class="mdl-data-table mdl-js-data-table">
 
