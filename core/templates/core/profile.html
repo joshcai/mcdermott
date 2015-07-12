@@ -1,13 +1,13 @@
-{% extends "base.html" %}
+{% extends "large_container.html" %}
 
 {% load thumbnail %}
 
-{% block content %}
+{% block inner_content %}
 
-<h2>{{ profile.user.get_full_name }}</h2>
+<h3>{{ profile.user.get_full_name }}</h3>
 
-{% thumbnail profile.pic "100x100" crop="center" as im %}
-    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+{% thumbnail profile.pic "200x200" crop="center" as im %}
+  <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
 {% endthumbnail %}
 
 <p>Class: {{ profile.class_year }}</p>

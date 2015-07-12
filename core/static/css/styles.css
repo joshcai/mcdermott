@@ -1,0 +1,32 @@
+/* lg-con is for large_container.html */ 
+.lg-con-ribbon {
+  width: 100%;
+  height: 40vh;
+  background-color: #69BE28;
+  flex-shrink: 0;
+}
+
+.lg-con-main {
+  margin-top: -35vh;
+  flex-shrink: 0;
+}
+
+.lg-con-container {
+  max-width: 1600px;
+  width: calc(100% - 16px);
+  margin: 0 auto;
+}
+
+.lg-con-content {
+  border-radius: 2px;
+  padding: 80px 56px;
+  margin-bottom: 80px;
+}
+
+.lg-con-layout.is-small-screen .lg-con-content {
+  padding: 40px 28px;
+}
+
+.lg-con-content h3 {
+  margin-top: 12px;
+}
