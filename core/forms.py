@@ -7,18 +7,19 @@ class McUserForm(forms.ModelForm):
     model = McUser
     fields = [
         'first_name',
-        'real_name', 
+        'real_name',
         'last_name',
-        'class_year',  
-        'utd_id', 
-        'major', 
-        'major2', 
-        'minor', 
-        'minor2', 
-        'hometown', 
-        'high_school', 
-        'phone_number', 
-        'id', 
+        'gender',
+        'class_year',
+        'utd_id',
+        'major',
+        'major2',
+        'minor',
+        'minor2',
+        'hometown',
+        'high_school',
+        'phone_number',
+        'id',
         'pic'
     ]
     widgets = {'id': forms.HiddenInput()}

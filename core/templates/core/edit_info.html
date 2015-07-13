@@ -12,20 +12,78 @@
 {% endif %}
 <form enctype="multipart/form-data" method="post" action="{% url 'edit_info' %}">
 {% csrf_token %}
-<table>
-{% for hidden in form.hidden_fields %}
-  {{ hidden }}
-  {{ hidden.errors }}
-{% endfor %}
-{% for field in form.visible_fields %}
-  <tr class="mdl-data-table mdl-js-data-table">
+<table  class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+  {% for hidden in form.hidden_fields %}
+    {{ hidden }}
+    {{ hidden.errors }}
+  {% endfor %}
 
-      <td class="mdl-data-table__cell--non-numeric">{{ field.label_tag }}</td>
-      <td class="mdl-data-table__cell--non-numeric">{{ field }}</td>
-      <td>{{ field.errors }}</td>
-
+  <!-- Manual HTML for McUser form -->
+  <tr>
+      <td class="mdl-data-table__cell--non-numeric">{{ form.first_name.label_tag }}</td>
+      <td>{{ form.first_name }}</td>
+      <td>{{ form.first_name.errors }}</td>
   </tr>
-{% endfor %}
+  <tr>
+      <td class="mdl-data-table__cell--non-numeric">{{ form.last_name.label_tag }}</td>
+      <td>{{ form.last_name }}</td>
+      <td>{{ form.last_name.errors }}</td>
+  </tr>
+  <tr>
+    <td class="mdl-data-table__cell--non-numeric">{{ form.class_year.label_tag }}</td>
+    <td>{{ form.class_year }}</td>
+    <td>{{ form.class_year.errors }}</td>
+  </tr>
+  <tr>
+    <td class="mdl-data-table__cell--non-numeric">{{ form.gender.label_tag }}</td>
+    <td>{{ form.gender }}</td>
+    <td>{{ form.gender.errors }}</td>
+  </tr>
+  <tr>
+    <td class="mdl-data-table__cell--non-numeric">{{ form.utd_id.label_tag }}</td>
+    <td>{{ form.utd_id }}</td>
+    <td>{{ form.utd_id.errors }}</td>
+  </tr>
+  <tr>
+    <td class="mdl-data-table__cell--non-numeric">{{ form.major.label_tag }}</td>
+    <td>{{ form.major }}</td>
+    <td>{{ form.major.errors }}</td>
+  </tr>
+  <tr>
+    <td class="mdl-data-table__cell--non-numeric">{{ form.major2.label_tag }}</td>
+    <td>{{ form.major2 }}</td>
+    <td>{{ form.major2.errors }}</td>
+  </tr>
+  <tr>
+    <td class="mdl-data-table__cell--non-numeric">{{ form.minor.label_tag }}</td>
+    <td>{{ form.minor }}</td>
+    <td>{{ form.minor.errors }}</td>
+  </tr>
+  <tr>
+    <td class="mdl-data-table__cell--non-numeric">{{ form.minor2.label_tag }}</td>
+    <td>{{ form.minor2 }}</td>
+    <td>{{ form.minor2.errors }}</td>
+  </tr>
+  <tr>
+    <td class="mdl-data-table__cell--non-numeric">{{ form.hometown.label_tag }}</td>
+    <td>{{ form.hometown }}</td>
+    <td>{{ form.hometown.errors }}</td>
+  </tr>
+  <tr>
+    <td class="mdl-data-table__cell--non-numeric">{{ form.high_school.label_tag }}</td>
+    <td>{{ form.high_school }}</td>
+    <td>{{ form.high_school.errors }}</td>
+  </tr>
+  <tr>
+    <td class="mdl-data-table__cell--non-numeric">{{ form.phone_number.label_tag }}</td>
+    <td>{{ form.phone_number }}</td>
+    <td>{{ form.phone_number.errors }}</td>
+  </tr>
+  <tr>
+    <td class="mdl-data-table__cell--non-numeric">{{ form.pic.label_tag }}</td>
+    <td>{{ form.pic }}</td>
+    <td>{{ form.pic.errors }}</td>
+  </tr>
 </table>
 {{ form.user }}
 <input class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect" type="submit" />
