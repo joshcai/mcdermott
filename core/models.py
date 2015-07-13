@@ -6,6 +6,7 @@ from sorl.thumbnail import ImageField
 from util import normalize_name
 
 from majors import MAJOR_CHOICES
+from minors import MINOR_CHOICES
 
 # Create your models here.
 
@@ -48,8 +49,9 @@ class McUser(models.Model):
   # Fields of study
   major = models.CharField(max_length=200, choices=MAJOR_CHOICES, blank=True)
   major2 = models.CharField(max_length=200, choices=MAJOR_CHOICES, blank=True)
-  minor = models.CharField(max_length=200, blank=True)
-  minor2 = models.CharField(max_length=200, blank=True)
+  MINOR_CHOICES = sorted(MINOR_CHOICES, key=lambda major:major[0]) #Remove when scraper is finished
+  minor = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
+  minor2 = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
 
   # Personal info
   hometown = models.CharField(max_length=200, blank=True)
