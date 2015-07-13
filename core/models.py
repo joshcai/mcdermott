@@ -5,6 +5,8 @@ from sorl.thumbnail import ImageField
 
 from util import normalize_name
 
+from majors import MAJOR_CHOICES
+
 # Create your models here.
 
 class McUser(models.Model):
@@ -30,20 +32,26 @@ class McUser(models.Model):
   # Real first name, use first_name as preferred first name so we don't
   # have to join on tables when fetching by name.
   real_name = models.CharField(max_length=200, blank=True)
-  MALE = "Male"
-  FEMALE = "Female"
-  GENDER_CHOICES = ((MALE, "Male"), (FEMALE, "Female"))
+
+  # Gender
+  MALE = 'Male'
+  FEMALE = 'Female'
+  GENDER_CHOICES = ((MALE, 'Male'), (FEMALE, 'Female'))
   gender = models.CharField(max_length=6, choices=GENDER_CHOICES, default=MALE, blank=False)
-  
+
   # e.g. 2012
   class_year = models.CharField(max_length=4, blank=True)
 
   # e.g. 2021135727
   utd_id = models.CharField(max_length=50, blank=True)
-  major = models.CharField(max_length=200, blank=True)
-  major2 = models.CharField(max_length=200, blank=True)
+
+  # Fields of study
+  major = models.CharField(max_length=200, choices=MAJOR_CHOICES, blank=True)
+  major2 = models.CharField(max_length=200, choices=MAJOR_CHOICES, blank=True)
   minor = models.CharField(max_length=200, blank=True)
   minor2 = models.CharField(max_length=200, blank=True)
+
+  # Personal info
   hometown = models.CharField(max_length=200, blank=True)
   high_school = models.CharField(max_length=200, blank=True)
   phone_number = models.CharField(max_length=200, blank=True)
