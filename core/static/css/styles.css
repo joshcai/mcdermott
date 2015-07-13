@@ -30,3 +30,7 @@
 .lg-con-content h3 {
   margin-top: 12px;
 }
+
+a.no-dec {
+  text-decoration: none;
+}

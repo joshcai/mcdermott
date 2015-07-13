@@ -34,7 +34,7 @@ def edit_info(request):
 
 @login_required
 def scholars(request):
-  scholars = User.objects.all()
+  scholars = McUser.objects.all()
   context = {
     'scholars': scholars
     }
@@ -55,7 +55,7 @@ def search(request):
   context = {
     'scholars': scholars
     }
-  return render(request, 'core/search.html', context)
+  return render(request, 'core/scholars.html', context)
 
 # TODO(joshcai): return another function, wrapped with login_required.
 def profile(request, name):
