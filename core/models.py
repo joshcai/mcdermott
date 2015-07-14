@@ -41,7 +41,13 @@ class McUser(models.Model):
   gender = models.CharField(max_length=6, choices=GENDER_CHOICES, default=MALE, blank=False)
 
   # e.g. 2012
-  class_year = models.CharField(max_length=4, blank=True)
+  YEARS = (
+  (2000, '2000'), (2001, '2001'), (2002, '2002'), (2003, '2003'), (2004, '2004'), (2005, '2005'),
+  (2006, '2006'), (2007, '2007'), (2008, '2008'), (2009, '2009'), (2010, '2010'), (2011, '2011'),
+  (2012, '2012'), (2013, '2013'), (2014, '2014'), (2015, '2015')
+  )
+
+  class_year = models.IntegerField(choices=YEARS, blank=True)
 
   # e.g. 2021135727
   utd_id = models.CharField(max_length=50, blank=True)
