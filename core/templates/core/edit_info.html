@@ -1,90 +1,109 @@
 {% extends "large_container.html" %}
 
+{% load widget_tweaks %}
+
 {% block inner_content %}
 
 {% if form.errors %}
   There were errors!
     {% for field in form %}
-        {% for error in field.errors %}
-            <p> {{ errors }} </p>
-        {% endfor %}
+      {% for error in field.errors %}
+        <p> {{ errors }} </p>
+      {% endfor %}
     {% endfor %}
 {% endif %}
 <form enctype="multipart/form-data" method="post" action="{% url 'edit_info' %}">
 {% csrf_token %}
-<table  class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
   {% for hidden in form.hidden_fields %}
     {{ hidden }}
     {{ hidden.errors }}
   {% endfor %}
 
   <!-- Manual HTML for McUser form -->
-  <tr>
-      <td class="mdl-data-table__cell--non-numeric">{{ form.first_name.label_tag }}</td>
-      <td>{{ form.first_name }}</td>
-      <td>{{ form.first_name.errors }}</td>
-  </tr>
-  <tr>
-      <td class="mdl-data-table__cell--non-numeric">{{ form.last_name.label_tag }}</td>
-      <td>{{ form.last_name }}</td>
-      <td>{{ form.last_name.errors }}</td>
-  </tr>
-  <tr>
-    <td class="mdl-data-table__cell--non-numeric">{{ form.class_year.label_tag }}</td>
-    <td>{{ form.class_year }}</td>
-    <td>{{ form.class_year.errors }}</td>
-  </tr>
-  <tr>
-    <td class="mdl-data-table__cell--non-numeric">{{ form.gender.label_tag }}</td>
-    <td>{{ form.gender }}</td>
-    <td>{{ form.gender.errors }}</td>
-  </tr>
-  <tr>
-    <td class="mdl-data-table__cell--non-numeric">{{ form.utd_id.label_tag }}</td>
-    <td>{{ form.utd_id }}</td>
-    <td>{{ form.utd_id.errors }}</td>
-  </tr>
-  <tr>
-    <td class="mdl-data-table__cell--non-numeric">{{ form.major.label_tag }}</td>
-    <td>{{ form.major }}</td>
-    <td>{{ form.major.errors }}</td>
-  </tr>
-  <tr>
-    <td class="mdl-data-table__cell--non-numeric">{{ form.major2.label_tag }}</td>
-    <td>{{ form.major2 }}</td>
-    <td>{{ form.major2.errors }}</td>
-  </tr>
-  <tr>
-    <td class="mdl-data-table__cell--non-numeric">{{ form.minor.label_tag }}</td>
-    <td>{{ form.minor }}</td>
-    <td>{{ form.minor.errors }}</td>
-  </tr>
-  <tr>
-    <td class="mdl-data-table__cell--non-numeric">{{ form.minor2.label_tag }}</td>
-    <td>{{ form.minor2 }}</td>
-    <td>{{ form.minor2.errors }}</td>
-  </tr>
-  <tr>
-    <td class="mdl-data-table__cell--non-numeric">{{ form.hometown.label_tag }}</td>
-    <td>{{ form.hometown }}</td>
-    <td>{{ form.hometown.errors }}</td>
-  </tr>
-  <tr>
-    <td class="mdl-data-table__cell--non-numeric">{{ form.high_school.label_tag }}</td>
-    <td>{{ form.high_school }}</td>
-    <td>{{ form.high_school.errors }}</td>
-  </tr>
-  <tr>
-    <td class="mdl-data-table__cell--non-numeric">{{ form.phone_number.label_tag }}</td>
-    <td>{{ form.phone_number }}</td>
-    <td>{{ form.phone_number.errors }}</td>
-  </tr>
-  <tr>
-    <td class="mdl-data-table__cell--non-numeric">{{ form.pic.label_tag }}</td>
-    <td>{{ form.pic }}</td>
-    <td>{{ form.pic.errors }}</td>
-  </tr>
-</table>
+  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    {{ form.first_name|add_class:"mdl-textfield__input" }}
+    <label for="id_first_name" class="mdl-textfield__label">
+      First name
+    </label>
+    <span class="mdl-textfield__error">{{ form.first_name.errors }}</span>
+  </div>
+  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    {{ form.last_name|add_class:"mdl-textfield__input" }}
+    <label for="id_last_name" class="mdl-textfield__label">
+      Last name
+    </label>
+    <span class="mdl-textfield__error">{{ form.last_name.errors }}</span>
+  </div>
+  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    {{ form.class_year|add_class:"mdl-textfield__input" }}
+    <label for="id_class_year" class="mdl-textfield__label">
+      Class year
+    </label>
+    <span class="mdl-textfield__error">{{ form.class_year.errors }}</span>
+  </div>
+  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    {{ form.utd_id|add_class:"mdl-textfield__input" }}
+    <label for="id_utd_id" class="mdl-textfield__label">
+      UTD ID
+    </label>
+    <span class="mdl-textfield__error">{{ form.utd_id.errors }}</span>
+  </div>
+  <!--TODO: Replace with Select vesion when MDL has it -->
+  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    {{ form.gender.label_tag }}
+    {{ form.gender }}
+    <span class="mdl-textfield__error">{{ form.gender.errors }}</span>
+  </div>
+  <!--TODO: Replace with Select vesion when MDL has it -->
+  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    {{ form.major.label_tag }}
+    {{ form.major }}
+    <span class="mdl-textfield__error">{{ form.major.errors }}</span>
+  </div>
+  <!--TODO: Replace with Select vesion when MDL has it -->
+  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    {{ form.major2.label_tag }}
+    {{ form.major2 }}
+    <span class="mdl-textfield__error">{{ form.major2.errors }}</span>
+  </div>
+  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    {{ form.minor.label_tag }}
+    {{ form.minor }}
+    <span class="mdl-textfield__error">{{ form.major.errors }}</span>
+  </div>
+  <!--TODO: Replace with Select vesion when MDL has it -->
+  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    {{ form.minor2.label_tag }}
+    {{ form.minor2 }}
+    <span class="mdl-textfield__error">{{ form.major2.errors }}</span>
+  </div>
+  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    {{ form.hometown|add_class:"mdl-textfield__input" }}
+    <label for="id_hometown" class="mdl-textfield__label">
+      Hometown
+    </label>
+    <span class="mdl-textfield__error">{{ form.hometown.errors }}</span>
+  </div>
+  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    {{ form.high_school|add_class:"mdl-textfield__input" }}
+    <label for="id_high_school" class="mdl-textfield__label">
+      High School
+    </label>
+    <span class="mdl-textfield__error">{{ form.high_school.errors }}</span>
+  </div>
+  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    {{ form.phone_number|add_class:"mdl-textfield__input" }}
+    <label for="id_phone_number" class="mdl-textfield__label">
+      Phone Number
+    </label>
+    <span class="mdl-textfield__error">{{ form.phone_number.errors }}</span>
+  </div>
+  <!--TODO: Replace this with something else later -->
+  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    {{ form.pic.label_tag }}
+    {{ form.pic }}
+    <span class="mdl-textfield__error">{{ form.pic.errors }}</span>
+  </div>
 {{ form.user }}
 <input class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect" type="submit" />
 </form>

@@ -24,7 +24,7 @@ def edit_info(request):
     form = McUserForm(request.POST, request.FILES, instance=user_info)
     if form.is_valid():
       form.save()
-      return redirect('index')
+      return redirect('own_profile')
   else:
     form = McUserForm(instance=user_info)
   context = {

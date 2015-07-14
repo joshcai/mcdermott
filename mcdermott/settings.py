@@ -40,6 +40,7 @@ INSTALLED_APPS = (
   'rest_framework',
   'sorl.thumbnail',
   'watson',
+  'widget_tweaks',
   'login',
   'core',
 )
