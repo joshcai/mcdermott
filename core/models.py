@@ -37,8 +37,8 @@ class McUser(models.Model):
   # Gender
   MALE = 'Male'
   FEMALE = 'Female'
-  GENDER_CHOICES = ((MALE, 'Male'), (FEMALE, 'Female'))
-  gender = models.CharField(max_length=6, choices=GENDER_CHOICES, default=MALE, blank=False)
+  GENDER_CHOICES = (('', ''), (MALE, 'Male'), (FEMALE, 'Female'))
+  gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False)
 
   # e.g. 2012
   YEARS = (

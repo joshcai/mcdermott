@@ -1,4 +1,5 @@
 MINOR_CHOICES = (
+('', ''),
 ('Art History', 'Art History'),
 ('Asian Studies', 'Asian Studies'),
 ('Communication', 'Communication'),

@@ -79,6 +79,7 @@ TELECOMMUNICATIONS_ENGINEERING = 'Telecommunications Engineering'
 
 
 MAJOR_CHOICES = (
+('', ''),
 (ACCOUNTING, 'Accounting'),
 (ACTUARIAL_SCIENCE, 'Actuarial Science'),
 (AMERICAN_STUDIES, 'American Studies'),
