@@ -1,6 +1,9 @@
-from django import forms
+import floppyforms as forms
 
 from models import McUser
+
+class ImageThumbnailInput(forms.ClearableFileInput):
+  template_name = 'floppyforms/image_thumbnail.html'
 
 class McUserForm(forms.ModelForm):
   class Meta:
@@ -22,7 +25,10 @@ class McUserForm(forms.ModelForm):
         'id',
         'pic'
     ]
-    widgets = {'id': forms.HiddenInput()}
+    widgets = {
+        'id': forms.HiddenInput(),
+        'pic': ImageThumbnailInput
+    }
 
 class UploadFileForm(forms.Form):
   file = forms.FileField()

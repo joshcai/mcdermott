@@ -4,119 +4,120 @@
 
 {% block inner_content %}
 
-{% if form.errors %}
-  There were errors!
-    {% for field in form %}
-      {% for error in field.errors %}
-        <p> {{ errors }} </p>
+<div class="text-center">
+  {% if form.errors %}
+    There were errors!
+      {% for field in form %}
+        {% for error in field.errors %}
+          <p> {{ errors }} </p>
+        {% endfor %}
       {% endfor %}
+  {% endif %}
+  <form enctype="multipart/form-data" method="post" action="{% url 'edit_info' %}">
+  {% csrf_token %}
+    {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+      {{ hidden.errors }}
     {% endfor %}
-{% endif %}
-<form enctype="multipart/form-data" method="post" action="{% url 'edit_info' %}">
-{% csrf_token %}
-  {% for hidden in form.hidden_fields %}
-    {{ hidden }}
-    {{ hidden.errors }}
-  {% endfor %}
 
-  <!-- Manual HTML for McUser form -->
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    {{ form.first_name|add_class:"mdl-textfield__input" }}
-    <label for="id_first_name" class="mdl-textfield__label">
-      First name
-    </label>
-    <span class="mdl-textfield__error">{{ form.first_name.errors }}</span>
-  </div>
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    {{ form.last_name|add_class:"mdl-textfield__input" }}
-    <label for="id_last_name" class="mdl-textfield__label">
-      Last name
-    </label>
-    <span class="mdl-textfield__error">{{ form.last_name.errors }}</span>
-  </div>
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    {{ form.class_year|add_class:"mdl-textfield__input" }}
-    <label for="id_class_year" class="mdl-textfield__label">
-      Class year
-    </label>
-    <span class="mdl-textfield__error">{{ form.class_year.errors }}</span>
-  </div>
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    {{ form.utd_id|add_class:"mdl-textfield__input" }}
-    <label for="id_utd_id" class="mdl-textfield__label">
-      UTD ID
-    </label>
-    <span class="mdl-textfield__error">{{ form.utd_id.errors }}</span>
-  </div>
-  <!--TODO: Replace with Select vesion when MDL has it -->
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    {{ form.major|add_class:"mdl-textfield__input" }}
-    <label for="id_major" class="mdl-textfield__label">
-      Major
-    </label>
-    <span class="mdl-textfield__error">{{ form.major.errors }}</span>
-  </div>
-  <!--TODO: Replace with Select vesion when MDL has it -->
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    {{ form.major2|add_class:"mdl-textfield__input" }}
-    <label for="id_major2" class="mdl-textfield__label">
-      Major 2
-    </label>
-    <span class="mdl-textfield__error">{{ form.major2.errors }}</span>
-  </div>
-  <!--TODO: Replace with Select vesion when MDL has it -->
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    {{ form.minor|add_class:"mdl-textfield__input" }}
-    <label for="id_minor" class="mdl-textfield__label">
-      Minor
-    </label>
-    <span class="mdl-textfield__error">{{ form.minor.errors }}</span>
-  </div>
-  <!--TODO: Replace with Select vesion when MDL has it -->
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    {{ form.minor2|add_class:"mdl-textfield__input" }}
-    <label for="id_minor2" class="mdl-textfield__label">
-      Minor 2
-    </label>
-    <span class="mdl-textfield__error">{{ form.minor2.errors }}</span>
-  </div>
-  <!--TODO: Replace with Select vesion when MDL has it -->
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    {{ form.gender|add_class:"mdl-textfield__input" }}
-    <label for="id_gender" class="mdl-textfield__label">
-      Gender
-    </label>
-    <span class="mdl-textfield__error">{{ form.gender.errors }}</span>
-  </div>
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    {{ form.hometown|add_class:"mdl-textfield__input" }}
-    <label for="id_hometown" class="mdl-textfield__label">
-      Hometown
-    </label>
-    <span class="mdl-textfield__error">{{ form.hometown.errors }}</span>
-  </div>
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    {{ form.high_school|add_class:"mdl-textfield__input" }}
-    <label for="id_high_school" class="mdl-textfield__label">
-      High School
-    </label>
-    <span class="mdl-textfield__error">{{ form.high_school.errors }}</span>
-  </div>
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    {{ form.phone_number|add_class:"mdl-textfield__input" }}
-    <label for="id_phone_number" class="mdl-textfield__label">
-      Phone Number
-    </label>
-    <span class="mdl-textfield__error">{{ form.phone_number.errors }}</span>
-  </div>
-  <!--TODO: Replace this with something else later -->
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    {{ form.pic.label_tag }}
-    {{ form.pic }}
-    <span class="mdl-textfield__error">{{ form.pic.errors }}</span>
-  </div>
-{{ form.user }}
-<input class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect" type="submit" />
-</form>
-
+    <!-- Manual HTML for McUser form -->
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      {{ form.first_name|add_class:"mdl-textfield__input" }}
+      <label for="id_first_name" class="mdl-textfield__label">
+        First name
+      </label>
+      <span class="mdl-textfield__error">{{ form.first_name.errors }}</span>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      {{ form.last_name|add_class:"mdl-textfield__input" }}
+      <label for="id_last_name" class="mdl-textfield__label">
+        Last name
+      </label>
+      <span class="mdl-textfield__error">{{ form.last_name.errors }}</span>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      {{ form.class_year|add_class:"mdl-textfield__input" }}
+      <label for="id_class_year" class="mdl-textfield__label">
+        Class year
+      </label>
+      <span class="mdl-textfield__error">{{ form.class_year.errors }}</span>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      {{ form.utd_id|add_class:"mdl-textfield__input" }}
+      <label for="id_utd_id" class="mdl-textfield__label">
+        UTD ID
+      </label>
+      <span class="mdl-textfield__error">{{ form.utd_id.errors }}</span>
+    </div>
+    <!--TODO: Replace with Select vesion when MDL has it -->
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      {{ form.major|add_class:"mdl-textfield__input" }}
+      <label for="id_major" class="mdl-textfield__label">
+        Major
+      </label>
+      <span class="mdl-textfield__error">{{ form.major.errors }}</span>
+    </div>
+    <!--TODO: Replace with Select vesion when MDL has it -->
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      {{ form.major2|add_class:"mdl-textfield__input" }}
+      <label for="id_major2" class="mdl-textfield__label">
+        Major 2
+      </label>
+      <span class="mdl-textfield__error">{{ form.major2.errors }}</span>
+    </div>
+    <!--TODO: Replace with Select vesion when MDL has it -->
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      {{ form.minor|add_class:"mdl-textfield__input" }}
+      <label for="id_minor" class="mdl-textfield__label">
+        Minor
+      </label>
+      <span class="mdl-textfield__error">{{ form.minor.errors }}</span>
+    </div>
+    <!--TODO: Replace with Select vesion when MDL has it -->
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      {{ form.minor2|add_class:"mdl-textfield__input" }}
+      <label for="id_minor2" class="mdl-textfield__label">
+        Minor 2
+      </label>
+      <span class="mdl-textfield__error">{{ form.minor2.errors }}</span>
+    </div>
+    <!--TODO: Replace with Select vesion when MDL has it -->
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      {{ form.gender|add_class:"mdl-textfield__input" }}
+      <label for="id_gender" class="mdl-textfield__label">
+        Gender
+      </label>
+      <span class="mdl-textfield__error">{{ form.gender.errors }}</span>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      {{ form.hometown|add_class:"mdl-textfield__input" }}
+      <label for="id_hometown" class="mdl-textfield__label">
+        Hometown
+      </label>
+      <span class="mdl-textfield__error">{{ form.hometown.errors }}</span>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      {{ form.high_school|add_class:"mdl-textfield__input" }}
+      <label for="id_high_school" class="mdl-textfield__label">
+        High School
+      </label>
+      <span class="mdl-textfield__error">{{ form.high_school.errors }}</span>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      {{ form.phone_number|add_class:"mdl-textfield__input" }}
+      <label for="id_phone_number" class="mdl-textfield__label">
+        Phone Number
+      </label>
+      <span class="mdl-textfield__error">{{ form.phone_number.errors }}</span>
+    </div>
+    <!--TODO: Replace this with something else later -->
+    <div>
+      {{ form.pic }}
+      <span class="mdl-textfield__error">{{ form.pic.errors }}</span>
+    </div>
+  {{ form.user }}
+  <br>
+  <input class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect" type="submit" />
+  </form>
+</div>
 {% endblock %}

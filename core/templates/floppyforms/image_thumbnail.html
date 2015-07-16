@@ -1,0 +1,13 @@
+{% load staticfiles %}
+{% load thumbnail %}
+
+{% if value %}
+  {% thumbnail value "100x100" crop="center" as im %}
+    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+  {% endthumbnail %}
+{% else %}
+  <img src="{% static 'img/user.png' %}" height="100" width="100">
+{% endif %}
+
+Change:
+<input type="{{ type }}" name="{{ name }}"{% if required %} required{% endif %}{% include "floppyforms/attrs.html" %}>

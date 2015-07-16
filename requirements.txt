@@ -3,6 +3,7 @@ Jinja2==2.7.3
 MarkupSafe==0.23
 Pillow==2.9.0
 argparse==1.2.1
+django-floppyforms==1.4.1
 django-watson==1.1.8
 django-widget-tweaks==1.4.1
 djangorestframework==3.1.3

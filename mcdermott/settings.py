@@ -37,6 +37,7 @@ INSTALLED_APPS = (
   'django.contrib.sessions',
   'django.contrib.messages',
   'django.contrib.staticfiles',
+  'floppyforms',
   'rest_framework',
   'sorl.thumbnail',
   'watson',
