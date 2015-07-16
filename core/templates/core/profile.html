@@ -6,6 +6,11 @@
 
 <h3>{{ profile.get_full_name }}</h3>
 
+{% if edit %}
+  <a href="{% url 'edit_info' %}">Edit Profile</a>
+  <br>
+{% endif %}
+
 {% thumbnail profile.pic "200x200" crop="center" as im %}
   <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
 {% endthumbnail %}

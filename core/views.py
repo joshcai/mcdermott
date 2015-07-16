@@ -57,7 +57,7 @@ def search(request):
     }
   return render(request, 'core/scholars.html', context)
 
-# TODO(joshcai): return another function, wrapped with login_required.
+@login_required
 def profile(request, name):
   name = normalize_name(name)
   # TODO(joshcai): handle case where more than 1 user (aka users have same name)
@@ -68,7 +68,8 @@ def profile(request, name):
   # 'user' is already passed in as default (the logged in user), 
   # so use 'profile' as alias 
   context = {
-      'profile': profile
+      'profile': profile,
+      'edit': profile == request.user.mcuser
     }
   return render(request, 'core/profile.html', context)
 
