@@ -1,5 +1,5 @@
 ### McDermott Network
-
+[![Build Status](https://travis-ci.org/mcdermott-scholars/mcdermott.svg?branch=master)](https://travis-ci.org/mcdermott-scholars/mcdermott)
 ---
 
 To run this app do:

@@ -7,6 +7,7 @@ from util import normalize_name
 
 from majors import MAJOR_CHOICES
 from minors import MINOR_CHOICES
+MINOR_CHOICES = sorted(MINOR_CHOICES, key=lambda major:major[0]) #Remove when scraper is finished
 
 # Create your models here.
 
@@ -48,17 +49,10 @@ class McUser(models.Model):
       (2012, '2012'), (2013, '2013'), (2014, '2014'), (2015, '2015')
   )
 
-  class_year = models.IntegerField(choices=YEARS, blank=True)
+  class_year = models.IntegerField(choices=YEARS, null=True, blank=True)
 
   # e.g. 2021135727
   utd_id = models.CharField(max_length=50, blank=True)
-
-  # Fields of study
-  major = models.CharField(max_length=200, choices=MAJOR_CHOICES, blank=True)
-  major2 = models.CharField(max_length=200, choices=MAJOR_CHOICES, blank=True)
-  MINOR_CHOICES = sorted(MINOR_CHOICES, key=lambda major:major[0]) #Remove when scraper is finished
-  minor = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
-  minor2 = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
 
   # Personal info
   hometown = models.CharField(max_length=200, blank=True)
@@ -77,6 +71,23 @@ class McUser(models.Model):
   def save(self, *args, **kwargs):
     self.norm_name = normalize_name(self.get_full_name())
     super(McUser, self).save(*args, **kwargs)
+
+class Degree(models.Model):
+  user = models.ForeignKey(McUser)
+  school = models.CharField(max_length=200, blank=True)
+  degree_type = models.CharField(max_length=200, blank=True)
+  start_time = models.DateField(null=True, blank=True)
+  end_time = models.DateField(null=True, blank=True)
+
+class Major(models.Model):
+  degree = models.ForeignKey(Degree)
+  utd_major = models.CharField(max_length=200, choices=MAJOR_CHOICES, blank=True)
+  other_major = models.CharField(max_length=200, blank=True)
+
+class Minor(models.Model):
+  degree = models.ForeignKey(Degree)
+  utd_minor = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
+  other_minor = models.CharField(max_length=200, blank=True)
 
 watson.register(McUser)
 # at bottom for circular dependency

@@ -35,6 +35,10 @@ a.no-dec {
   text-decoration: none;
 }
 
+.inherit-color {
+  color: inherit;
+}
+
 .text-center {
   text-align: center;
 }

@@ -5,8 +5,8 @@ from django.shortcuts import render, redirect
 from rest_framework import viewsets
 import watson
 
-from forms import McUserForm
-from models import McUser
+from forms import McUserForm, DegreeForm
+from models import McUser, Degree
 from serializers import UserSerializer
 from util import normalize_name
 
@@ -20,15 +20,24 @@ def edit_info(request):
     user_info = McUser.objects.get(user_id=request.user.id)
   except McUser.DoesNotExist:
     user_info = McUser(user_id=request.user.id)
+  try:
+    degree = Degree.objects.get(user_id=user_info.id)
+  except Degree.DoesNotExist:
+    degree = Degree(user_id=user_info.id)
   if request.method == 'POST':
-    form = McUserForm(request.POST, request.FILES, instance=user_info)
-    if form.is_valid():
+    form = McUserForm(request.POST, request.FILES, instance=user_info, 
+                      prefix='base')
+    degree_form = DegreeForm(request.POST, instance=degree, prefix='degree')
+    if form.is_valid() and degree_form.is_valid():
       form.save()
+      degree_form.save()
       return redirect('own_profile')
   else:
-    form = McUserForm(instance=user_info)
+    form = McUserForm(instance=user_info, prefix='base')
+    degree_form = DegreeForm(instance=degree, prefix='degree')
   context = {
-      'form': form
+      'form': form,
+      'degree_form': degree_form
       }
   return render(request, 'core/edit_info.html', context)
 
