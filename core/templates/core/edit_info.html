@@ -100,7 +100,7 @@
       </label>
       <span class="mdl-textfield__error">{{ degree_form.degree_type.errors }}</span>
     </div>
-    <!--TODO: Replace with Select vesion when MDL has it -->
+    <!--TODO: Replace with Date picker -->
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
       {{ degree_form.start_time|add_class:"mdl-textfield__input" }}
       <label for="id_start_time" class="mdl-textfield__label">
@@ -108,7 +108,7 @@
       </label>
       <span class="mdl-textfield__error">{{ degree_form.start_time.errors }}</span>
     </div>
-    <!--TODO: Replace with Select vesion when MDL has it -->
+    <!--TODO: Replace with Date picker -->
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
       {{ degree_form.end_time|add_class:"mdl-textfield__input" }}
       <label for="id_end_time" class="mdl-textfield__label">
@@ -116,6 +116,30 @@
       </label>
       <span class="mdl-textfield__error">{{ degree_form.end_time.errors }}</span>
     </div>
+    {{ major_formset.management_form }}
+    {% for form in major_formset %}
+      {{ form.id }}
+      <!--TODO: Replace with Select vesion when MDL has it -->
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        {{ form.utd_major|add_class:"mdl-textfield__input" }}
+        <label for="id_major_set-0-utd_major" class="mdl-textfield__label">
+          Major
+        </label>
+        <span class="mdl-textfield__error">{{ form.utd_major.errors }}</span>
+      </div>
+    {% endfor %}
+    {{ minor_formset.management_form }}
+    {% for form in minor_formset %}
+      {{ form.id }}
+      <!--TODO: Replace with Select vesion when MDL has it -->
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        {{ form.utd_minor|add_class:"mdl-textfield__input" }}
+        <label for="id_minor_set-0-utd_major" class="mdl-textfield__label">
+          Minor
+        </label>
+        <span class="mdl-textfield__error">{{ form.utd_minor.errors }}</span>
+      </div>
+    {% endfor %}
     <br>
     <input class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect" type="submit" value="save" />
     <br>

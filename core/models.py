@@ -90,5 +90,8 @@ class Minor(models.Model):
   other_minor = models.CharField(max_length=200, blank=True)
 
 watson.register(McUser)
+watson.register(Degree)
+watson.register(Major)
+watson.register(Minor)
 # at bottom for circular dependency
 import signals

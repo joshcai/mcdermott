@@ -30,6 +30,8 @@ pip install -r requirements.txt
 # If a model is changed:
 python manage.py makemigrations
 python manage.py migrate
+# If another model is registered with Watson:
+python manage.py buildwatson
 ```
 
 To access the admin interface, run:

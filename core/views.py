@@ -1,12 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.forms.models import inlineformset_factory
 from django.http import Http404
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
 import watson
 
 from forms import McUserForm, DegreeForm
-from models import McUser, Degree
+from models import McUser, Degree, Major, Minor
 from serializers import UserSerializer
 from util import normalize_name
 
@@ -24,20 +25,37 @@ def edit_info(request):
     degree = Degree.objects.get(user_id=user_info.id)
   except Degree.DoesNotExist:
     degree = Degree(user_id=user_info.id)
+  MajorFormSet = inlineformset_factory(Degree, Major, 
+                                       fields=('utd_major',),
+                                       max_num=2, extra=2)
+  MinorFormSet = inlineformset_factory(Degree, Minor,
+                                       fields=('utd_minor',),
+                                       max_num=2, extra=2)
   if request.method == 'POST':
     form = McUserForm(request.POST, request.FILES, instance=user_info, 
                       prefix='base')
     degree_form = DegreeForm(request.POST, instance=degree, prefix='degree')
-    if form.is_valid() and degree_form.is_valid():
+    major_formset = MajorFormSet(request.POST, instance=degree)
+    minor_formset = MinorFormSet(request.POST, instance=degree)
+    if (form.is_valid() and 
+        degree_form.is_valid() and 
+        major_formset.is_valid() and
+        minor_formset.is_valid()):
       form.save()
       degree_form.save()
+      major_formset.save()
+      minor_formset.save()
       return redirect('own_profile')
   else:
     form = McUserForm(instance=user_info, prefix='base')
     degree_form = DegreeForm(instance=degree, prefix='degree')
+    major_formset = MajorFormSet(instance=degree)
+    minor_formset = MinorFormSet(instance=degree)
   context = {
       'form': form,
-      'degree_form': degree_form
+      'degree_form': degree_form,
+      'major_formset': major_formset,
+      'minor_formset': minor_formset
       }
   return render(request, 'core/edit_info.html', context)
 
@@ -60,7 +78,16 @@ def search(request):
   scholars = []
   if query:
     results = watson.search(query)
-    scholars.extend([r.object for r in results])
+    for result in results:
+      if isinstance(result.object, McUser):
+        if result.object not in scholars:
+          scholars.append(result.object)
+      elif isinstance(result.object, Degree):
+        if result.object.user not in scholars:
+          scholars.append(result.object.user)
+      elif isinstance(result.object, Major) or isinstance(result.object, Minor):
+        if result.object.degree.user not in scholars:
+          scholars.append(result.object.degree.user)
   context = {
     'scholars': scholars
     }
