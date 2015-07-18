@@ -38,3 +38,7 @@ a.no-dec {
 .text-center {
   text-align: center;
 }
+
+.center {
+  margin: 0px auto;
+}
