@@ -73,19 +73,19 @@ class McUser(models.Model):
     super(McUser, self).save(*args, **kwargs)
 
 class Degree(models.Model):
-  user = models.ForeignKey(McUser)
+  user = models.ForeignKey(McUser, related_name='degrees')
   school = models.CharField(max_length=200, blank=True)
   degree_type = models.CharField(max_length=200, blank=True)
   start_time = models.DateField(null=True, blank=True)
   end_time = models.DateField(null=True, blank=True)
 
 class Major(models.Model):
-  degree = models.ForeignKey(Degree)
+  degree = models.ForeignKey(Degree, related_name='majors')
   utd_major = models.CharField(max_length=200, choices=MAJOR_CHOICES, blank=True)
   other_major = models.CharField(max_length=200, blank=True)
 
 class Minor(models.Model):
-  degree = models.ForeignKey(Degree)
+  degree = models.ForeignKey(Degree, related_name='minors')
   utd_minor = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
   other_minor = models.CharField(max_length=200, blank=True)
 
@@ -95,3 +95,4 @@ watson.register(Major)
 watson.register(Minor)
 # at bottom for circular dependency
 import signals
+  

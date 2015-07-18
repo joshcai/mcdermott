@@ -16,10 +16,25 @@
 {% endthumbnail %}
 
 <p>Class: {{ profile.class_year }}</p>
-<p>Major: {{ profile.major }}</p>
-<p>Major2: {{ profile.major2 }}</p>
-<p>Minor: {{ profile.minor }}</p>
-<p>Minor2: {{ profile.minor2 }}</p>
+{% for degree in profile.degrees.all %}
+  <p>School: {{ degree.school }}</p>
+  <p>Type: {{ degree.degree_type }}</p>
+  <p>Time period: {{ start_time }} - {{ end_time }}</p>
+  {% for major in degree.majors.all %}
+    {% if major.utd_major %}
+      <p>Major: {{ major.utd_major }}</p>
+    {% elif major.other_major %}
+      <p>Major: {{ major.other_major }}</p>
+    {% endif %}
+  {% endfor %}
+  {% for minor in degree.minors.all %}
+    {% if minor.utd_minor %}
+      <p>Minor: {{ minor.utd_minor }}</p>
+    {% elif minor.other_minor %}
+      <p>Minor: {{ minor.other_minor }}</p>
+    {% endif %}
+  {% endfor %}
+{% endfor %}
 <p>Hometown: {{ profile.hometown }}</p>
 <p>High School: {{ profile.high_school }}</p>
 <p>Phone number: {{ profile.phone_number }}</p>
