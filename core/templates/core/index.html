@@ -1,7 +1,55 @@
 {% extends "base.html" %}
 
+{% load widget_tweaks %}
+
 {% block content %}
 
-<p>Hello world!</p>
+{% if user.is_authenticated %}
+
+<div class="text-center">
+  <br>
+  <br>
+  <img src="http://placehold.it/175x175">
+  <br>
+  <br>
+  <form method="get" action="{% url 'search' %}">
+    <div class="mdl-textfield mdl-js-textfield">
+      <input class="mdl-textfield__input" type="text" name="q"
+             id="searchbox" />
+      <label class="mdl-textfield__label" for="searchbox">Search...</label>
+    </div>
+  </form>
+</div>
+
+{% else %}
+
+<br>
+<br>
+<div class="mdl-card mdl-shadow--3dp text-center center">
+  <div class="mdl-card__supporting-text">
+    <br>
+    <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+    {% csrf_token %}
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" id="id_username" maxlength="254" name="username" type="text" />
+        <label for="id_username" class="mdl-textfield__label">
+          Username
+        </label>
+      </div>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <td><input class="mdl-textfield__input" id="id_password" name="password" type="password" /></td>
+        <label for="id_username" class="mdl-textfield__label">
+          Password
+        </label>
+      </div>
+    <input class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect" type="submit" value="login" />
+ 
+    </form>
+    <br>
+    <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+  </div>
+</div>
+
+{% endif %}
 
 {% endblock %}
