@@ -1,7 +1,10 @@
 from django.contrib.auth.models import User
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 import watson
 from sorl.thumbnail import ImageField
+import StringIO
+from PIL import Image, ImageOps
 
 from util import normalize_name
 
@@ -70,6 +73,19 @@ class McUser(models.Model):
 
   def save(self, *args, **kwargs):
     self.norm_name = normalize_name(self.get_full_name())
+    if self.pic:
+      image = Image.open(StringIO.StringIO(self.pic.read()))
+      if image.mode not in ('L', 'RGB'):
+        image = image.convert('RGB')
+
+      # Resize to 400x400
+      imagefit = ImageOps.fit(image, (400, 400), Image.ANTIALIAS)
+      output = StringIO.StringIO()
+      imagefit.save(output, 'JPEG', quality=75)
+      output.seek(0)
+      # TODO: Find a way to delete old image files.
+      self.pic = InMemoryUploadedFile(output, 'ImageField', 
+          '%s.jpg'  % self.norm_name, 'image/jpeg', output.len, None)
     super(McUser, self).save(*args, **kwargs)
 
 class Degree(models.Model):
@@ -89,10 +105,20 @@ class Minor(models.Model):
   utd_minor = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
   other_minor = models.CharField(max_length=200, blank=True)
 
+class Experience(models.Model):
+  user = models.ForeignKey(McUser, related_name='experiences')
+  title = models.CharField(max_length=200, blank=True)
+  organization = models.CharField(max_length=200, blank=True)
+  description = models.TextField(blank=True)
+  location = models.CharField(max_length=200, blank=True)
+  start_time = models.DateField(null=True, blank=True)
+  end_time = models.DateField(null=True, blank=True)
+
 watson.register(McUser)
 watson.register(Degree)
 watson.register(Major)
 watson.register(Minor)
+watson.register(Experience)
 # at bottom for circular dependency
 import signals
   

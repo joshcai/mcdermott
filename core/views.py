@@ -7,7 +7,7 @@ from rest_framework import viewsets
 import watson
 
 from forms import McUserForm, DegreeForm
-from models import McUser, Degree, Major, Minor
+from models import McUser, Degree, Major, Minor, Experience
 from serializers import UserSerializer
 from util import normalize_name
 
@@ -32,8 +32,7 @@ def edit_info(request):
                                        fields=('utd_minor',),
                                        max_num=2, extra=2)
   if request.method == 'POST':
-    form = McUserForm(request.POST, request.FILES, instance=user_info, 
-                      prefix='base')
+    form = McUserForm(request.POST, request.FILES, instance=user_info, prefix='base')
     degree_form = DegreeForm(request.POST, instance=degree, prefix='degree')
     major_formset = MajorFormSet(request.POST, instance=degree)
     minor_formset = MinorFormSet(request.POST, instance=degree)
@@ -82,7 +81,7 @@ def search(request):
       if isinstance(result.object, McUser):
         if result.object not in scholars:
           scholars.append(result.object)
-      elif isinstance(result.object, Degree):
+      elif isinstance(result.object, Degree) or isinstance(result.object, Experience):
         if result.object.user not in scholars:
           scholars.append(result.object.user)
       elif isinstance(result.object, Major) or isinstance(result.object, Minor):
