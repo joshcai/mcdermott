@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+# Config options for production vs development
+import config
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,12 +22,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'c+up^p+ilvpcmhhaoj0b+42f!co_j=c*@c7kn8xa5$vgf+1kma'
+SECRET_KEY = config.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = TEMPLATE_DEBUG = config.DEBUG
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config.ALLOWED_HOSTS
 
 
 # Application definition
@@ -157,4 +159,4 @@ REST_FRAMEWORK = {
     ]
 }
 
-THUMBNAIL_DEBUG = True
+THUMBNAIL_DEBUG = config.DEBUG

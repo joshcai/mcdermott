@@ -5,6 +5,7 @@
 To run this app do:
 
 ```
+cp mcdermott/example_config.py mcdermott/config.py
 virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
