@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
+import json
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 # Config options for production vs development
@@ -25,12 +26,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config.SECRET_KEY
+SECRET_KEY = os.environ.get('SECRET_KEY') or config.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = TEMPLATE_DEBUG = config.DEBUG
+DEBUG = TEMPLATE_DEBUG = os.environ.get('DEBUG') or config.DEBUG
 
-ALLOWED_HOSTS = config.ALLOWED_HOSTS
+allowed_hosts_env = os.environ.get('ALLOWED_HOSTS')
+if allowed_hosts_env:
+  allowed_hosts_env = [x.strip() for x in allowed_hosts_env.split(',')]
+ALLOWED_HOSTS = allowed_hosts_env or config.ALLOWED_HOSTS
 
 
 # Application definition
@@ -162,4 +166,4 @@ REST_FRAMEWORK = {
     ]
 }
 
-THUMBNAIL_DEBUG = config.DEBUG
+THUMBNAIL_DEBUG = os.environ.get('DEBUG') or config.DEBUG
