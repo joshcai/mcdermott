@@ -24,15 +24,28 @@ source venv/bin/activate
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py buildwatson
+python mcdermott/manage.py collectstatic --noinput
 
 # move these to /etc/environment
 export DEBUG=false
 export SECRET_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
 export ALLOWED_HOSTS='localhost, *.joshcai.com'
 
-# gunicorn config
-sudo chmod u+x mcdermott/install/gunicorn_start.sh
+# create log file
+mkdir -p /home/ubuntu/logs/
+touch /home/ubuntu/logs/mcdermott_gunicorn_supervisor.log
 
-python mcdermott/manage.py collectstatic --noinput
+# create socket file
+mkdir -p /home/ubuntu/mcdermott/run/gunicorn.sock
+
+# create symbolic links 
+sudo ln -s /home/ubuntu/mcdermott/install/mcdermott.conf /etc/nginx/sites-enabled/
+sudo ln -s /home/ubuntu/mcdermott/install/supervisor_mcd.conf /etc/supervisor/conf.d/
+
 sudo service nginx restart
 
+sudo supervisorctl reread
+sudo supervisorctl update
+
+# useful later:
+# sudo supervisorctl restart mcdermott
