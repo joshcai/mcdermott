@@ -4,3 +4,4 @@ db.sqlite3
 *migrations
 media/
 mcdermott/config.py
+run/
