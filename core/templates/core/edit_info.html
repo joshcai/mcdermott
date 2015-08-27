@@ -9,7 +9,7 @@
     There were errors!
       {% for field in form %}
         {% for error in field.errors %}
-          <p> {{ errors }} </p>
+          <p> {{ error }} {{ field.label_tag }} </p>
         {% endfor %}
       {% endfor %}
   {% endif %}
@@ -34,6 +34,13 @@
         Last name
       </label>
       <span class="mdl-textfield__error">{{ form.last_name.errors }}</span>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      {{ form.birthday|add_class:"mdl-textfield__input" }}
+      <label for="id_{{ form.birthday.name }}" class="mdl-textfield__label">
+        Birthday
+      </label>
+      <span class="mdl-textfield__error">{{ form.birthday.errors }}</span>
     </div>
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
       {{ form.class_year|add_class:"mdl-textfield__input" }}

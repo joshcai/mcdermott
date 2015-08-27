@@ -39,10 +39,11 @@ class McUser(models.Model):
   real_name = models.CharField(max_length=200, blank=True)
 
   # Gender
-  MALE = 'Male'
-  FEMALE = 'Female'
-  GENDER_CHOICES = (('', ''), (MALE, 'Male'), (FEMALE, 'Female'))
+  GENDER_CHOICES = (('', ''), ('Male', 'Male'), ('Female', 'Female'))
   gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False)
+
+  # Birthday
+  birthday = models.CharField(max_length=200,blank=True) # models.DateField()
 
   # e.g. 2012
   YEARS = (
@@ -84,7 +85,7 @@ class McUser(models.Model):
       imagefit.save(output, 'JPEG', quality=75)
       output.seek(0)
       # TODO: Find a way to delete old image files.
-      self.pic = InMemoryUploadedFile(output, 'ImageField', 
+      self.pic = InMemoryUploadedFile(output, 'ImageField',
           '%s.jpg'  % self.norm_name, 'image/jpeg', output.len, None)
     super(McUser, self).save(*args, **kwargs)
 
@@ -121,4 +122,3 @@ watson.register(Minor)
 watson.register(Experience)
 # at bottom for circular dependency
 import signals
-  

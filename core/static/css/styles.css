@@ -46,3 +46,27 @@ a.no-dec {
 .center {
   margin: 0px auto;
 }
+
+/* rules for profile page, mostly */
+.profile-name h3 {
+    line-height: 1;
+}
+
+.profile-contact-card {
+    
+}
+
+.profile-contact-card p {
+    color: grey;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.profile-contact-field {
+}
+
+.experience {
+}
+
+.school-name {
+}
