@@ -1,0 +1,14 @@
+<html>
+  <head>
+    <title>McCalendar</title>
+  </head>
+  <body>
+    This is the index of the McCalendar app.
+    <a href='create_event'>Create event</a>
+    <ul>
+    {% for event in events %}
+      <li><a href='{{ event.id }}'>{{ event.subject }}</a></li>
+    {% endfor %}
+    </ul>
+  </body>
+</html>
