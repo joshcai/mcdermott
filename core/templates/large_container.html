@@ -1,16 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="lg-con-layout mdl-layout mdl-layout--fixed-header mdl-js-layout mdl-color--grey-100">
-  <div class="lg-con-ribbon"></div>
-  <main class="lg-con-main mdl-layout__content">
-    <div class="lg-con-container mdl-grid">
-      <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
-      <div class="lg-con-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
-        {% block inner_content %}
-        {% endblock %}
-      </div>
-    </div>
-  </main>
+<div class="col-md-8 col-md-offset-2 main well well-lg">
+  {% block inner_content %}
+  {% endblock %}
 </div>
 {% endblock %}

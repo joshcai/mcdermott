@@ -28,7 +28,7 @@
   <div class="experience">
     <p class="school-name">School: {{ degree.school }}</p>
     <p>Type: {{ degree.degree_type }}</p>
-    <p>Time period: {{ start_time }} - {{ end_time }}</p>
+    <p>Time period: {{ degree.start_time }} - {{ degree.end_time }}</p>
     {% for major in degree.majors.all %}
       {% if major.utd_major %}
         <p>Major: {{ major.utd_major }}</p>
@@ -51,8 +51,7 @@
 <h4>Study Abroad</h4>
 
 {% if edit %}
-  <a href="{% url 'edit_info' %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect">
-      Edit Profile</a>
+  <a href="{% url 'edit_info' %}" class="btn btn-default">Edit Profile</a>
   <br>
 {% endif %}
 

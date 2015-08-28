@@ -5,32 +5,30 @@
 
 {% block content %}
 
-<div class="mdl-grid">
-{% for scholar in scholars %}
-  {# add picture here #}
-  <div class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--3-col">
-    <div class="mdl-card__title">
-       <h2 class="mdl-card__title-text">
+<div class="col-md-12">
+  <div class="row">
+    {% for scholar in scholars %}
+      {# add picture here #}
+      <div class="col-md-3">
+        <div class="well">
           <a class="no-dec" href ="/{{ scholar.first_name }}{{ scholar.last_name }}">
-            {{ scholar.get_full_name }}
+            <h2>{{ scholar.get_full_name }}</h2>
           </a>
-        </h2>
-    </div>
-    <div class="mdl-card__media">
-      {% if scholar.pic %}
-        {% thumbnail scholar.pic "100x100" crop="center" as im %}
-          <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-        {% endthumbnail %}
-      {% else %}
-        <img src="{% static 'img/user.png' %}" height="100" width="100">
-      {% endif %}
-    </div>
-    <div class="mdl-card__supporting-text">
-    Class: {{ scholar.class_year }}
-    </div>
+          {% if scholar.pic %}
+            {% thumbnail scholar.pic "100x100" crop="center" as im %}
+              <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+            {% endthumbnail %}
+          {% else %}
+            <img src="{% static 'img/user.png' %}" height="100" width="100">
+          {% endif %}
+          <p>Class: {{ scholar.class_year }}</p>
+          <p>Phone: {{ scholar.phone_number }}</p>
+          <p>Email: {{ scholar.email }}</p>
+        </div>
+      </div>
+    {% empty %}
+      <h3>No scholars found.</h3>
+    {% endfor %}
   </div>
-{% empty %}
-  <h3>No scholars found.</h3>
-{% endfor %}
 </div>
 {% endblock %}
