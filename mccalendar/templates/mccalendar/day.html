@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h4 class="center">{{ month_name }} {{ day }}, {{ year }}</h4>
+<a href="{% url 'mccalendar:create_event' %}">Create event</a>
+
+{% for event in events %}
+  <p>{{ event.subject }} - {{ event.description }}</p>
+{% endfor %}
+{% endblock %}
