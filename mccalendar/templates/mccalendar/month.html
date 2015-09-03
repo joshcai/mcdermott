@@ -27,7 +27,7 @@
         <!-- Day number and entry snippets -->
         {% if day != 0 %}
         <div class="day-div">
-          <a href="/mccalendar/{{ year }}/{{ month}}/{{ day}}/" class="day-link">{{ day }}<span class="day-span"></span></a>
+          <a href="{% url 'mccalendar:day' year month day %}" class="day-link">{{ day }}<span class="day-span"></span></a>
 <!--          TODO: FIX THIS URL TO BE PROPER -->
           {% for event in events %}
             <br />

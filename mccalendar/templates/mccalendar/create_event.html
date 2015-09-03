@@ -1,4 +1,4 @@
-<form method="post" action="{% url 'create_event' %}">
+<form method="post" action="{% url 'mccalendar:create_event' %}">
 {% csrf_token %}
 <ul>
 {% for error in form.errors %}

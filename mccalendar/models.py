@@ -1,8 +1,11 @@
 from django.db import models
 from core.models import McUser
+from django import forms
+
+from functools import partial
+DateInput = partial(forms.DateInput, {'class': 'datepicker'})
 
 class McEvent(models.Model):
-    mcevent_next_id = 1
     """Calendar event model
     """
     #needed for Google Calendar export
