@@ -6,43 +6,42 @@
 
 <br>
 <br>
-<div class="mdl-card mdl-shadow--3dp text-center center">
+<div class="col-md-4 col-md-offset-4">
   {% if next %}
-    <div class="mdl-card__supporting-text">
-      {% if user.is_authenticated %}
+    {% if user.is_authenticated %}
       <p>Your account doesn't have access to this page. To proceed,
       please login with an account that has access.</p>
       {% else %}
       <p>Please login to see this page.</p>
+      <br>
     {% endif %}
-    </div>
   {% endif %}
-  <div class="mdl-card__supporting-text">
-    <br>
-    {% if form.errors %}
-      <p>Your username and password didn't match. Please try again.</p>
-    {% endif %}
-    <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
-    {% csrf_token %}
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      {{ form.username|add_class:"mdl-textfield__input" }}
-      <label for="id_username" class="mdl-textfield__label">
+  {% if form.errors %}
+    <p>Your username and password didn't match. Please try again.</p>
+  {% endif %}
+  <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+  {% csrf_token %}
+    <div class="form-group">
+      <label for="id_username" class="col-sm-2 control-label">
         Username
       </label>
+      <div class="col-sm-10">
+        <input class="form-control" id="id_username" maxlength="254" name="username" type="text" />
+      </div>
     </div>
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <td>{{ form.password|add_class:"mdl-textfield__input" }}</td>
-      <label for="id_username" class="mdl-textfield__label">
+    <div class="form-group">
+      <label for="id_username" class="col-sm-2 control-label">
         Password
       </label>
+      <div class="col-sm-10">
+        <input class="form-control" id="id_password" name="password" type="password" />
+      </div>
     </div>
-
-    <input class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect" type="submit" value="login" />
+    <input class="btn btn-default" type="submit" value="Login" />
     <input type="hidden" name="next" value="{{ next }}" />
-    </form>
-    <br>
-    <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
-  </div>
+  </form>
+  <br>
+  <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
 </div>
 
 {% endblock %}
