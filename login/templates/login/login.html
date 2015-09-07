@@ -6,7 +6,7 @@
 
 <br>
 <br>
-<div class="col-md-4 col-md-offset-4">
+<div class="col-md-4 col-md-offset-4 text-center">
   {% if next %}
     {% if user.is_authenticated %}
       <p>Your account doesn't have access to this page. To proceed,
@@ -19,7 +19,7 @@
   {% if form.errors %}
     <p>Your username and password didn't match. Please try again.</p>
   {% endif %}
-  <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+  <form class="form-horizontal" method="post" action="{% url 'django.contrib.auth.views.login' %}">
   {% csrf_token %}
     <div class="form-group">
       <label for="id_username" class="col-sm-2 control-label">

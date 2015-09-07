@@ -22,75 +22,75 @@
 
     <!-- Manual HTML for McUser form -->
     <div class="form-group col-md-6">
-      <label for="id_{{ form.first_name.name }}" class="mdl-textfield__label">
+      <label for="id_{{ form.first_name.name }}" class="form-label">
         First name
       </label>
       {{ form.first_name|add_class:"form-control" }}
-      <span class="mdl-textfield__error">{{ form.first_name.errors }}</span>
+      <span class="error">{{ form.first_name.errors }}</span>
     </div>
     <div class="form-group col-md-6">
-      <label for="id_{{ form.last_name.name }}" class="mdl-textfield__label">
+      <label for="id_{{ form.last_name.name }}" class="form-label">
         Last name
       </label>
       {{ form.last_name|add_class:"form-control" }}
-      <span class="mdl-textfield__error">{{ form.last_name.errors }}</span>
+      <span class="error">{{ form.last_name.errors }}</span>
     </div>
     <div class="form-group col-md-6">
-      <label for="id_{{ form.birthday.name }}" class="mdl-textfield__label">
+      <label for="id_{{ form.birthday.name }}" class="form-label">
         Birthday
       </label>
       {{ form.birthday|add_class:"form-control" }}
-      <span class="mdl-textfield__error">{{ form.birthday.errors }}</span>
+      <span class="error">{{ form.birthday.errors }}</span>
     </div>
     <div class="form-group col-md-6">
-      <label for="id_{{ form.class_year.name }}" class="mdl-textfield__label">
+      <label for="id_{{ form.class_year.name }}" class="form-label">
         Class year
       </label>
       {{ form.class_year|add_class:"form-control" }}
-      <span class="mdl-textfield__error">{{ form.class_year.errors }}</span>
+      <span class="error">{{ form.class_year.errors }}</span>
     </div>
     <div class="form-group col-md-6">
-      <label for="id_{{ form.utd_id.name }}" class="mdl-textfield__label">
+      <label for="id_{{ form.utd_id.name }}" class="form-label">
         UTD ID
       </label>
       {{ form.utd_id|add_class:"form-control" }}
-      <span class="mdl-textfield__error">{{ form.utd_id.errors }}</span>
+      <span class="error">{{ form.utd_id.errors }}</span>
     </div>
 
     <!--TODO: Replace with Select vesion when MDL has it -->
     <div class="form-group col-md-6">
-      <label for="id_{{ form.gender.name }}" class="mdl-textfield__label">
+      <label for="id_{{ form.gender.name }}" class="form-label">
         Gender
       </label>
       {{ form.gender|add_class:"form-control" }}
-      <span class="mdl-textfield__error">{{ form.gender.errors }}</span>
+      <span class="error">{{ form.gender.errors }}</span>
     </div>
     <div class="form-group col-md-6">
-      <label for="id_{{ form.hometown.name }}" class="mdl-textfield__label">
+      <label for="id_{{ form.hometown.name }}" class="form-label">
         Hometown
       </label>
       {{ form.hometown|add_class:"form-control" }}
-      <span class="mdl-textfield__error">{{ form.hometown.errors }}</span>
+      <span class="error">{{ form.hometown.errors }}</span>
     </div>
     <div class="form-group col-md-6">
-      <label for="id_{{ form.high_school.name }}" class="mdl-textfield__label">
+      <label for="id_{{ form.high_school.name }}" class="form-label">
         High School
       </label>
       {{ form.high_school|add_class:"form-control" }}
-      <span class="mdl-textfield__error">{{ form.high_school.errors }}</span>
+      <span class="error">{{ form.high_school.errors }}</span>
     </div>
     <div class="form-group col-md-6">
-      <label for="id_{{ form.phone_number.name }}" class="mdl-textfield__label">
+      <label for="id_{{ form.phone_number.name }}" class="form-label">
         Phone Number
       </label>
       {{ form.phone_number|add_class:"form-control" }}
-      <span class="mdl-textfield__error">{{ form.phone_number.errors }}</span>
+      <span class="error">{{ form.phone_number.errors }}</span>
     </div>
     <br>
     <!--TODO: Replace this with something else later -->
     <div class="col-md-12 text-center">
       {{ form.pic }}
-      <span class="mdl-textfield__error">{{ form.pic.errors }}</span>
+      <span class="error">{{ form.pic.errors }}</span>
     </div>
     <br>
     {% if degree_form.errors %}
@@ -102,55 +102,55 @@
         {% endfor %}
     {% endif %}
     <div class="form-group col-md-6">
-      <label for="id_school" class="mdl-textfield__label">
+      <label for="id_school" class="form-label">
         School
       </label>
       {{ degree_form.school|add_class:"form-control" }}
-      <span class="mdl-textfield__error">{{ degree_form.school.errors }}</span>
+      <span class="error">{{ degree_form.school.errors }}</span>
     </div>
     <div class="form-group col-md-6">
-      <label for="id_degree_type" class="mdl-textfield__label">
+      <label for="id_degree_type" class="form-label">
         Degree
       </label>
       {{ degree_form.degree_type|add_class:"form-control" }}
-      <span class="mdl-textfield__error">{{ degree_form.degree_type.errors }}</span>
+      <span class="error">{{ degree_form.degree_type.errors }}</span>
     </div>
     <!--TODO: Replace with Date picker -->
     <div class="form-group col-md-6">
-      <label for="id_start_time" class="mdl-textfield__label">
+      <label for="id_start_time" class="form-label">
         Start Date
       </label>
       {{ degree_form.start_time|add_class:"form-control" }}
-      <span class="mdl-textfield__error">{{ degree_form.start_time.errors }}</span>
+      <span class="error">{{ degree_form.start_time.errors }}</span>
     </div>
     <!--TODO: Replace with Date picker -->
     <div class="form-group col-md-6">
-      <label for="id_end_time" class="mdl-textfield__label">
+      <label for="id_end_time" class="form-label">
         End Date
       </label>
       {{ degree_form.end_time|add_class:"form-control" }}
-      <span class="mdl-textfield__error">{{ degree_form.end_time.errors }}</span>
+      <span class="error">{{ degree_form.end_time.errors }}</span>
     </div>
     {{ major_formset.management_form }}
     {% for form in major_formset %}
       {{ form.id }}
       <div class="form-group col-md-6">
-        <label for="id_major_set-0-utd_major" class="mdl-textfield__label">
+        <label for="id_major_set-0-utd_major" class="form-label">
           Major
         </label>
         {{ form.utd_major|add_class:"form-control" }}
-        <span class="mdl-textfield__error">{{ form.utd_major.errors }}</span>
+        <span class="error">{{ form.utd_major.errors }}</span>
       </div>
     {% endfor %}
     {{ minor_formset.management_form }}
     {% for form in minor_formset %}
       {{ form.id }}
       <div class="form-group col-md-6">
-        <label for="id_minor_set-0-utd_major" class="mdl-textfield__label">
+        <label for="id_minor_set-0-utd_major" class="form-label">
           Minor
         </label>
         {{ form.utd_minor|add_class:"form-control" }}
-        <span class="mdl-textfield__error">{{ form.utd_minor.errors }}</span>
+        <span class="error">{{ form.utd_minor.errors }}</span>
       </div>
     {% endfor %}
     <br>
