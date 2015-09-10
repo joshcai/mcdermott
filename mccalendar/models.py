@@ -9,7 +9,7 @@ class McEvent(models.Model):
     """Calendar event model
     """
     #needed for Google Calendar export
-    owner = models.OneToOneField(McUser)
+    owner = models.ForeignKey(McUser)
     subject = models.CharField(max_length=200, blank=True)
     start_date = models.DateField(null=True, blank=True)
     start_time = models.TimeField()

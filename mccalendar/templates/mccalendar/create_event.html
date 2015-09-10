@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+
 <form method="post" action="{% url 'mccalendar:create_event' %}">
 {% csrf_token %}
 <ul>
@@ -12,6 +15,13 @@
   </label>
   <span class="mdl-textfield__error">{{ form.subject.errors }}</span>
 </div>
+<div>
+  {{ form.description }}
+  <label for="id_{{ form.description.name }}">
+    Description
+  </label>
+  <span class="mdl-textfield__error">{{ form.description.errors }}</span>
+</div
 <div>
   {{ form.start_date }}
   <label for="id_{{ form.start_date.name }}">
@@ -38,3 +48,5 @@
   </div>
   <input type="submit" value="save"/>
 </form>
+
+{% endblock %}

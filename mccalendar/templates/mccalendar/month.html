@@ -31,7 +31,7 @@
 <!--          TODO: FIX THIS URL TO BE PROPER -->
           {% for event in events %}
             <br />
-            <b>{{ event.subject }}</b>
+            <b>{{ event.subject }} - {{ event.start_time }}</b>
           {% endfor %}
         {% endif %}
         </div>
