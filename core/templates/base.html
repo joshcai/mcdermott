@@ -41,7 +41,7 @@
           </ul>
           {% if user.is_authenticated %}
             <form method="get" action="{% url 'search' %}" class="navbar-form navbar-right">
-              <input type="text" name="q" id="searchbox" class="form-control" placeholder="Search...">
+              <input type="text" name="q" id="searchbox" class="form-control" placeholder="Search..." value="{{ request.GET.q }}">
             </form>
           {% endif %}
         </div>
