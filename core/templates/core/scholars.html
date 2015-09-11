@@ -5,30 +5,36 @@
 
 {% block content %}
 
-<div class="col-md-12">
-  <div class="row">
-    {% for scholar in scholars %}
-      {# add picture here #}
-      <div class="col-md-3">
-        <div class="well">
-          <a class="no-dec" href ="/{{ scholar.first_name }}{{ scholar.last_name }}">
-            <h2>{{ scholar.get_full_name }}</h2>
-          </a>
-          {% if scholar.pic %}
-            {% thumbnail scholar.pic "100x100" crop="center" as im %}
-              <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-            {% endthumbnail %}
-          {% else %}
-            <img src="{% static 'img/user.png' %}" height="100" width="100">
-          {% endif %}
-          <p>Class: {{ scholar.class_year }}</p>
-          <p>Phone: {{ scholar.phone_number }}</p>
-          <p>Email: {{ scholar.email }}</p>
-        </div>
-      </div>
-    {% empty %}
-      <h3>No scholars found.</h3>
-    {% endfor %}
-  </div>
+<div class="col-md-6 col-md-offset-3 col-sm-12">
+  {% for scholar in scholars %}
+    {# add picture here #}
+    <div class="well">
+      <div class="pull-left">
+      {% if scholar.pic %}
+        {% thumbnail scholar.pic "100x100" crop="center" as im %}
+          <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+        {% endthumbnail %}
+      {% else %}
+        <img src="{% static 'img/user.png' %}" height="100" width="100">
+      {% endif %}
+    </div>
+    <div>
+      <a class="no-dec" href ="/{{ scholar.first_name }}{{ scholar.last_name }}">
+        <h4>{{ scholar.get_full_name }}</h4>
+      </a>
+      <p>
+        {{ scholar.class_year }}
+        {% if scholar.phone_number %}
+          , {{ scholar.phone_number }}
+        {% endif %}
+        {% if scholar.email %}
+        , {{ scholar.email }}
+        {% endif %}
+      </p>
+    </div>
+    </div>
+  {% empty %}
+    <h3>No scholars found.</h3>
+  {% endfor %}
 </div>
 {% endblock %}

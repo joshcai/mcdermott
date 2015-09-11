@@ -5,12 +5,12 @@
   <head>
     <title>McDermott Network</title>
 
-    <!-- Bootstrap links -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-    <!-- jQuery -->
+    <!-- jQuery - must come before Bootstrap JS file -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+    <!-- Bootstrap links -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
@@ -39,9 +39,11 @@
               <li><a href="{% url 'logout' %}">Logout</a></li>
             {% endif %}
           </ul>
-          <form method="get" action="{% url 'search' %}" class="navbar-form navbar-right">
-            <input type="text" name="q" id="searchbox" class="form-control" placeholder="Search...">
-          </form>
+          {% if user.is_authenticated %}
+            <form method="get" action="{% url 'search' %}" class="navbar-form navbar-right">
+              <input type="text" name="q" id="searchbox" class="form-control" placeholder="Search..." value="{{ request.GET.q }}">
+            </form>
+          {% endif %}
         </div>
       </div>
     </nav>

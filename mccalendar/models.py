@@ -1,12 +1,15 @@
 from django.db import models
 from core.models import McUser
+from django import forms
+
+from functools import partial
+DateInput = partial(forms.DateInput, {'class': 'datepicker'})
 
 class McEvent(models.Model):
-    mcevent_next_id = 1
     """Calendar event model
     """
     #needed for Google Calendar export
-    owner = models.OneToOneField(McUser)
+    owner = models.ForeignKey(McUser)
     subject = models.CharField(max_length=200, blank=True)
     start_date = models.DateField(null=True, blank=True)
     start_time = models.TimeField()

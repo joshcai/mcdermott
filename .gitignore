@@ -6,3 +6,4 @@ media/
 mcdermott/config.py
 run/
 static/
+*.xlsx

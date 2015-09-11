@@ -14,7 +14,7 @@ import json
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 # Config options for production vs development
-try: 
+try:
   import config
 except ImportError:
   import example_config as config
@@ -72,20 +72,6 @@ ROOT_URLCONF = 'mcdermott.urls'
 
 TEMPLATES = [
   {
-    'BACKEND': 'django.template.backends.jinja2.Jinja2',
-    'DIRS': [],
-    'APP_DIRS': True,
-    'OPTIONS': {
-      'environment': 'mcdermott.jinja2_config.environment',
-      # 'context_processors': [
-      #   'django.template.context_processors.debug',
-      #   'django.template.context_processors.request',
-      #   'django.contrib.auth.context_processors.auth',
-      #   'django.contrib.messages.context_processors.messages',
-      # ],
-    },
-  },
-  {
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
     'DIRS': [],
     'APP_DIRS': True,
@@ -97,6 +83,7 @@ TEMPLATES = [
         'django.template.context_processors.media',
         'django.template.context_processors.static',
         'django.template.context_processors.tz',
+        'django.core.context_processors.request',
         'django.contrib.messages.context_processors.messages',
       ],
     },
@@ -158,7 +145,7 @@ LOGIN_REDIRECT_URL = '/'
 # Default login url
 LOGIN_URL = '/login'
 
-# Django Rest Framework configuration 
+# Django Rest Framework configuration
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.

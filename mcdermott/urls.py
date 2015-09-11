@@ -11,7 +11,7 @@ urlpatterns = [
   url(r'^admin/', include(admin.site.urls)),
   # core_urls has to be at the end, because the last match in core_urls
   # will match anything
-  url(r'^mccalendar/', include(mccalendar_urls)),
+  url(r'^mccalendar/', include(mccalendar_urls, namespace='mccalendar')),
   url(r'^', include(core_urls)),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

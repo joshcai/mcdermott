@@ -1,8 +1,2 @@
-<html>
-  <head>
-    <title>Event Detail</title>
-  </head>
-  <body>
-    You are looking at the details of event {{ event.id }}.
-  </body>
-</html>
+You are looking at the details of event {{ event.id }}.
+<a href="{% url 'mccalendar:delete_event' event.id %}">Delete event</a>
