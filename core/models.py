@@ -43,7 +43,7 @@ class McUser(models.Model):
   gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False)
 
   # Birthday
-  birthday = models.CharField(max_length=200,blank=True) # models.DateField()
+  birthday = models.DateField(null=True, blank=True)
 
   # e.g. 2012
   YEARS = (
