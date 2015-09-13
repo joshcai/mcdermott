@@ -21,42 +21,55 @@ def edit_info(request):
     user_info = McUser.objects.get(user_id=request.user.id)
   except McUser.DoesNotExist:
     user_info = McUser(user_id=request.user.id)
+  if request.method == 'POST':
+    form = McUserForm(request.POST, request.FILES, instance=user_info, prefix='base')
+    if (form.is_valid()):
+      form.save()
+      return redirect('edit_info')
+  else:
+    form = McUserForm(instance=user_info, prefix='base')
+  context = {
+      'form': form,
+      }
+  return render(request, 'core/edit_info.html', context)
+
+@login_required
+def edit_edu(request):
+  try:
+    user_info = McUser.objects.get(user_id=request.user.id)
+  except McUser.DoesNotExist:
+    user_info = McUser(user_id=request.user.id)
   try:
     degree = Degree.objects.get(user_id=user_info.id)
   except Degree.DoesNotExist:
     degree = Degree(user_id=user_info.id)
-  MajorFormSet = inlineformset_factory(Degree, Major, 
+  MajorFormSet = inlineformset_factory(Degree, Major,
                                        fields=('utd_major',),
                                        max_num=2, extra=2)
   MinorFormSet = inlineformset_factory(Degree, Minor,
                                        fields=('utd_minor',),
                                        max_num=2, extra=2)
   if request.method == 'POST':
-    form = McUserForm(request.POST, request.FILES, instance=user_info, prefix='base')
     degree_form = DegreeForm(request.POST, instance=degree, prefix='degree')
     major_formset = MajorFormSet(request.POST, instance=degree)
     minor_formset = MinorFormSet(request.POST, instance=degree)
-    if (form.is_valid() and 
-        degree_form.is_valid() and 
+    if (degree_form.is_valid() and
         major_formset.is_valid() and
         minor_formset.is_valid()):
-      form.save()
       degree_form.save()
       major_formset.save()
       minor_formset.save()
-      return redirect('own_profile')
+      return redirect('edit_edu')
   else:
-    form = McUserForm(instance=user_info, prefix='base')
     degree_form = DegreeForm(instance=degree, prefix='degree')
     major_formset = MajorFormSet(instance=degree)
     minor_formset = MinorFormSet(instance=degree)
   context = {
-      'form': form,
       'degree_form': degree_form,
       'major_formset': major_formset,
       'minor_formset': minor_formset
       }
-  return render(request, 'core/edit_info.html', context)
+  return render(request, 'core/edit_edu.html', context)
 
 @login_required
 def scholars(request):
@@ -100,8 +113,8 @@ def profile(request, name):
     profile = McUser.objects.get(norm_name=name)
   except McUser.DoesNotExist:
     raise Http404('Page does not exist')
-  # 'user' is already passed in as default (the logged in user), 
-  # so use 'profile' as alias 
+  # 'user' is already passed in as default (the logged in user),
+  # so use 'profile' as alias
   context = {
       'profile': profile,
       'edit': profile == request.user.mcuser

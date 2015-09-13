@@ -35,10 +35,10 @@ export ALLOWED_HOSTS='localhost, *.joshcai.com'
 mkdir -p /home/ubuntu/logs/
 touch /home/ubuntu/logs/mcdermott_gunicorn_supervisor.log
 
-# create socket file
-mkdir -p /home/ubuntu/mcdermott/run/gunicorn.sock
+# create directory for socket file
+mkdir -p /home/ubuntu/mcdermott/run
 
-# create symbolic links 
+# create symbolic links
 sudo ln -s /home/ubuntu/mcdermott/install/mcdermott.conf /etc/nginx/sites-enabled/
 sudo ln -s /home/ubuntu/mcdermott/install/supervisor_mcd.conf /etc/supervisor/conf.d/
 

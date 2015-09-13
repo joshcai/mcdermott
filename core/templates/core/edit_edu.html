@@ -1,0 +1,86 @@
+{% extends "large_container.html" %}
+
+{% load widget_tweaks %}
+
+{% block inner_content %}
+
+<div class="">
+  <ul class="nav nav-tabs nav-justified">
+    <li role="presentation"><a href="{% url 'edit_info' %}">Profile</a></li>
+    <li role="presentation" class="active"><a>Education</a></li>
+    <li role="presentation"><a href="#">Experience</a></li>
+    <li role="presentation"><a href="#">Study Abroad</a></li>
+  </ul>
+  <br>
+  <form method="post" action="{% url 'edit_edu' %}" class="form-horizontal">
+  {% csrf_token %}
+
+    <!-- Manual HTML for Degree form -->
+    {% if degree_form.errors %}
+      There were errors!
+        {% for field in degree_form %}
+          {% for error in field.errors %}
+            <p> {{ error }} {{ field.label_tag }} </p>
+          {% endfor %}
+        {% endfor %}
+    {% endif %}
+    <div class="form-group col-md-6">
+      <label for="id_school" class="form-label">
+        School
+      </label>
+      {{ degree_form.school|add_class:"form-control" }}
+      <span class="error">{{ degree_form.school.errors }}</span>
+    </div>
+    <div class="form-group col-md-6">
+      <label for="id_degree_type" class="form-label">
+        Degree
+      </label>
+      {{ degree_form.degree_type|add_class:"form-control" }}
+      <span class="error">{{ degree_form.degree_type.errors }}</span>
+    </div>
+    <!--TODO: Replace with Date picker -->
+    <div class="form-group col-md-6">
+      <label for="id_start_time" class="form-label">
+        Start Date
+      </label>
+      {{ degree_form.start_time|add_class:"form-control" }}
+      <span class="error">{{ degree_form.start_time.errors }}</span>
+    </div>
+    <!--TODO: Replace with Date picker -->
+    <div class="form-group col-md-6">
+      <label for="id_end_time" class="form-label">
+        End Date
+      </label>
+      {{ degree_form.end_time|add_class:"form-control" }}
+      <span class="error">{{ degree_form.end_time.errors }}</span>
+    </div>
+    {{ major_formset.management_form }}
+    {% for form in major_formset %}
+      {{ form.id }}
+      <div class="form-group col-md-6">
+        <label for="id_major_set-0-utd_major" class="form-label">
+          Major
+        </label>
+        {{ form.utd_major|add_class:"form-control" }}
+        <span class="error">{{ form.utd_major.errors }}</span>
+      </div>
+    {% endfor %}
+    {{ minor_formset.management_form }}
+    {% for form in minor_formset %}
+      {{ form.id }}
+      <div class="form-group col-md-6">
+        <label for="id_minor_set-0-utd_major" class="form-label">
+          Minor
+        </label>
+        {{ form.utd_minor|add_class:"form-control" }}
+        <span class="error">{{ form.utd_minor.errors }}</span>
+      </div>
+    {% endfor %}
+    <br>
+    <div class="col-md-12 text-center">
+      <input class="btn btn-default" type="submit" value="SAVE" />
+    </div>
+    <br>
+  </form>
+</div>
+{% endblock %}
