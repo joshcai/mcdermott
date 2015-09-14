@@ -1,13 +1,17 @@
 {% load staticfiles %}
 {% load thumbnail %}
+<div class="row">
+  <div class="col-md-6">
+  {% if value %}
+    {% thumbnail value "100x100" crop="center" as im %}
+      <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+    {% endthumbnail %}
+  {% else %}
+    <img src="{% static 'img/user.png' %}" height="100" width="100">
+  {% endif %}
 
-{% if value %}
-  {% thumbnail value "100x100" crop="center" as im %}
-    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-  {% endthumbnail %}
-{% else %}
-  <img src="{% static 'img/user.png' %}" height="100" width="100">
-{% endif %}
-
-Change:
-<input type="{{ type }}" name="{{ name }}"{% if required %} required{% endif %}{% include "floppyforms/attrs.html" %}>
+</div>
+  <div class="col-md-6">
+  <input type="{{ type }}" name="{{ name }}"{% if required %} required{% endif %}{% include "floppyforms/attrs.html" %}>
+</div>
+</div>

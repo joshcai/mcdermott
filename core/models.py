@@ -95,16 +95,11 @@ class Degree(models.Model):
   degree_type = models.CharField(max_length=200, blank=True)
   start_time = models.DateField(null=True, blank=True)
   end_time = models.DateField(null=True, blank=True)
+  major1 = models.CharField(max_length=200, choices=MAJOR_CHOICES, blank=True)
+  major2 = models.CharField(max_length=200, choices=MAJOR_CHOICES, blank=True)
+  minor1 = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
+  minor2 = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
 
-class Major(models.Model):
-  degree = models.ForeignKey(Degree, related_name='majors')
-  utd_major = models.CharField(max_length=200, choices=MAJOR_CHOICES, blank=True)
-  other_major = models.CharField(max_length=200, blank=True)
-
-class Minor(models.Model):
-  degree = models.ForeignKey(Degree, related_name='minors')
-  utd_minor = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
-  other_minor = models.CharField(max_length=200, blank=True)
 
 class Experience(models.Model):
   user = models.ForeignKey(McUser, related_name='experiences')
@@ -117,8 +112,6 @@ class Experience(models.Model):
 
 watson.register(McUser)
 watson.register(Degree)
-watson.register(Major)
-watson.register(Minor)
 watson.register(Experience)
 # at bottom for circular dependency
 import signals

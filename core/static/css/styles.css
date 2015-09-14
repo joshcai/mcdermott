@@ -47,6 +47,15 @@ a.no-dec {
   margin: 0px auto;
 }
 
+.margin-sm {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.margin-height-md {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
 /* rules for profile page, mostly */
 .profile-name h3 {
     line-height: 1;

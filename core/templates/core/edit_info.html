@@ -4,7 +4,7 @@
 
 {% block inner_content %}
 
-<div class="">
+<div class="row">
   <ul class="nav nav-tabs nav-justified">
     <li role="presentation" class="active"><a>Profile</a></li>
     <li role="presentation"><a href="{% url 'edit_edu' %}">Education</a></li>
@@ -28,76 +28,92 @@
     {% endfor %}
 
     <!-- Manual HTML for McUser form -->
-    <div class="form-group col-md-6">
-      <label for="id_{{ form.first_name.name }}" class="form-label">
-        First name
-      </label>
-      {{ form.first_name|add_class:"form-control" }}
-      <span class="error">{{ form.first_name.errors }}</span>
+    <div class="col-md-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.first_name.name }}" class="form-label">
+          First name
+        </label>
+        {{ form.first_name|add_class:"form-control" }}
+        <span class="error">{{ form.first_name.errors }}</span>
+      </div>
     </div>
-    <div class="form-group col-md-6">
-      <label for="id_{{ form.last_name.name }}" class="form-label">
-        Last name
-      </label>
-      {{ form.last_name|add_class:"form-control" }}
-      <span class="error">{{ form.last_name.errors }}</span>
+    <div class="col-md-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.last_name.name }}" class="form-label">
+          Last name
+        </label>
+        {{ form.last_name|add_class:"form-control" }}
+        <span class="error">{{ form.last_name.errors }}</span>
+      </div>
     </div>
-    <div class="form-group col-md-6">
-      <label for="id_{{ form.birthday.name }}" class="form-label">
-        Birthday
-      </label>
-      {{ form.birthday|add_class:"form-control" }}
-      <span class="error">{{ form.birthday.errors }}</span>
+    <div class="col-md-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.birthday.name }}" class="form-label">
+          Birthday
+        </label>
+        {{ form.birthday|add_class:"form-control" }}
+        <span class="error">{{ form.birthday.errors }}</span>
+      </div>
     </div>
-    <div class="form-group col-md-6">
-      <label for="id_{{ form.class_year.name }}" class="form-label">
-        Class year
-      </label>
-      {{ form.class_year|add_class:"form-control" }}
-      <span class="error">{{ form.class_year.errors }}</span>
+    <div class="col-md-3">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.class_year.name }}" class="form-label">
+          Class year
+        </label>
+        {{ form.class_year|add_class:"form-control" }}
+        <span class="error">{{ form.class_year.errors }}</span>
+      </div>
     </div>
-    <div class="form-group col-md-6">
-      <label for="id_{{ form.utd_id.name }}" class="form-label">
-        UTD ID
-      </label>
-      {{ form.utd_id|add_class:"form-control" }}
-      <span class="error">{{ form.utd_id.errors }}</span>
+    <div class="col-md-3">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.gender.name }}" class="form-label">
+          Gender
+        </label>
+        {{ form.gender|add_class:"form-control" }}
+        <span class="error">{{ form.gender.errors }}</span>
+      </div>
     </div>
-    <div class="form-group col-md-6">
-      <label for="id_{{ form.gender.name }}" class="form-label">
-        Gender
-      </label>
-      {{ form.gender|add_class:"form-control" }}
-      <span class="error">{{ form.gender.errors }}</span>
+    <div class="col-md-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.utd_id.name }}" class="form-label">
+          UTD ID
+        </label>
+        {{ form.utd_id|add_class:"form-control" }}
+        <span class="error">{{ form.utd_id.errors }}</span>
+      </div>
     </div>
-    <div class="form-group col-md-6">
-      <label for="id_{{ form.hometown.name }}" class="form-label">
-        Hometown
-      </label>
-      {{ form.hometown|add_class:"form-control" }}
-      <span class="error">{{ form.hometown.errors }}</span>
+    <div class="col-md-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.hometown.name }}" class="form-label">
+          Hometown
+        </label>
+        {{ form.hometown|add_class:"form-control" }}
+        <span class="error">{{ form.hometown.errors }}</span>
+      </div>
     </div>
-    <div class="form-group col-md-6">
-      <label for="id_{{ form.high_school.name }}" class="form-label">
-        High School
-      </label>
-      {{ form.high_school|add_class:"form-control" }}
-      <span class="error">{{ form.high_school.errors }}</span>
+    <div class="col-md-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.high_school.name }}" class="form-label">
+          High School
+        </label>
+        {{ form.high_school|add_class:"form-control" }}
+        <span class="error">{{ form.high_school.errors }}</span>
+      </div>
     </div>
-    <div class="form-group col-md-6">
-      <label for="id_{{ form.phone_number.name }}" class="form-label">
-        Phone Number
-      </label>
-      {{ form.phone_number|add_class:"form-control" }}
-      <span class="error">{{ form.phone_number.errors }}</span>
+    <div class="col-md-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.phone_number.name }}" class="form-label">
+          Phone Number
+        </label>
+        {{ form.phone_number|add_class:"form-control" }}
+        <span class="error">{{ form.phone_number.errors }}</span>
+      </div>
     </div>
-    <br>
     <!--TODO: Replace this with something else later -->
-    <div class="col-md-12 text-center">
+    <div class="col-md-4 col-md-offset-4 text-center margin-height-md">
       {{ form.pic }}
       <span class="error">{{ form.pic.errors }}</span>
     </div>
-    <br>
     <div class="col-md-12 text-center">
       <input class="btn btn-default" type="submit" value="SAVE" />
     </div>

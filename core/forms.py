@@ -37,5 +37,9 @@ class DegreeForm(forms.ModelForm):
       'school',
       'degree_type',
       'start_time',
-      'end_time'
+      'end_time',
+      'major1',
+      'major2',
+      'minor1',
+      'minor2'
     ]

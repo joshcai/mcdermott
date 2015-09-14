@@ -7,7 +7,7 @@ from rest_framework import viewsets
 import watson
 
 from forms import McUserForm, DegreeForm
-from models import McUser, Degree, Major, Minor, Experience
+from models import McUser, Degree, Experience
 from serializers import UserSerializer
 from util import normalize_name
 
@@ -43,31 +43,15 @@ def edit_edu(request):
     degree = Degree.objects.get(user_id=user_info.id)
   except Degree.DoesNotExist:
     degree = Degree(user_id=user_info.id)
-  MajorFormSet = inlineformset_factory(Degree, Major,
-                                       fields=('utd_major',),
-                                       max_num=2, extra=2)
-  MinorFormSet = inlineformset_factory(Degree, Minor,
-                                       fields=('utd_minor',),
-                                       max_num=2, extra=2)
   if request.method == 'POST':
     degree_form = DegreeForm(request.POST, instance=degree, prefix='degree')
-    major_formset = MajorFormSet(request.POST, instance=degree)
-    minor_formset = MinorFormSet(request.POST, instance=degree)
-    if (degree_form.is_valid() and
-        major_formset.is_valid() and
-        minor_formset.is_valid()):
+    if (degree_form.is_valid()):
       degree_form.save()
-      major_formset.save()
-      minor_formset.save()
       return redirect('edit_edu')
   else:
     degree_form = DegreeForm(instance=degree, prefix='degree')
-    major_formset = MajorFormSet(instance=degree)
-    minor_formset = MinorFormSet(instance=degree)
   context = {
       'degree_form': degree_form,
-      'major_formset': major_formset,
-      'minor_formset': minor_formset
       }
   return render(request, 'core/edit_edu.html', context)
 
