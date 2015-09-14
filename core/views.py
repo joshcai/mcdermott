@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.forms.models import inlineformset_factory
+from django.forms.models import modelformset_factory
 from django.http import Http404
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
@@ -10,6 +10,8 @@ from forms import McUserForm, DegreeForm
 from models import McUser, Degree, Experience
 from serializers import UserSerializer
 from util import normalize_name
+
+DegreeFormSet = modelformset_factory(Degree, form=DegreeForm, extra=1, can_delete=True)
 
 # Create your views here.
 def index(request):
@@ -39,19 +41,17 @@ def edit_edu(request):
     user_info = McUser.objects.get(user_id=request.user.id)
   except McUser.DoesNotExist:
     user_info = McUser(user_id=request.user.id)
-  try:
-    degree = Degree.objects.get(user_id=user_info.id)
-  except Degree.DoesNotExist:
-    degree = Degree(user_id=user_info.id)
+  degrees = Degree.objects.filter(user_id=user_info.id)
   if request.method == 'POST':
-    degree_form = DegreeForm(request.POST, instance=degree, prefix='degree')
-    if (degree_form.is_valid()):
-      degree_form.save()
+    degrees_formset = DegreeFormSet(request.POST, queryset=degrees, initial=[{'user': user_info.id}])
+    print dir(degrees_formset)
+    if (degrees_formset.is_valid()):
+      degrees_formset.save()
       return redirect('edit_edu')
   else:
-    degree_form = DegreeForm(instance=degree, prefix='degree')
+    degrees_formset = DegreeFormSet(queryset=degrees, initial=[{'user': user_info.id}])
   context = {
-      'degree_form': degree_form,
+      'degrees_formset': degrees_formset,
       }
   return render(request, 'core/edit_edu.html', context)
 
@@ -81,9 +81,6 @@ def search(request):
       elif isinstance(result.object, Degree) or isinstance(result.object, Experience):
         if result.object.user not in scholars:
           scholars.append(result.object.user)
-      elif isinstance(result.object, Major) or isinstance(result.object, Minor):
-        if result.object.degree.user not in scholars:
-          scholars.append(result.object.degree.user)
   context = {
     'scholars': scholars
     }

@@ -34,6 +34,7 @@ class DegreeForm(forms.ModelForm):
   class Meta:
     model = Degree
     fields = [
+      'user',
       'school',
       'degree_type',
       'start_time',
@@ -43,3 +44,6 @@ class DegreeForm(forms.ModelForm):
       'minor1',
       'minor2'
     ]
+    widgets = {
+      'user': forms.HiddenInput()
+    }

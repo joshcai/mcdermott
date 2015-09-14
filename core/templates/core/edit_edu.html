@@ -13,91 +13,99 @@
   </ul>
   <br>
   <form method="post" action="{% url 'edit_edu' %}" class="form-horizontal">
-  {% csrf_token %}
+    {% csrf_token %}
 
-    <!-- Manual HTML for Degree form -->
-    {% if degree_form.errors %}
-      There were errors!
-        {% for field in degree_form %}
-          {% for error in field.errors %}
-            <p> {{ error }} {{ field.label_tag }} </p>
+    {{ degrees_formset.management_form }}
+
+    {% for degree_form in degrees_formset %}
+      {% if degree_form.errors %}
+        There were errors!
+          {% for field in degree_form %}
+            {% for error in field.errors %}
+              <p> {{ error }} {{ field.label_tag }} </p>
+            {% endfor %}
           {% endfor %}
-        {% endfor %}
-    {% endif %}
-    <div class="col-md-6">
-      <div class="form-group margin-sm">
-        <label for="id_school" class="form-label">
-          School
-        </label>
-        {{ degree_form.school|add_class:"form-control" }}
-        <span class="error">{{ degree_form.school.errors }}</span>
+      {% endif %}
+      {% if forloop.last %}
+        <h4>Add another degree:</h4>
+      {% endif %}
+      {{ degree_form.id }}
+      {{ degree_form.user }}
+      <div class="col-md-12 {% if not forloop.first %}margin-top-lg{% endif %}">
+        <div class="form-group margin-sm">
+          <label for="id_school" class="form-label">
+            School
+          </label>
+          {{ degree_form.school|add_class:"form-control" }}
+          <span class="error">{{ degree_form.school.errors }}</span>
+        </div>
       </div>
-    </div>
-    <div class="col-md-6">
-      <div class="form-group margin-sm">
-        <label for="id_degree_type" class="form-label">
-          Degree
-        </label>
-        {{ degree_form.degree_type|add_class:"form-control" }}
-        <span class="error">{{ degree_form.degree_type.errors }}</span>
+      <div class="col-md-6">
+        <div class="form-group margin-sm">
+          <label for="id_degree_type" class="form-label">
+            Degree
+          </label>
+          {{ degree_form.degree_type|add_class:"form-control" }}
+          <span class="error">{{ degree_form.degree_type.errors }}</span>
+        </div>
       </div>
-    </div>
-    <!--TODO: Replace with Date picker -->
-    <div class="col-md-6">
-      <div class="form-group margin-sm">
-        <label for="id_start_time" class="form-label">
-          Start Date
-        </label>
-        {{ degree_form.start_time|add_class:"form-control" }}
-        <span class="error">{{ degree_form.start_time.errors }}</span>
+      <!--TODO: Replace with Date picker -->
+      <div class="col-md-3">
+        <div class="form-group margin-sm">
+          <label for="id_start_time" class="form-label">
+            Start Date
+          </label>
+          {{ degree_form.start_time|add_class:"form-control" }}
+          <span class="error">{{ degree_form.start_time.errors }}</span>
+        </div>
       </div>
-    </div>
-    <!--TODO: Replace with Date picker -->
-    <div class="col-md-6">
-      <div class="form-group margin-sm">
-        <label for="id_end_time" class="form-label">
-          End Date
-        </label>
-        {{ degree_form.end_time|add_class:"form-control" }}
-        <span class="error">{{ degree_form.end_time.errors }}</span>
+      <!--TODO: Replace with Date picker -->
+      <div class="col-md-3">
+        <div class="form-group margin-sm">
+          <label for="id_end_time" class="form-label">
+            End Date
+          </label>
+          {{ degree_form.end_time|add_class:"form-control" }}
+          <span class="error">{{ degree_form.end_time.errors }}</span>
+        </div>
       </div>
-    </div>
-    <div class="col-md-6">
-      <div class="form-group margin-sm">
-        <label for="id_major1" class="form-label">
-          Primary Major
-        </label>
-        {{ degree_form.major1|add_class:"form-control" }}
-        <span class="error">{{ degree_form.major1.errors }}</span>
+      <div class="col-md-6">
+        <div class="form-group margin-sm">
+          <label for="id_major1" class="form-label">
+            Primary Major
+          </label>
+          {{ degree_form.major1|add_class:"form-control" }}
+          <span class="error">{{ degree_form.major1.errors }}</span>
+        </div>
       </div>
-    </div>
-    <div class="col-md-6">
-      <div class="form-group margin-sm">
-        <label for="id_major2" class="form-label">
-          Major
-        </label>
-        {{ degree_form.major2|add_class:"form-control" }}
-        <span class="error">{{ degree_form.major2.errors }}</span>
+      <div class="col-md-6">
+        <div class="form-group margin-sm">
+          <label for="id_major2" class="form-label">
+            Major
+          </label>
+          {{ degree_form.major2|add_class:"form-control" }}
+          <span class="error">{{ degree_form.major2.errors }}</span>
+        </div>
       </div>
-    </div>
-    <div class="col-md-6">
-      <div class="form-group margin-sm">
-        <label for="id_minor1" class="form-label">
-          Minor
-        </label>
-        {{ degree_form.minor1|add_class:"form-control" }}
-        <span class="error">{{ degree_form.minor1.errors }}</span>
+      <div class="col-md-6">
+        <div class="form-group margin-sm">
+          <label for="id_minor1" class="form-label">
+            Minor
+          </label>
+          {{ degree_form.minor1|add_class:"form-control" }}
+          <span class="error">{{ degree_form.minor1.errors }}</span>
+        </div>
       </div>
-    </div>
-    <div class="col-md-6">
-      <div class="form-group margin-sm">
-        <label for="id_minor2" class="form-label">
-          Minor
-        </label>
-        {{ degree_form.minor2|add_class:"form-control" }}
-        <span class="error">{{ degree_form.minor2.errors }}</span>
+      <div class="col-md-6">
+        <div class="form-group margin-sm">
+          <label for="id_minor2" class="form-label">
+            Minor
+          </label>
+          {{ degree_form.minor2|add_class:"form-control" }}
+          <span class="error">{{ degree_form.minor2.errors }}</span>
+        </div>
       </div>
-    </div>
+    {% endfor %}
     <br>
     <div class="col-md-12 text-center">
       <input class="btn btn-default" type="submit" value="SAVE" />
