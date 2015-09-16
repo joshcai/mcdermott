@@ -170,22 +170,30 @@ footer {
   font-weight: bold;
 }
 
-/* Calendar code */
+/* Calendar stuff (awful b/c written by Andrew) */
 .empty {
   width: 100px;
   height: 80px;
   text-align: center;
 }
 
+.month-header {
+  text-align: center;
+}
+
 .month {
   height: 500px;
   width: 70%;
-  background-color: red;
+}
+
+.month-table {
+/*  border-collapse:separate;*/
+/*  border-spacing:10px 10px;*/
 }
 
 .day {
-  width: 100px;
-  height: 80px;
+  width: 120px;
+  height: 100px;
   border: 1px solid black;
 }
 
@@ -194,8 +202,8 @@ footer {
 }
 
 .current {
-  width: 100px;
-  height: 80px;
+  width: 120px;
+  height: 100px;
   border: 1px solid black;
 }
 
@@ -210,7 +218,7 @@ footer {
   text-align: left;
   background-color: #f0f0f0;
   position: relative;
-  overflow-y: auto;
+/*  overflow-y: auto;*/
 }
 
 .day-span {

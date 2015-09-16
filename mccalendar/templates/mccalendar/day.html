@@ -2,7 +2,7 @@
 {% block content %}
 
 <h4 class="center">{{ month_name }} {{ day }}, {{ year }}</h4>
-<a href="{% url 'mccalendar:create_event' %}">Create event</a>
+<a href="{% url 'mccalendar:edit_event' %}">Create event</a>
 
 {% for event in events %}
   <p><a href={% url 'mccalendar:event_detail' event.id %}>{{ event.subject }}</a> - {{ event.description }}</p>

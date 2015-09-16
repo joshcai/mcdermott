@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-<h4 class="center">{{ month_name }}, {{ year }}</h4>
-<a href="{% url 'mccalendar:month' year month 'prev' %}">Prev month</a>
-<a href="">Current month</a>
-<a href="{% url 'mccalendar:month' year month 'next' %}">Next month</a>
+<div class="month-header">
+  <h4 class="center">{{ month_name }}, {{ year }}</h4>
+  <a href="{% url 'mccalendar:month' year month 'prev' %}">Prev month</a>
+  <a href="">Current month</a>
+  <a href="{% url 'mccalendar:month' year month 'next' %}">Next month</a>
+</div>
 <div class="month center">
-  <table class="center">
+  <table class="month-table center">
     <tr>
       <td class="empty">Sun</td>
       <td class="empty">Mon</td>

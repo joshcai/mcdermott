@@ -22,32 +22,17 @@ def index(request):
   context = {
     'events': events,
   }
-  return redirect('/mccalendar/%s/%s/' % (cur_year, cur_month))
+  return redirect('/calendar/%s/%s/' % (cur_year, cur_month))
 
-"""
 @login_required
-def year(request, year=None):
-  cur_year, cur_month = time.localtime()[:2]
-
-  #create list of months
-  month_list = []
-  for nm, month in enumerate(months):
-    event = current = False
-    events = McEvent.objects.filter(start_date__year=year, start_date__month=n+1)
-
-    if events:
-      event = True
-    if year == cur_year and nm+1 == cur_month:  #enumerate starts at 0, but months at 1
-      current = True  #to highlight the current month?
-    month_list.append(dict(n=n+1, name=month, entry=entry, current=current))
-
+def event_list(request):
+  #only want events that occur this month; will change later
+  cur_year, cur_month, cur_day = time.localtime()[:3]
+  events = McEvents.objects.filter(start_date__year==cur_year, start_date__month==cur_month)
   context = {
-    'n':n,
-    'months':month_list,
-    'year':year,
+    'events': events,
   }
-  return render(request, 'mccalendar/year.html', context)
-"""
+  return render(request, 'mccalendar/event_list.html', context)
 
 @login_required
 def month(request, year=None, month=None, change=None):
@@ -113,7 +98,7 @@ def day(request, year=None, month=None, day=None):
   return render(request, 'mccalendar/day.html', context)
 
 @login_required
-def create_event(request):
+def edit_event(request):
   if request.method == 'POST':
     event = McEvent(owner=request.user.mcuser)
     form = McEventForm(request.POST, instance=event)

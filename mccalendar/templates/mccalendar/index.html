@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 This is the index of the McCalendar app.
-<a href='create_event'>Create event</a>
+<a href='edit_event'>Create event</a>
 <ul>
 {% for event in events %}
   <li><a href='event/{{ event.id }}'>{{ event.subject }}</a></li>
