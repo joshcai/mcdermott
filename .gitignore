@@ -5,5 +5,5 @@ db.sqlite3
 media/
 mcdermott/config.py
 run/
-static/
+/static/
 *.xlsx

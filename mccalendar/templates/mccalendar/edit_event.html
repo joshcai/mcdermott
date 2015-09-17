@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<form method="post" action="{% url 'calendar:edit_event' %}" class="form-horizontal">
+<form method="post" action="{% url 'mccalendar:edit_event' %}" class="form-horizontal">
 {% csrf_token %}
 <ul>
 {% for error in form.errors %}

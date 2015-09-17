@@ -28,7 +28,7 @@ def index(request):
 def event_list(request):
   #only want events that occur this month; will change later
   cur_year, cur_month, cur_day = time.localtime()[:3]
-  events = McEvents.objects.filter(start_date__year==cur_year, start_date__month==cur_month)
+  events = McEvent.objects.filter(start_date__year=cur_year, start_date__month=cur_month)
   context = {
     'events': events,
   }
@@ -112,7 +112,7 @@ def edit_event(request):
   context = {
     'form':form,
   }
-  return render(request, 'mccalendar/create_event.html', context)
+  return render(request, 'mccalendar/edit_event.html', context)
 
 @login_required
 def event_detail(request, event_id):

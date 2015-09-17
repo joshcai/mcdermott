@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load widget_tweaks %}
+{% load staticfiles %}
 
 {% block content %}
 
@@ -9,7 +10,7 @@
 <div class="text-center">
   <br>
   <br>
-  <img src="http://placehold.it/175x175">
+  <img src="{% static 'img/logo.png' %}" width="500">
   <br>
   <br>
   <form method="get" action="{% url 'search' %}">
