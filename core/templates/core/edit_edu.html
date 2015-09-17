@@ -8,7 +8,7 @@
   <ul class="nav nav-tabs nav-justified">
     <li role="presentation"><a href="{% url 'edit_info' %}">Profile</a></li>
     <li role="presentation" class="active"><a>Education</a></li>
-    <li role="presentation"><a href="#">Experience</a></li>
+    <li role="presentation"><a href="{% url 'edit_exp' %}">Experience</a></li>
     <li role="presentation"><a href="#">Study Abroad</a></li>
   </ul>
   <br>
@@ -27,7 +27,9 @@
           {% endfor %}
       {% endif %}
       {% if forloop.last %}
-        <h4>Add another degree:</h4>
+        <div class="col-md-12">
+          <h4>Add another degree:</h4>
+        </div>
       {% endif %}
       {{ degree_form.id }}
       {{ degree_form.user }}

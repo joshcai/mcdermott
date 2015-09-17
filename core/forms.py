@@ -1,6 +1,6 @@
 import floppyforms as forms
 
-from models import McUser, Degree
+from models import McUser, Degree, Experience
 
 class ImageThumbnailInput(forms.ClearableFileInput):
   template_name = 'floppyforms/image_thumbnail.html'
@@ -46,4 +46,22 @@ class DegreeForm(forms.ModelForm):
     ]
     widgets = {
       'user': forms.HiddenInput()
+    }
+
+class ExperienceForm(forms.ModelForm):
+  class Meta:
+    model = Experience
+    fields = [
+      'user',
+      'exp_type',
+      'title',
+      'organization',
+      'description',
+      'location',
+      'start_time',
+      'end_time'
+    ]
+    widgets = {
+      'user': forms.HiddenInput(),
+      'description': forms.Textarea(attrs={'rows':4, 'cols':15})
     }

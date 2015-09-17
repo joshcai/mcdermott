@@ -100,10 +100,14 @@ class Degree(models.Model):
   minor1 = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
   minor2 = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
 
+EXP_CHOICES = (('', ''), ('Research', 'Research'), ('Internship', 'Internship'),
+               ('Volunteer', 'Volunteer'), ('Clubs / Leadership', 'Clubs / Leadership'),
+               ('Athletic', 'Athletic'), ('Other', 'Other'))
 
 class Experience(models.Model):
   user = models.ForeignKey(McUser, related_name='experiences')
   title = models.CharField(max_length=200, blank=True)
+  exp_type = models.CharField(max_length=200, choices=EXP_CHOICES, blank=True)
   organization = models.CharField(max_length=200, blank=True)
   description = models.TextField(blank=True)
   location = models.CharField(max_length=200, blank=True)

@@ -6,12 +6,13 @@ from django.shortcuts import render, redirect
 from rest_framework import viewsets
 import watson
 
-from forms import McUserForm, DegreeForm
+from forms import McUserForm, DegreeForm, ExperienceForm
 from models import McUser, Degree, Experience
 from serializers import UserSerializer
 from util import normalize_name
 
 DegreeFormSet = modelformset_factory(Degree, form=DegreeForm, extra=1, can_delete=True)
+ExperienceFormSet = modelformset_factory(Experience, form=ExperienceForm, extra=1, can_delete=True)
 
 # Create your views here.
 def index(request):
@@ -44,7 +45,6 @@ def edit_edu(request):
   degrees = Degree.objects.filter(user_id=user_info.id)
   if request.method == 'POST':
     degrees_formset = DegreeFormSet(request.POST, queryset=degrees, initial=[{'user': user_info.id}])
-    print dir(degrees_formset)
     if (degrees_formset.is_valid()):
       degrees_formset.save()
       return redirect('edit_edu')
@@ -54,6 +54,25 @@ def edit_edu(request):
       'degrees_formset': degrees_formset,
       }
   return render(request, 'core/edit_edu.html', context)
+
+@login_required
+def edit_exp(request):
+  try:
+    user_info = McUser.objects.get(user_id=request.user.id)
+  except McUser.DoesNotExist:
+    user_info = McUser(user_id=request.user.id)
+  experiences = Experience.objects.filter(user_id=user_info.id)
+  if request.method == 'POST':
+    experiences_formset = ExperienceFormSet(request.POST, queryset=experiences, initial=[{'user': user_info.id}])
+    if (experiences_formset.is_valid()):
+      experiences_formset.save()
+      return redirect('edit_exp')
+  else:
+    experiences_formset = ExperienceFormSet(queryset=experiences, initial=[{'user': user_info.id}])
+  context = {
+      'experiences_formset': experiences_formset,
+      }
+  return render(request, 'core/edit_exp.html', context)
 
 @login_required
 def scholars(request):
