@@ -3,7 +3,7 @@
 <div class="month-header">
   <h4 class="center">{{ month_name }}, {{ year }}</h4>
   <a href="{% url 'mccalendar:month' year month 'prev' %}">Prev month</a>
-  <a href="">Current month</a>
+  <a href="{% url 'mccalendar:index' %}">Current month</a>
   <a href="{% url 'mccalendar:month' year month 'next' %}">Next month</a>
 </div>
 <div class="month center">

@@ -51,7 +51,7 @@ def month(request, year=None, month=None, change=None):
       if month == 0:
         month = 12
         year -= 1
-    return redirect('/mccalendar/%s/%s/' % (year, month))
+    return redirect('/calendar/%s/%s/' % (year, month))
 
   cur_year, cur_month, cur_day = time.localtime()[:3]
 
