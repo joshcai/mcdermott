@@ -41,6 +41,12 @@
       {% endfor %}
     </tr>
     {% endfor %}
+    <!--  Placeholder row for now, to keep calendar off bottom of page  -->
+    <tr>
+      {% for i in "xxxxxxx" %}
+      <td class="empty"></td>
+      {% endfor %}
+    </tr>
   </table>
 </div>
 {% endblock %}

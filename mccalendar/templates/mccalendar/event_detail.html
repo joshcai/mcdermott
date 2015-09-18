@@ -1,2 +1,11 @@
-You are looking at the details of event {{ event.id }}.
-<a href="{% url 'mccalendar:delete_event' event.id %}">Delete event</a>
+{% extends "large_container.html" %}
+{% block inner_content %}
+
+<h4>{{ event.subject }}</h4>
+<p>{{ event.start_date }}</p>
+<p>{{ event.start_time }} - {{ event.end_time }}</p>
+<p>{{ event.description }}</p>
+
+<!--<a href="{% url 'mccalendar:delete_event' event.id %}">Delete event</a>-->
+
+{% endblock %}

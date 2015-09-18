@@ -122,7 +122,7 @@ def event_detail(request, event_id):
     raise Http404('Event %s does not exist' %event_id)
   else:
     context = {
-      'event':event
+      'event': event,
     }
     return render(request, 'mccalendar/event_detail.html', context)
 

@@ -1,11 +1,11 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "large_container.html" %}
+{% block inner_content %}
 
 <div class="event-list-header">
   <h4>Upcoming events</h4>
   <div class="event-list">
     {% for event in events %}
-    <p><a href="{% url 'mccalendar:event_detail' event.id %}">{{ event.subject }}</a> - {{ event.description }}</p>
+    <p><a href="{% url 'mccalendar:event_detail' event.id %}">{{ event.subject }}</a> - {{ event.description }} ({{ event.start_date }})</p>
     {% endfor %}
 </div>
 {% endblock %}

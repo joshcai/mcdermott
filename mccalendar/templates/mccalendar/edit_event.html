@@ -1,39 +1,40 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "large_container.html" %}
+{% block inner_content %}
 
 <form method="post" action="{% url 'mccalendar:edit_event' %}" class="form-horizontal">
 {% csrf_token %}
-<ul>
-{% for error in form.errors %}
-  <li>{{ error }}</li>
-{% endfor %}
-</ul>
-<div>
-  {{ form.subject }}
-  <label for="id_{{ form.subject.name }}">
-    Subject
-  </label>
-  <span class="">{{ form.subject.errors }}</span>
-</div>
-<div>
-  {{ form.description }}
-  <label for="id_{{ form.description.name }}">
-    Description
-  </label>
-  <span class="">{{ form.description.errors }}</span>
-</div
-<div>
-  {{ form.start_date }}
-  <label for="id_{{ form.start_date.name }}">
-    Start Date
-  </label>
-  <span class="">{{ form.start_date.errors }}</span>
-    {{ form.start_time }}
-    <label for="id_{{ form.start_time.name }}">
-      Start Time
+  <div>
+  <ul>
+  {% for error in form.errors %}
+    <li>{{ error }}</li>
+  {% endfor %}
+  </ul>
+  <div>
+    {{ form.subject }}
+    <label for="id_{{ form.subject.name }}">
+      Subject
     </label>
-  <span class="">{{ form.start_time.errors }}</span>
-</div>
+    <span class="">{{ form.subject.errors }}</span>
+  </div>
+  <div>
+    {{ form.description }}
+    <label for="id_{{ form.description.name }}">
+      Description
+    </label>
+    <span class="">{{ form.description.errors }}</span>
+  </div>
+  <div>
+    {{ form.start_date }}
+    <label for="id_{{ form.start_date.name }}">
+      Start Date
+    </label>
+    <span class="">{{ form.start_date.errors }}</span>
+      {{ form.start_time }}
+      <label for="id_{{ form.start_time.name }}">
+        Start Time
+      </label>
+    <span class="">{{ form.start_time.errors }}</span>
+  </div>
   <div>
     {{ form.end_date }}
     <label for="id_{{ form.end_date.name }}">
@@ -47,6 +48,7 @@
     <span class="">{{ form.end_time.errors }}</span>
   </div>
   <input type="submit" value="save"/>
+  </div>
 </form>
 
 {% endblock %}

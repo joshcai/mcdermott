@@ -172,9 +172,10 @@ footer {
 
 /* Calendar stuff (awful b/c written by Andrew) */
 .empty {
-  width: 100px;
-  height: 80px;
+  width: 120px;
+  height: 100px;
   text-align: center;
+  font-size: 20px;
 }
 
 .month-header {

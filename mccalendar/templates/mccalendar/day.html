@@ -1,5 +1,5 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "large_container.html" %}
+{% block inner_content %}
 
 <h4 class="center">{{ month_name }} {{ day }}, {{ year }}</h4>
 <a href="{% url 'mccalendar:edit_event' %}">Create event</a>

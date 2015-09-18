@@ -47,6 +47,15 @@
 {% endfor %}
 
 <h4>Experience</h4>
+{% for experience in profile.experiences.all %}
+  <div class="experience">
+    <p>Title: {{ experience.title }}</p>
+    <p>Organization: {{ experience.organization }}</p>
+    <p>Location: {{ experience.location }}</p>
+    <p>Type: {{ experience.exp_type }}</p>
+    <p>Time period: {{ experience.start_time }} - {{ experience.end_time }}</p>
+  </div>
+{% endfor %}
 
 <h4>Study Abroad</h4>
 
