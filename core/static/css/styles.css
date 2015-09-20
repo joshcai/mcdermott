@@ -170,6 +170,11 @@ footer {
   font-weight: bold;
 }
 
+/* Profile stuff */
+.profile-show {
+  display: inline;
+}
+
 /* Calendar stuff (awful b/c written by Andrew) */
 .empty {
   width: 120px;

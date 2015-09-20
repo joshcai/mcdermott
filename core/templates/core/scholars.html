@@ -2,12 +2,15 @@
 
 {% load staticfiles %}
 {% load thumbnail %}
+{% load core_tags %}
 
 {% block content %}
 
-<div class="col-md-6 col-md-offset-3 col-sm-12">
-  {% for scholar in scholars %}
-    {# add picture here #}
+{% for scholar_group in scholars|group_by:3 %}
+<div class="row">
+  {% for scholar in scholar_group %}
+  <div class="col-md-4 col-sm-12">
+  {# add picture here #}
     <div class="well">
       <div class="pull-left">
       {% if scholar.pic %}
@@ -17,24 +20,27 @@
       {% else %}
         <img src="{% static 'img/user.png' %}" height="100" width="100">
       {% endif %}
-    </div>
-    <div>
-      <a class="no-dec" href ="/{{ scholar.first_name }}{{ scholar.last_name }}">
-        <h4>{{ scholar.get_full_name }}</h4>
-      </a>
-      <p>
-        {{ scholar.class_year }}
+      </div>
+      <!-- Scholar quick info -->
+      <div class="text-right">
+        <a class="no-dec" href ="/{{ scholar.first_name }}{{ scholar.last_name }}">
+          <h4>{{ scholar.get_full_name }}</h4>
+        </a>
+        {{ scholar.class_year }}</br>
         {% if scholar.phone_number %}
-          , {{ scholar.phone_number }}
+          {{ scholar.phone_number }}
         {% endif %}
+        </br>
         {% if scholar.email %}
-        , {{ scholar.email }}
+          {{ scholar.email }}
         {% endif %}
-      </p>
+        </br>
+      </div>
     </div>
-    </div>
-  {% empty %}
-    <h3>No scholars found.</h3>
+  </div>
   {% endfor %}
 </div>
+{% empty %}
+  <h3>No scholars found.</h3>
+{% endfor %}
 {% endblock %}

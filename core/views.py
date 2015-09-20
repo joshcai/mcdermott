@@ -121,6 +121,10 @@ def profile(request, name):
     }
   return render(request, 'core/profile.html', context)
 
+@login_required
+def documents(request):
+  return render(request, 'core/documents.html')
+
 
 class UserViewSet(viewsets.ModelViewSet):
   """
