@@ -170,9 +170,11 @@ footer {
   font-weight: bold;
 }
 
-/* Profile stuff */
-.profile-show {
-  display: inline;
+.profile-show-btn {
+  background: white;
+  -webkit-box-shadow: none;
+	-moz-box-shadow: none;
+  box-shadow: none;
 }
 
 /* Calendar stuff (awful b/c written by Andrew) */
