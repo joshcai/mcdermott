@@ -1,6 +1,6 @@
 import floppyforms as forms
 
-from models import McUser, Degree, Experience
+from models import McUser, Degree, Experience, StudyAbroad
 
 class ImageThumbnailInput(forms.ClearableFileInput):
   template_name = 'floppyforms/image_thumbnail.html'
@@ -58,6 +58,24 @@ class ExperienceForm(forms.ModelForm):
       'organization',
       'description',
       'location',
+      'start_time',
+      'end_time'
+    ]
+    widgets = {
+      'user': forms.HiddenInput(),
+      'description': forms.Textarea(attrs={'rows':4, 'cols':15})
+    }
+
+class StudyAbroadForm(forms.ModelForm):
+  class Meta:
+    model = StudyAbroad
+    fields = [
+      'user',
+      'study_abroad_type',
+      'organization',
+      'description',
+      'primary_location',
+      'other_locations',
       'start_time',
       'end_time'
     ]

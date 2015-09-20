@@ -6,13 +6,14 @@ from django.shortcuts import render, redirect
 from rest_framework import viewsets
 import watson
 
-from forms import McUserForm, DegreeForm, ExperienceForm
-from models import McUser, Degree, Experience
+from forms import McUserForm, DegreeForm, ExperienceForm, StudyAbroadForm
+from models import McUser, Degree, Experience, StudyAbroad
 from serializers import UserSerializer
 from util import normalize_name
 
 DegreeFormSet = modelformset_factory(Degree, form=DegreeForm, extra=1, can_delete=True)
 ExperienceFormSet = modelformset_factory(Experience, form=ExperienceForm, extra=1, can_delete=True)
+StudyAbroadFormSet = modelformset_factory(StudyAbroad, form=StudyAbroadForm, extra=1, can_delete=True)
 
 # Create your views here.
 def index(request):
@@ -75,6 +76,26 @@ def edit_exp(request):
   return render(request, 'core/edit_exp.html', context)
 
 @login_required
+def edit_abroad(request):
+  try:
+    user_info = McUser.objects.get(user_id=request.user.id)
+  except McUser.DoesNotExist:
+    user_info = McUser(user_id=request.user.id)
+  study_abroad = StudyAbroad.objects.filter(user_id=user_info.id)
+  if request.method == 'POST':
+    study_abroad_formset = StudyAbroadFormSet(request.POST, queryset=study_abroad, initial=[{'user': user_info.id}])
+    if (study_abroad_formset.is_valid()):
+      study_abroad_formset.save()
+      return redirect('edit_abroad')
+  else:
+    study_abroad_formset = StudyAbroadFormSet(queryset=study_abroad, initial=[{'user': user_info.id}])
+  context = {
+      'study_abroad_formset': study_abroad_formset,
+      }
+  return render(request, 'core/edit_abroad.html', context)
+
+
+@login_required
 def scholars(request):
   scholars = McUser.objects.all()
   context = {
@@ -97,7 +118,9 @@ def search(request):
       if isinstance(result.object, McUser):
         if result.object not in scholars:
           scholars.append(result.object)
-      elif isinstance(result.object, Degree) or isinstance(result.object, Experience):
+      elif (isinstance(result.object, Degree) or 
+            isinstance(result.object, Experience) or
+            isinstance(result.object, StudyAbroad)):
         if result.object.user not in scholars:
           scholars.append(result.object.user)
   context = {

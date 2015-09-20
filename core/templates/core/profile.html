@@ -70,6 +70,15 @@
 <h4>Study Abroad</h4>
 <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#study-abroad">Show</button>
 <div id="study-abroad" class="collapse">
+  {% for study_abroad in profile.studiesabroad.all %}
+  <div class="study_abroad">
+    <p>Location: {{ study_abroad.primary_location }}</p>
+    <p>Organization: {{ study_abroad.organization }}</p>
+    <p>Other locations: {{ study_abroad.other_locations }}</p>
+    <p>Type: {{ study_abroad.study_abroad_type }}</p>
+    <p>Time period: {{ study_abroad.start_time }} - {{ study_abroad.end_time }}</p>
+  </div>
+  {% endfor %}
 </div>
 
 {% if edit %}

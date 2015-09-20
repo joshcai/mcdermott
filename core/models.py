@@ -114,8 +114,23 @@ class Experience(models.Model):
   start_time = models.DateField(null=True, blank=True)
   end_time = models.DateField(null=True, blank=True)
 
+STUDY_ABROAD_CHOICES = (('', ''), ('Internship', 'Internship'), ('Coursework', 'Coursework'),
+                        ('Independent Study', 'Independent Study'), ('Other', 'Other'))
+
+class StudyAbroad(models.Model):
+  user = models.ForeignKey(McUser, related_name='studiesabroad')
+  study_abroad_type = models.CharField(max_length=200, 
+                                       choices=STUDY_ABROAD_CHOICES, blank=True)
+  organization = models.CharField(max_length=200, blank=True)
+  description = models.TextField(blank=True)
+  primary_location = models.CharField(max_length=200, blank=True)
+  other_locations = models.CharField(max_length=200, blank=True)
+  start_time = models.DateField(null=True, blank=True)
+  end_time = models.DateField(null=True, blank=True)
+
 watson.register(McUser)
 watson.register(Degree)
 watson.register(Experience)
+watson.register(StudyAbroad)
 # at bottom for circular dependency
 import signals

@@ -8,19 +8,19 @@
   <ul class="nav nav-tabs nav-justified">
     <li role="presentation"><a href="{% url 'edit_info' %}">Profile</a></li>
     <li role="presentation"><a href="{% url 'edit_edu' %}">Education</a></li>
-    <li role="presentation" class="active"><a>Experience</a></li>
-    <li role="presentation"><a href="{% url 'edit_abroad' %}">Study Abroad</a></li>
+    <li role="presentation"><a href="{% url 'edit_exp' %}">Experience</a></li>
+    <li role="presentation" class="active"><a>Study Abroad</a></li>
   </ul>
   <br>
-  <form method="post" action="{% url 'edit_exp' %}" class="form-horizontal">
+  <form method="post" action="{% url 'edit_abroad' %}" class="form-horizontal">
     {% csrf_token %}
 
-    {{ experiences_formset.management_form }}
+    {{ study_abroad_formset.management_form }}
 
-    {% for experience_form in experiences_formset %}
-      {% if experience_form.errors %}
+    {% for study_abroad_form in study_abroad_formset %}
+      {% if study_abroad_form.errors %}
         There were errors!
-          {% for field in experience_form %}
+          {% for field in study_abroad_form %}
             {% for error in field.errors %}
               <p> {{ error }} {{ field.label_tag }} </p>
             {% endfor %}
@@ -28,18 +28,18 @@
       {% endif %}
       {% if forloop.last %}
         <div class="col-md-12">
-          <h4>Add another experience:</h4>
+          <h4>Add another study abroad experience:</h4>
         </div>
       {% endif %}
-      {{ experience_form.id }}
-      {{ experience_form.user }}
+      {{ study_abroad_form.id }}
+      {{ study_abroad_form.user }}
       <div class="col-md-6 {% if not forloop.first %}margin-top-lg{% endif %}">
         <div class="form-group margin-sm">
-          <label for="id_title" class="form-label">
-            Title / Position
+          <label for="id_primary_location" class="form-label">
+            Primary Location
           </label>
-          {{ experience_form.title|add_class:"form-control" }}
-          <span class="error">{{ experience_form.title.errors }}</span>
+          {{ study_abroad_form.primary_location|add_class:"form-control" }}
+          <span class="error">{{ study_abroad_form.primary_location.errors }}</span>
         </div>
       </div>
       <div class="col-md-6 {% if not forloop.first %}margin-top-lg{% endif %}">
@@ -47,26 +47,26 @@
           <label for="id_organization" class="form-label">
             Organization
           </label>
-          {{ experience_form.organization|add_class:"form-control" }}
-          <span class="error">{{ experience_form.organization.errors }}</span>
-        </div>
-      </div>
-      <div class="col-md-2">
-        <div class="form-group margin-sm">
-          <label for="id_exp_type" class="form-label">
-            Experience Type
-          </label>
-          {{ experience_form.exp_type|add_class:"form-control" }}
-          <span class="error">{{ experience_form.exp_type.errors }}</span>
+          {{ study_abroad_form.organization|add_class:"form-control" }}
+          <span class="error">{{ study_abroad_form.organization.errors }}</span>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group margin-sm">
-          <label for="id_location" class="form-label">
-            Location
+          <label for="id_other_locations" class="form-label">
+            Other Locations Visited
           </label>
-          {{ experience_form.location|add_class:"form-control" }}
-          <span class="error">{{ experience_form.location.errors }}</span>
+          {{ study_abroad_form.other_locations|add_class:"form-control" }}
+          <span class="error">{{ study_abroad_form.other_locations.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group margin-sm">
+          <label for="id_study_abroad_type" class="form-label">
+            Experience Type
+          </label>
+          {{ study_abroad_form.study_abroad_type|add_class:"form-control" }}
+          <span class="error">{{ study_abroad_form.exp_type.errors }}</span>
         </div>
       </div>
       <div class="col-md-3">
@@ -74,8 +74,8 @@
           <label for="id_start_time" class="form-label">
             Start Time
           </label>
-          {{ experience_form.start_time|add_class:"form-control" }}
-          <span class="error">{{ experience_form.start_time.errors }}</span>
+          {{ study_abroad_form.start_time|add_class:"form-control" }}
+          <span class="error">{{ study_abroad_form.start_time.errors }}</span>
         </div>
       </div>
       <div class="col-md-3">
@@ -83,8 +83,8 @@
           <label for="id_end_time" class="form-label">
             End Time
           </label>
-          {{ experience_form.end_time|add_class:"form-control" }}
-          <span class="error">{{ experience_form.end_time.errors }}</span>
+          {{ study_abroad_form.end_time|add_class:"form-control" }}
+          <span class="error">{{ study_abroad_form.end_time.errors }}</span>
         </div>
       </div>
       <div class="col-md-12">
@@ -92,8 +92,8 @@
           <label for="id_description" class="form-label">
             Description
           </label>
-          {{ experience_form.description|add_class:"form-control" }}
-          <span class="error">{{ experience_form.description.errors }}</span>
+          {{ study_abroad_form.description|add_class:"form-control" }}
+          <span class="error">{{ study_abroad_form.description.errors }}</span>
         </div>
       </div>
     {% endfor %}
