@@ -23,10 +23,9 @@
   </div>
 </div>
 
-<h4>Education</h4>
-<span class="profile-show">
-  <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#education">Show</button>
-</span>
+<h4>Education
+  <button type="button" class="btn btn-sm profile-show-btn" data-toggle="collapse" data-target="#education">Show</button>
+</h4>
 <div id="education" class="collapse">
 {% for degree in profile.degrees.all %}
   <div class="experience">
@@ -51,10 +50,9 @@
 {% endfor %}
 </div>
 
-<h4>Experience</h4>
-<span class="profile-show">
-  <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#experience">Show</button>
-</span>
+<h4>Experience
+  <button type="button" class="btn btn-sm profile-show-btn" data-toggle="collapse" data-target="#experience">Show</button>
+</h4>
 <div id="experience" class="collapse">
   {% for experience in profile.experiences.all %}
   <div class="experience">
@@ -67,8 +65,9 @@
   {% endfor %}
 </div>
 
-<h4>Study Abroad</h4>
-<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#study-abroad">Show</button>
+<h4>Study Abroad
+  <button type="button" class="btn btn-sm profile-show-btn" data-toggle="collapse" data-target="#study-abroad">Show</button>
+</h4>
 <div id="study-abroad" class="collapse">
 </div>
 
