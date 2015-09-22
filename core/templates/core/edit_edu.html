@@ -38,6 +38,9 @@
           <label for="id_school" class="form-label">
             School
           </label>
+          {% if not forloop.last %}
+          <span class="text-right pull-right">Delete: {{ degree_form.DELETE }}</span>
+          {% endif %}
           {{ degree_form.school|add_class:"form-control" }}
           <span class="error">{{ degree_form.school.errors }}</span>
         </div>

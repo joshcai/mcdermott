@@ -47,6 +47,9 @@
           <label for="id_organization" class="form-label">
             Organization
           </label>
+          {% if not forloop.last %}
+          <span class="text-right pull-right">Delete: {{ study_abroad_form.DELETE }}</span>
+          {% endif %}
           {{ study_abroad_form.organization|add_class:"form-control" }}
           <span class="error">{{ study_abroad_form.organization.errors }}</span>
         </div>

@@ -47,6 +47,9 @@
           <label for="id_organization" class="form-label">
             Organization
           </label>
+          {% if not forloop.last %}
+          <span class="text-right pull-right">Delete: {{ experience_form.DELETE }}</span>
+          {% endif %}
           {{ experience_form.organization|add_class:"form-control" }}
           <span class="error">{{ experience_form.organization.errors }}</span>
         </div>
