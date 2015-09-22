@@ -1,6 +1,10 @@
-from django import forms
+import floppyforms as forms
+from functools import partial
 
 from models import McEvent
+
+DateInput = partial(forms.DateInput, {'class': 'datepicker'})
+TimeInput = partial(forms.TimeInput, {'class': 'timepicker'})
 
 class McEventForm(forms.ModelForm):
   class Meta:
@@ -18,7 +22,13 @@ class McEventForm(forms.ModelForm):
       'private',
       #'relevant_years',
     ]
-    widgets = {'id': forms.HiddenInput()}
+    widgets = {
+      'id': forms.HiddenInput(),
+      'start_date': DateInput(),
+      'start_time': TimeInput(),
+      'end_date': DateInput(),
+      'end_time': TimeInput(),
+    }
 
 class UploadFileForm(forms.Form):
   file = forms.FileField()

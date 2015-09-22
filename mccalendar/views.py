@@ -98,7 +98,7 @@ def day(request, year=None, month=None, day=None):
   return render(request, 'mccalendar/day.html', context)
 
 @login_required
-def edit_event(request):
+def edit_event(request, event_id):
   if request.method == 'POST':
     event = McEvent(owner=request.user.mcuser)
     form = McEventForm(request.POST, instance=event)
@@ -111,6 +111,7 @@ def edit_event(request):
     form = McEventForm()
   context = {
     'form':form,
+    'event_id': event_id,
   }
   return render(request, 'mccalendar/edit_event.html', context)
 
