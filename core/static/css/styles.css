@@ -79,9 +79,12 @@ a.no-dec {
 }
 
 .experience {
+  line-height: 0.5;
+  margin-bottom: 2em;
 }
 
 .school-name {
+  font-size: 1.2em;
 }
 
 /*
@@ -92,6 +95,7 @@ body {
   padding-top: 80px;
   background-color: #f5f5f5;
 }
+
 footer {
   padding-left: 15px;
   padding-right: 15px;

@@ -27,14 +27,26 @@
           <h4>{{ scholar.get_full_name }}</h4>
         </a>
         {{ scholar.class_year }}</br>
-        {% if scholar.phone_number %}
-          {{ scholar.phone_number }}
-        {% endif %}
-        </br>
-        {% if scholar.email %}
-          {{ scholar.email }}
-        {% endif %}
-        </br>
+        <!-- Dropdown -->
+        <button type="button" class="btn btn-sm profile-show-btn" data-toggle="collapse" data-target="#{{ scholar.norm_name }}">More</button>
+        <div id="{{ scholar.norm_name }}" class="collapse">
+          <div class="well experience text-left">
+            {% if scholar.phone_number %}
+<!--              <p>{{ scholar.phone_number }}-->
+            {% endif %}
+            {% if scholar.email %}
+<!--              <p>{{ scholar.email }}</p>-->
+            {% endif %}
+            {% for degree in scholar.degrees.all %}
+              <p>
+                {{ degree.degree_type }} in {{ degree.major1 }}
+                  {% if degree.major2 %}
+                    , {{ degree.major2 }}
+                  {% endif %}
+              </p>
+            {% endfor %}
+          </div>
+        </div>
       </div>
     </div>
   </div>

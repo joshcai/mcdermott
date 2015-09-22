@@ -28,14 +28,15 @@
 </h4>
 <div id="education" class="collapse">
 {% for degree in profile.degrees.all %}
-  <div class="experience">
+  <div class="well experience">
     <p class="school-name">School: {{ degree.school }}</p>
     <p>Type: {{ degree.degree_type }}</p>
     <p>Time period: {{ degree.start_time }} - {{ degree.end_time }}</p>
     {% for major in degree.majors.all %}
       {% if major.utd_major %}
         <p>Major: {{ major.utd_major }}</p>
-      {% elif major.other_major %}
+<!--      {% elif major.other_major %}-->
+      {% else %}
         <p>Major: {{ major.other_major }}</p>
       {% endif %}
     {% endfor %}
@@ -55,7 +56,7 @@
 </h4>
 <div id="experience" class="collapse">
   {% for experience in profile.experiences.all %}
-  <div class="experience">
+  <div class="well experience">
     <p>Title: {{ experience.title }}</p>
     <p>Organization: {{ experience.organization }}</p>
     <p>Location: {{ experience.location }}</p>
@@ -70,7 +71,7 @@
 </h4>
 <div id="study-abroad" class="collapse">
   {% for study_abroad in profile.studiesabroad.all %}
-  <div class="study_abroad">
+  <div class="well experience">
     <p>Location: {{ study_abroad.primary_location }}</p>
     <p>Organization: {{ study_abroad.organization }}</p>
     <p>Other locations: {{ study_abroad.other_locations }}</p>
