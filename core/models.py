@@ -59,9 +59,17 @@ class McUser(models.Model):
   utd_id = models.CharField(max_length=50, blank=True)
 
   # Personal info
+  show_email = models.BooleanField(default=True)
   hometown = models.CharField(max_length=200, blank=True)
   high_school = models.CharField(max_length=200, blank=True)
   phone_number = models.CharField(max_length=200, blank=True)
+  show_phone_number = models.BooleanField(default=True)
+  linkedin = models.CharField(max_length=200, blank=True)
+  show_linkedin = models.BooleanField(default=True)
+  website = models.CharField(max_length=200, blank=True)
+  show_website = models.BooleanField(default=True)
+
+
   pic = ImageField(upload_to='img', blank=True)
   # normalized name, e.g. joshcai
   norm_name = models.CharField(max_length=400, blank=True)

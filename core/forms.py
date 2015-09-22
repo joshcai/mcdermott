@@ -1,6 +1,9 @@
 import floppyforms as forms
+from functools import partial
 
 from models import McUser, Degree, Experience, StudyAbroad
+
+DateInput = partial(forms.DateInput, {'class': 'datepicker'})
 
 class ImageThumbnailInput(forms.ClearableFileInput):
   template_name = 'floppyforms/image_thumbnail.html'
@@ -19,12 +22,15 @@ class McUserForm(forms.ModelForm):
         'hometown',
         'high_school',
         'phone_number',
+        'show_phone_number',
+        'show_email',
         'id',
         'pic'
     ]
     widgets = {
         'id': forms.HiddenInput(),
-        'pic': ImageThumbnailInput
+        'pic': ImageThumbnailInput,
+        'birthday': DateInput(),
     }
 
 class UploadFileForm(forms.Form):
@@ -45,7 +51,9 @@ class DegreeForm(forms.ModelForm):
       'minor2'
     ]
     widgets = {
-      'user': forms.HiddenInput()
+      'user': forms.HiddenInput(),
+      'start_time': DateInput(),
+      'end_time': DateInput(),
     }
 
 class ExperienceForm(forms.ModelForm):
@@ -63,7 +71,10 @@ class ExperienceForm(forms.ModelForm):
     ]
     widgets = {
       'user': forms.HiddenInput(),
-      'description': forms.Textarea(attrs={'rows':4, 'cols':15})
+      'description': forms.Textarea(attrs={'rows':4, 'cols':15}),
+      'start_time': DateInput(),
+      'end_time': DateInput(),
+
     }
 
 class StudyAbroadForm(forms.ModelForm):
@@ -81,5 +92,7 @@ class StudyAbroadForm(forms.ModelForm):
     ]
     widgets = {
       'user': forms.HiddenInput(),
-      'description': forms.Textarea(attrs={'rows':4, 'cols':15})
+      'description': forms.Textarea(attrs={'rows':4, 'cols':15}),
+      'start_time': DateInput(),
+      'end_time': DateInput(),
     }
