@@ -1,5 +1,6 @@
 {% extends "large_container.html" %}
 
+{% load core_tags %}
 {% load thumbnail %}
 
 {% block inner_content %}
@@ -15,11 +16,15 @@
   <h4>Personal Information</h4>
   <div class="profile-contact-card">
     <p><span class="profile-contact-field">Class:</span> {{ profile.class_year }}</p>
-    <p><span class="profile-contact-field">Phone number:</span> {{ profile.phone_number }}</p>
-    <p><span class="profile-contact-field">Email:</span> {{ profile.email }}</p>
+    <p><span class="profile-contact-field">Phone number:</span> {{ profile.phone_number|displayphone }}</p>
+    <p><span class="profile-contact-field">Email:</span> {{ profile.user.email }}</p>
     <p>Birthday: {{ profile.birthday }}</p>
-    <p>Hometown: {{ profile.hometown }}</p>
-    <p>High School: {{ profile.high_school }}</p>
+    {% if profile.hometown %}
+      <p>Hometown: {{ profile.hometown }}</p>
+    {% endif %}
+    {% if profile.high_school %}
+      <p>High School: {{ profile.high_school }}</p>
+    {% endif %}
   </div>
 </div>
 

@@ -33,6 +33,7 @@ class McUser(models.Model):
   """
   user = models.OneToOneField(User)
   first_name = models.CharField(max_length=200, blank=True)
+  middle_name = models.CharField(max_length=200, blank=True)
   last_name = models.CharField(max_length=200, blank=True)
   # Real first name, use first_name as preferred first name so we don't
   # have to join on tables when fetching by name.
@@ -127,7 +128,7 @@ STUDY_ABROAD_CHOICES = (('', ''), ('Internship', 'Internship'), ('Coursework', '
 
 class StudyAbroad(models.Model):
   user = models.ForeignKey(McUser, related_name='studiesabroad')
-  study_abroad_type = models.CharField(max_length=200, 
+  study_abroad_type = models.CharField(max_length=200,
                                        choices=STUDY_ABROAD_CHOICES, blank=True)
   organization = models.CharField(max_length=200, blank=True)
   description = models.TextField(blank=True)

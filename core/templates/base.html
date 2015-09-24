@@ -3,6 +3,9 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>McDermott Network</title>
 
     <!-- jQuery - must come before Bootstrap JS file -->
@@ -36,8 +39,8 @@
             {% else %}
               <li><a href="{% url 'mccalendar:index' %}">Calendar</a></li>
               <li><a href="{% url 'mccalendar:event_list' %}">Events</a></li>
-              <li><a href="{% url 'documents' %}">Documents</a></li>
-              <li><a href="{% url 'scholars' %}">All Scholars</a></li>
+              {# <li><a href="{% url 'documents' %}">Documents</a></li> #}
+              <li><a href="{% url 'scholars' %}">Scholars</a></li>
               <li><a href="{% url 'own_profile' %}">My Profile</a></li>
               <li><a href="{% url 'logout' %}">Logout</a></li>
             {% endif %}
