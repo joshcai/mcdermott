@@ -181,6 +181,11 @@ footer {
   box-shadow: none;
 }
 
+#logo {
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
 /* Calendar stuff (awful b/c written by Andrew) */
 .empty {
   width: 120px;

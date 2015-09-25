@@ -36,9 +36,6 @@ class Command(BaseCommand):
     # Converts from 09/24/15 to 2015-24-09
     return datetime.datetime.strptime(date, '%m/%d/%y').strftime('%Y-%m-%d')
 
-  def normalizePhone(self, number):
-    return number.replace('-', '').replace('(', '' ).replace(')', '' ).replace(' ', '' )
-
   def add_from_csv(self, scholar):
     if not scholar['UTD email']:
       self.stdout.write('No email found for %s' % (scholar['V3']))
@@ -55,7 +52,7 @@ class Command(BaseCommand):
     user.mcuser.gender = ('Male' if scholar['Title'] == 'Mr.' else 'Female')
     user.mcuser.class_year = scholar['Class']
     user.mcuser.birthday = self.convertDate(scholar['DOB'])
-    user.mcuser.phone_number = self.normalizePhone(scholar['Cell'])
+    user.mcuser.phone_number = scholar['Cell']
     user.mcuser.save()
     self.stdout.write('Created user %s %s' %
                       (user.mcuser.first_name, user.mcuser.last_name))

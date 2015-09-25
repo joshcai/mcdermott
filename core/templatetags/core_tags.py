@@ -12,8 +12,14 @@ def grouped(l, n):
   for i in xrange(0, len(l), n):
       yield l[i:i+n]
 
+
+def normalizePhone(number):
+  return number.replace('-', '').replace('(', '' ).replace(')', '' ).replace(' ', '' )
+
+
 @register.filter
 def displayphone(value):
-  if len(value) < 10:
+  norm_value = normalizePhone(value)
+  if len(norm_value) != 10:
     return value
-  return '(%s) %s-%s' % (value[:3], value[3:6], value[6:])
+  return '(%s) %s-%s' % (norm_value[:3], norm_value[3:6], norm_value[6:])

@@ -97,7 +97,15 @@ def edit_abroad(request):
 
 @login_required
 def scholars(request):
-  scholars = McUser.objects.all()
+  scholars = McUser.objects.all().order_by('first_name')
+  context = {
+    'scholars': scholars
+    }
+  return render(request, 'core/scholars.html', context)
+
+@login_required
+def scholars_by_class(request, class_year):
+  scholars = McUser.objects.all().filter(class_year=int(class_year)).order_by('first_name')
   context = {
     'scholars': scholars
     }
@@ -118,7 +126,7 @@ def search(request):
       if isinstance(result.object, McUser):
         if result.object not in scholars:
           scholars.append(result.object)
-      elif (isinstance(result.object, Degree) or 
+      elif (isinstance(result.object, Degree) or
             isinstance(result.object, Experience) or
             isinstance(result.object, StudyAbroad)):
         if result.object.user not in scholars:

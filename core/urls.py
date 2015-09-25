@@ -15,6 +15,7 @@ urlpatterns = [
   url(r'^edit_exp$', views.edit_exp, name='edit_exp'),
   url(r'^edit_abroad$', views.edit_abroad, name='edit_abroad'),
   url(r'^scholars$', views.scholars, name='scholars'),
+  url(r'^scholars/class/(\d+)$', views.scholars_by_class, name='scholars_by_class'),
   url(r'^profile$', views.own_profile, name='own_profile'),
   url(r'^search$', views.search, name='search'),
   url(r'^(\w+)$', views.profile, name='profile'),
