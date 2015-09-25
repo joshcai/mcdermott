@@ -7,3 +7,4 @@ mcdermott/config.py
 run/
 /static/
 *.xlsx
+*.csv

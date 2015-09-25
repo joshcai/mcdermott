@@ -51,6 +51,7 @@ INSTALLED_APPS = (
   'django.contrib.staticfiles',
   'floppyforms',
   'rest_framework',
+  'rolepermissions',
   'sorl.thumbnail',
   'watson',
   'widget_tweaks',
@@ -168,3 +169,5 @@ REST_FRAMEWORK = {
 }
 
 THUMBNAIL_DEBUG = os.environ.get('DEBUG') or config.DEBUG
+
+ROLEPERMISSIONS_MODULE = 'mcdermott.roles'

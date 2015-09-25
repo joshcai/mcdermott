@@ -78,6 +78,10 @@ class McUser(models.Model):
   #TODO: allow multiple phone
   #TODO: allow backup emails
 
+  # Staff only fields
+  staff_phone = models.CharField(max_length=200, blank=True)
+  staff_title = models.CharField(max_length=200, blank=True)
+
   def get_full_name(self):
     return '%s %s' % (self.first_name, self.last_name)
 
