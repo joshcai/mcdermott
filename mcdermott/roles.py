@@ -3,6 +3,7 @@ from rolepermissions.roles import AbstractUserRole
 class Staff(AbstractUserRole):
   available_permissions = {
     'see_all_info': True,
+    'edit_all_info': True,
     'create_users': True
   }
 

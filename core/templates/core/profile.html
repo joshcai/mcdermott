@@ -1,6 +1,7 @@
 {% extends "large_container.html" %}
 
 {% load core_tags %}
+{% load permission_tags %}
 {% load thumbnail %}
 
 {% block inner_content %}
@@ -86,8 +87,8 @@
   {% endfor %}
 </div>
 
-{% if edit %}
-  <a href="{% url 'edit_info' %}" class="btn btn-default">Edit Profile</a>
+{% if edit or user|can:'edit_all_info' %}
+  <a href="{% url 'edit_info' name=profile.norm_name %}" class="btn btn-default">Edit Profile</a>
   <br>
 {% endif %}
 

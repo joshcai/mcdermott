@@ -20,3 +20,7 @@ def displayphone(value):
   if len(norm_value) != 10:
     return value
   return '(%s) %s-%s' % (norm_value[:3], norm_value[3:6], norm_value[6:])
+
+@register.filter
+def removespaces(value):
+  return value.replace(' ', '')

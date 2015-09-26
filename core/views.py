@@ -1,9 +1,11 @@
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.forms.models import modelformset_factory
 from django.http import Http404
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
+from rolepermissions.verifications import has_permission
 import watson
 
 from forms import McUserForm, DegreeForm, ExperienceForm, StudyAbroadForm
@@ -20,77 +22,77 @@ def index(request):
   return render(request, 'core/index.html')
 
 @login_required
-def edit_info(request):
-  try:
-    user_info = McUser.objects.get(user_id=request.user.id)
-  except McUser.DoesNotExist:
-    user_info = McUser(user_id=request.user.id)
+def edit_info(request, name=None):
+  user_info = McUser.objects.get(norm_name=normalize_name(name))
+  if not user_info.user.id == request.user.id and not has_permission(request.user, 'edit_all_info'):
+    return redirect('edit_info', name=request.user.mcuser.norm_name)
   if request.method == 'POST':
     form = McUserForm(request.POST, request.FILES, instance=user_info, prefix='base')
     if (form.is_valid()):
       form.save()
-      return redirect('edit_info')
+      return redirect('edit_info', name=user_info.norm_name)
   else:
     form = McUserForm(instance=user_info, prefix='base')
   context = {
       'form': form,
+      'mcuser': user_info
       }
   return render(request, 'core/edit_info.html', context)
 
 @login_required
-def edit_edu(request):
-  try:
-    user_info = McUser.objects.get(user_id=request.user.id)
-  except McUser.DoesNotExist:
-    user_info = McUser(user_id=request.user.id)
+def edit_edu(request, name=None):
+  user_info = McUser.objects.get(norm_name=normalize_name(name))
+  if not user_info.user.id == request.user.id and not has_permission(request.user, 'edit_all_info'):
+    return redirect('edit_edu', name=request.user.mcuser.norm_name)
   degrees = Degree.objects.filter(user_id=user_info.id)
   if request.method == 'POST':
     degrees_formset = DegreeFormSet(request.POST, queryset=degrees, initial=[{'user': user_info.id}])
     if (degrees_formset.is_valid()):
       degrees_formset.save()
-      return redirect('edit_edu')
+      return redirect('edit_edu', name=user_info.norm_name)
   else:
     degrees_formset = DegreeFormSet(queryset=degrees, initial=[{'user': user_info.id}])
   context = {
       'degrees_formset': degrees_formset,
+      'mcuser': user_info
       }
   return render(request, 'core/edit_edu.html', context)
 
 @login_required
-def edit_exp(request):
-  try:
-    user_info = McUser.objects.get(user_id=request.user.id)
-  except McUser.DoesNotExist:
-    user_info = McUser(user_id=request.user.id)
+def edit_exp(request, name=None):
+  user_info = McUser.objects.get(norm_name=normalize_name(name))
+  if not user_info.user.id == request.user.id and not has_permission(request.user, 'edit_all_info'):
+    return redirect('edit_exp', name=request.user.mcuser.norm_name)
   experiences = Experience.objects.filter(user_id=user_info.id)
   if request.method == 'POST':
     experiences_formset = ExperienceFormSet(request.POST, queryset=experiences, initial=[{'user': user_info.id}])
     if (experiences_formset.is_valid()):
       experiences_formset.save()
-      return redirect('edit_exp')
+      return redirect('edit_exp', name=user_info.norm_name)
   else:
     experiences_formset = ExperienceFormSet(queryset=experiences, initial=[{'user': user_info.id}])
   context = {
       'experiences_formset': experiences_formset,
+      'mcuser': user_info
       }
   return render(request, 'core/edit_exp.html', context)
 
 @login_required
-def edit_abroad(request):
-  try:
-    user_info = McUser.objects.get(user_id=request.user.id)
-  except McUser.DoesNotExist:
-    user_info = McUser(user_id=request.user.id)
+def edit_abroad(request, name=None):
+  user_info = McUser.objects.get(norm_name=normalize_name(name))
+  if not user_info.user.id == request.user.id and not has_permission(request.user, 'edit_all_info'):
+    return redirect('edit_abroad', name=request.user.mcuser.norm_name)
   study_abroad = StudyAbroad.objects.filter(user_id=user_info.id)
   if request.method == 'POST':
     study_abroad_formset = StudyAbroadFormSet(request.POST, queryset=study_abroad, initial=[{'user': user_info.id}])
     if (study_abroad_formset.is_valid()):
       study_abroad_formset.save()
-      return redirect('edit_abroad')
+      return redirect('edit_abroad', name=user_info.norm_name)
   else:
     study_abroad_formset = StudyAbroadFormSet(queryset=study_abroad, initial=[{'user': user_info.id}])
   context = {
       'study_abroad_formset': study_abroad_formset,
+      'mcuser': user_info
       }
   return render(request, 'core/edit_abroad.html', context)
 

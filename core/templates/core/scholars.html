@@ -23,7 +23,7 @@
       </div>
       <!-- Scholar quick info -->
       <div class="text-right">
-        <a class="no-dec" href ="/{{ scholar.first_name }}{{ scholar.last_name }}">
+        <a class="no-dec" href ="/{{ scholar.first_name|removespaces }}{{ scholar.last_name|removespaces }}">
           <h4>{{ scholar.get_full_name }}</h4>
         </a>
         {{ scholar.class_year }}</br>
