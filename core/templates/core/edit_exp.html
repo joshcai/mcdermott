@@ -6,13 +6,13 @@
 
 <div class="row">
   <ul class="nav nav-tabs nav-justified">
-    <li role="presentation"><a href="{% url 'edit_info' name=mcuser.norm_name %}">Profile</a></li>
-    <li role="presentation"><a href="{% url 'edit_edu' name=mcuser.norm_name %}">Education</a></li>
+    <li role="presentation"><a href="{% url 'edit_info' mcuser.norm_name %}">Profile</a></li>
+    <li role="presentation"><a href="{% url 'edit_edu' mcuser.norm_name %}">Education</a></li>
     <li role="presentation" class="active"><a>Experience</a></li>
-    <li role="presentation"><a href="{% url 'edit_abroad' name=mcuser.norm_name %}">Study Abroad</a></li>
+    <li role="presentation"><a href="{% url 'edit_abroad' mcuser.norm_name %}">Study Abroad</a></li>
   </ul>
   <br>
-  <form method="post" action="{% url 'edit_exp' name=mcuser.norm_name %}" class="form-horizontal">
+  <form method="post" action="{% url 'edit_exp' mcuser.norm_name %}" class="form-horizontal">
     {% csrf_token %}
 
     {{ experiences_formset.management_form }}

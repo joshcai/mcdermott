@@ -7,9 +7,9 @@
 <div class="row">
   <ul class="nav nav-tabs nav-justified">
     <li role="presentation" class="active"><a>Profile</a></li>
-    <li role="presentation"><a href="{% url 'edit_edu' name=mcuser.norm_name %}">Education</a></li>
-    <li role="presentation"><a href="{% url 'edit_exp' name=mcuser.norm_name %}">Experience</a></li>
-    <li role="presentation"><a href="{% url 'edit_abroad' name=mcuser.norm_name %}">Study Abroad</a></li>
+    <li role="presentation"><a href="{% url 'edit_edu' mcuser.norm_name %}">Education</a></li>
+    <li role="presentation"><a href="{% url 'edit_exp' mcuser.norm_name %}">Experience</a></li>
+    <li role="presentation"><a href="{% url 'edit_abroad' mcuser.norm_name %}">Study Abroad</a></li>
   </ul>
   <br>
   {% if form.errors %}
@@ -20,7 +20,7 @@
         {% endfor %}
       {% endfor %}
   {% endif %}
-  <form enctype="multipart/form-data" method="post" action="{% url 'edit_info' name=mcuser.norm_name %}" class="form-horizontal">
+  <form enctype="multipart/form-data" method="post" action="{% url 'edit_info' mcuser.norm_name %}" class="form-horizontal">
   {% csrf_token %}
     {% for hidden in form.hidden_fields %}
       {{ hidden }}

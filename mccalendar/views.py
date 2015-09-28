@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -12,7 +13,7 @@ from forms import McEventForm
 
 # Create your views here.
 
-month_names = "January February March April May June July August September October November December".split()
+month_names = 'January February March April May June July August September October November December'.split()
 
 #Default calendar view
 @login_required
@@ -98,20 +99,41 @@ def day(request, year=None, month=None, day=None):
   return render(request, 'mccalendar/day.html', context)
 
 @login_required
-def edit_event(request, event_id):
+def create_event(request):
   if request.method == 'POST':
     event = McEvent(owner=request.user.mcuser)
     form = McEventForm(request.POST, instance=event)
     if (form.is_valid()):
       form.save()
-      return redirect('index')
+      return redirect(reverse('mccalendar:event_detail', args=[event.id]))
     else:
       form = McEventForm(request.POST, instance=event)
   else:
     form = McEventForm()
   context = {
     'form':form,
-    'event_id': event_id,
+    'form_url': reverse('mccalendar:create_event')
+  }
+  return render(request, 'mccalendar/edit_event.html', context)
+
+@login_required
+def edit_event(request, event_id=None):
+  try:
+    event = McEvent.objects.get(id=event_id)
+  except McEvent.DoesNotExist:
+    return redirect('mccalendar:create_event')
+  if request.method == 'POST':
+    form = McEventForm(request.POST, instance=event)
+    if (form.is_valid()):
+      form.save()
+      return redirect(reverse('mccalendar:event_detail', args=[event.id]))
+    else:
+      form = McEventForm(request.POST, instance=event)
+  else:
+    form = McEventForm(instance=event)
+  context = {
+    'form':form,
+    'form_url': reverse('mccalendar:edit_event', args=[event_id])
   }
   return render(request, 'mccalendar/edit_event.html', context)
 

@@ -4,6 +4,11 @@
 {% load thumbnail %}
 {% load core_tags %}
 
+
+{% block title %}
+All scholars
+{% endblock %}
+
 {% block content %}
 
 {% for scholar_group in scholars|group_by:3 %}

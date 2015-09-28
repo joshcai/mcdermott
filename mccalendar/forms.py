@@ -11,6 +11,7 @@ class McEventForm(forms.ModelForm):
     model = McEvent
     fields = [
     #   'owner',
+      'id',
       'subject',
       'start_date',
       'start_time',

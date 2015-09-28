@@ -6,6 +6,6 @@
 <p>{{ event.start_time }} - {{ event.end_time }}</p>
 <p>{{ event.description }}</p>
 
-<!--<a href="{% url 'mccalendar:delete_event' event.id %}">Delete event</a>-->
+<a href="{% url 'mccalendar:edit_event' event.id %}">Edit event</a>
 
 {% endblock %}

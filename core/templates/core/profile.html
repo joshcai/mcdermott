@@ -4,6 +4,10 @@
 {% load permission_tags %}
 {% load thumbnail %}
 
+{% block title %}
+{{ profile.get_full_name }}
+{% endblock %}
+
 {% block inner_content %}
 
 <!-- Name and contact info-->
@@ -19,7 +23,7 @@
     <p><span class="profile-contact-field">Class:</span> {{ profile.class_year }}</p>
     <p><span class="profile-contact-field">Phone number:</span> {{ profile.phone_number|displayphone }}</p>
     <p><span class="profile-contact-field">Email:</span> {{ profile.user.email }}</p>
-    <p>Birthday: {{ profile.birthday }}</p>
+    <p>Birthday: {{ profile.birthday|date:"F j" }}</p>
     {% if profile.hometown %}
       <p>Hometown: {{ profile.hometown }}</p>
     {% endif %}
@@ -88,7 +92,7 @@
 </div>
 
 {% if edit or user|can:'edit_all_info' %}
-  <a href="{% url 'edit_info' name=profile.norm_name %}" class="btn btn-default">Edit Profile</a>
+  <a href="{% url 'edit_info' profile.norm_name %}" class="btn btn-default">Edit Profile</a>
   <br>
 {% endif %}
 

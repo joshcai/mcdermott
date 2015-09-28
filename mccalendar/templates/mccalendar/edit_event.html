@@ -1,14 +1,14 @@
 {% extends "large_container.html" %}
 {% block inner_content %}
 
-<form method="post" action="{% url 'mccalendar:edit_event' event_id %}" class="form-horizontal">
+<form method="post" action="{{ form_url }}" class="form-horizontal">
 {% csrf_token %}
+  {{ form.id }}
   <div>
     {{ form.subject }}
     <label for="id_{{ form.subject.name }}">
       Subject
     </label>
-    <span class="text-right pull-right">Delete: {{ form.DELETE }}</span>
     <span class="">{{ form.subject.errors }}</span>
   </div>
   <div>
