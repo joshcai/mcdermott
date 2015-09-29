@@ -45,7 +45,7 @@
       <div class="col-md-6 {% if not forloop.first %}margin-top-lg{% endif %}">
         <div class="form-group margin-sm">
           <label for="id_organization" class="form-label">
-            Organization
+            Organization / School
           </label>
           {% if not forloop.last %}
           <span class="text-right pull-right">Delete: {{ study_abroad_form.DELETE }}</span>
@@ -75,7 +75,7 @@
       <div class="col-md-3">
         <div class="form-group margin-sm">
           <label for="id_start_time" class="form-label">
-            Start Time
+            Start Date
           </label>
           {{ study_abroad_form.start_time|add_class:"form-control" }}
           <span class="error">{{ study_abroad_form.start_time.errors }}</span>
@@ -84,7 +84,7 @@
       <div class="col-md-3">
         <div class="form-group margin-sm">
           <label for="id_end_time" class="form-label">
-            End Time
+            End Date
           </label>
           {{ study_abroad_form.end_time|add_class:"form-control" }}
           <span class="error">{{ study_abroad_form.end_time.errors }}</span>

@@ -20,10 +20,9 @@ class McUserForm(forms.ModelForm):
         'class_year',
         'utd_id',
         'hometown',
+        'hometown_state',
         'high_school',
         'phone_number',
-        'show_phone_number',
-        'show_email',
         'id',
         'pic'
     ]

@@ -16,7 +16,7 @@
     <h3>{{ profile.get_full_name }}</h3>
   </div>
   {% thumbnail profile.pic "200x200" crop="center" as im %}
-    <img style="float: right;" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+    <img class="profile-pic" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
   {% endthumbnail %}
   <h4>Personal Information</h4>
   <div class="profile-contact-card">
@@ -29,6 +29,9 @@
     {% endif %}
     {% if profile.high_school %}
       <p>High School: {{ profile.high_school }}</p>
+    {% endif %}
+    {% if user|has_role:'staff' %}
+      <p><span class="staff-only">UTD ID:</span> {{ profile.utd_id }}</p>
     {% endif %}
   </div>
 </div>
@@ -91,6 +94,9 @@
   {% endfor %}
 </div>
 
+{% if user|has_role:'staff' %}
+  <p><span class="staff-only">Orange fields</span> can only be seen by staff.</p>
+{% endif %}
 {% if edit or user|can:'edit_all_info' %}
   <a href="{% url 'edit_info' profile.norm_name %}" class="btn btn-default">Edit Profile</a>
   <br>

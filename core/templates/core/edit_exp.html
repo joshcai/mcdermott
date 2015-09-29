@@ -54,15 +54,6 @@
           <span class="error">{{ experience_form.organization.errors }}</span>
         </div>
       </div>
-      <div class="col-md-2">
-        <div class="form-group margin-sm">
-          <label for="id_exp_type" class="form-label">
-            Experience Type
-          </label>
-          {{ experience_form.exp_type|add_class:"form-control" }}
-          <span class="error">{{ experience_form.exp_type.errors }}</span>
-        </div>
-      </div>
       <div class="col-md-4">
         <div class="form-group margin-sm">
           <label for="id_location" class="form-label">
@@ -72,10 +63,19 @@
           <span class="error">{{ experience_form.location.errors }}</span>
         </div>
       </div>
+      <div class="col-md-2">
+        <div class="form-group margin-sm">
+          <label for="id_exp_type" class="form-label">
+            Experience Type
+          </label>
+          {{ experience_form.exp_type|add_class:"form-control" }}
+          <span class="error">{{ experience_form.exp_type.errors }}</span>
+        </div>
+      </div>
       <div class="col-md-3">
         <div class="form-group margin-sm">
           <label for="id_start_time" class="form-label">
-            Start Time
+            Start Date
           </label>
           {{ experience_form.start_time|add_class:"form-control" }}
           <span class="error">{{ experience_form.start_time.errors }}</span>
@@ -84,7 +84,7 @@
       <div class="col-md-3">
         <div class="form-group margin-sm">
           <label for="id_end_time" class="form-label">
-            End Time
+            End Date
           </label>
           {{ experience_form.end_time|add_class:"form-control" }}
           <span class="error">{{ experience_form.end_time.errors }}</span>

@@ -1,8 +1,13 @@
 {% extends "large_container.html" %}
+
+{% load permission_tags %}
+
 {% block inner_content %}
 
 <h4 class="center">{{ month_name }} {{ day }}, {{ year }}</h4>
-<a href="{% url 'mccalendar:create_event' %}">Create event</a>
+{% if user|has_role:'staff' %}
+  <a href="{% url 'mccalendar:create_event' %}">Create event</a>
+{% endif %}
 
 {% for event in events %}
   <p><a href="{% url 'mccalendar:event_detail' event.id %}">{{ event.subject }}</a> - {{ event.description }}</p>

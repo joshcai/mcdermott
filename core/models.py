@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 import watson
+from jsonfield import JSONField
 from sorl.thumbnail import ImageField
 import StringIO
 from PIL import Image, ImageOps
@@ -35,8 +36,7 @@ class McUser(models.Model):
   first_name = models.CharField(max_length=200, blank=True)
   middle_name = models.CharField(max_length=200, blank=True)
   last_name = models.CharField(max_length=200, blank=True)
-  # Real first name, use first_name as preferred first name so we don't
-  # have to join on tables when fetching by name.
+  # Real first name
   real_name = models.CharField(max_length=200, blank=True)
 
   # Gender
@@ -60,15 +60,16 @@ class McUser(models.Model):
   utd_id = models.CharField(max_length=50, blank=True)
 
   # Personal info
-  show_email = models.BooleanField(default=True)
   hometown = models.CharField(max_length=200, blank=True)
+  hometown_state = models.CharField(max_length=200, blank=True)
   high_school = models.CharField(max_length=200, blank=True)
   phone_number = models.CharField(max_length=200, blank=True)
-  show_phone_number = models.BooleanField(default=True)
   linkedin = models.CharField(max_length=200, blank=True)
-  show_linkedin = models.BooleanField(default=True)
+  facebook = models.CharField(max_length=200, blank=True)
   website = models.CharField(max_length=200, blank=True)
-  show_website = models.BooleanField(default=True)
+
+  # birthday, phone number, email, linkedin, website, facebook can be hidden
+  visible_fields = JSONField()
 
 
   pic = ImageField(upload_to='img', blank=True)

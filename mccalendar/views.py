@@ -1,3 +1,6 @@
+import time
+import calendar
+
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
@@ -5,8 +8,7 @@ from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render, redirect
 
-import time
-import calendar
+from rolepermissions.decorators import has_role_decorator
 
 from models import McEvent
 from forms import McEventForm
@@ -99,6 +101,7 @@ def day(request, year=None, month=None, day=None):
   return render(request, 'mccalendar/day.html', context)
 
 @login_required
+@has_role_decorator('staff')
 def create_event(request):
   if request.method == 'POST':
     event = McEvent(owner=request.user.mcuser)
@@ -117,6 +120,7 @@ def create_event(request):
   return render(request, 'mccalendar/edit_event.html', context)
 
 @login_required
+@has_role_decorator('staff')
 def edit_event(request, event_id=None):
   try:
     event = McEvent.objects.get(id=event_id)
@@ -150,6 +154,7 @@ def event_detail(request, event_id):
     return render(request, 'mccalendar/event_detail.html', context)
 
 @login_required
+@has_role_decorator('staff')
 def delete_event(request, event_id):
   try:
     event = McEvent.objects.get(id=event_id)

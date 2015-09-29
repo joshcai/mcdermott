@@ -75,20 +75,29 @@
     </div>
     <div class="col-md-6">
       <div class="form-group margin-sm">
-        <label for="id_{{ form.utd_id.name }}" class="form-label">
+        <label for="id_{{ form.utd_id.name }}" class="form-label staff-only">
           UTD ID
         </label>
         {{ form.utd_id|add_class:"form-control" }}
         <span class="error">{{ form.utd_id.errors }}</span>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-3">
       <div class="form-group margin-sm">
         <label for="id_{{ form.hometown.name }}" class="form-label">
-          Hometown
+          Hometown City
         </label>
         {{ form.hometown|add_class:"form-control" }}
         <span class="error">{{ form.hometown.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.hometown_state.name }}" class="form-label">
+          Hometown State
+        </label>
+        {{ form.hometown_state|add_class:"form-control" }}
+        <span class="error">{{ form.hometown_state.errors }}</span>
       </div>
     </div>
     <div class="col-md-6">
@@ -115,9 +124,11 @@
       <span class="error">{{ form.pic.errors }}</span>
     </div>
     <div class="col-md-12 text-center">
+      <span class="staff-only">Orange fields</span> are viewable by staff only.
+      <br>
+      <br>
       <input class="btn btn-default" type="submit" value="SAVE" />
     </div>
-    <br>
   </form>
 </div>
 {% endblock %}

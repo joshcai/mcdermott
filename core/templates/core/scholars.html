@@ -11,6 +11,7 @@ All scholars
 
 {% block content %}
 
+<div class="col-md-12">
 {% for scholar_group in scholars|group_by:3 %}
 <div class="row">
   {% for scholar in scholar_group %}
@@ -60,4 +61,5 @@ All scholars
 {% empty %}
   <h3>No scholars found.</h3>
 {% endfor %}
+</div>
 {% endblock %}

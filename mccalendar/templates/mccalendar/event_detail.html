@@ -1,4 +1,7 @@
 {% extends "large_container.html" %}
+
+{% load permission_tags %}
+
 {% block inner_content %}
 
 <h4>{{ event.subject }}</h4>
@@ -6,6 +9,8 @@
 <p>{{ event.start_time }} - {{ event.end_time }}</p>
 <p>{{ event.description }}</p>
 
-<a href="{% url 'mccalendar:edit_event' event.id %}">Edit event</a>
+{% if user|has_role:'staff' %}
+  <a href="{% url 'mccalendar:edit_event' event.id %}">Edit event</a>
+{% endif %}
 
 {% endblock %}
