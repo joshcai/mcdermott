@@ -222,7 +222,7 @@ footer {
 .day {
   width: 120px;
   height: 100px;
-  border: 1px solid black;
+  padding: 2px;
 }
 
 .day:hover {
@@ -233,6 +233,7 @@ footer {
   width: 120px;
   height: 100px;
   border: 1px solid black;
+  padding: 2px;
 }
 
 .current:hover {
@@ -244,8 +245,9 @@ footer {
   height: 100%;
   width: 100%;
   text-align: left;
-  background-color: #f0f0f0;
+  background-color: #fff;
   position: relative;
+  border-radius: 2px;
 /*  overflow-y: auto;*/
 }
 
