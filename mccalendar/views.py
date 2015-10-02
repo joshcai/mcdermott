@@ -152,28 +152,3 @@ def event_detail(request, event_id):
       'event': event,
     }
     return render(request, 'mccalendar/event_detail.html', context)
-
-@login_required
-@has_role_decorator('staff')
-def delete_event(request, event_id):
-  try:
-    event = McEvent.objects.get(id=event_id)
-  except McEvent.DoesNotExist:
-    raise Http404('Event %s does not exist' %event_id)
-  '''if request.method == 'POST':
-    if 'yes' in request.POST:
-      print "yes button"
-    else:
-      print "no button"
-    return redirect('/mccalendar/%s/%s/' % (cur_year, cur_month))
-  else:
-    context = {
-      'event': event,
-    }
-    return render(request, 'mccalendar/delete_event.html', context)'''
-  event_subject = event.subject
-  event.delete()
-  context = {
-    'event_subject': event_subject,
-  }
-  return render(request, 'mccalendar/delete_event.html', context)
