@@ -1,42 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="month-header">
+<div class="text-center">
   <h4 class="center">{{ month_name }}, {{ year }}</h4>
-  <a href="{% url 'mccalendar:month' year month 'prev' %}">Prev month</a>
-  <a href="{% url 'mccalendar:index' %}">Current month</a>
-  <a href="{% url 'mccalendar:month' year month 'next' %}">Next month</a>
+  <a href="{% url 'mccalendar:month' year month 'prev' %}" class="btn">Prev</a>
+  <a href="{% url 'mccalendar:month' year month 'next' %}" class="btn">Next</a>
 </div>
 <div class="month center">
-  <table class="month-table center">
+  <table class="center">
     <tr>
-      <td class="empty">Sun</td>
-      <td class="empty">Mon</td>
-      <td class="empty">Tue</td>
-      <td class="empty">Wed</td>
-      <td class="empty">Thu</td>
-      <td class="empty">Fri</td>
-      <td class="empty">Sat</td>
+      <td class="day empty day-header">Sun</td>
+      <td class="day empty day-header">Mon</td>
+      <td class="day empty day-header">Tue</td>
+      <td class="day empty day-header">Wed</td>
+      <td class="day empty day-header">Thu</td>
+      <td class="day empty day-header">Fri</td>
+      <td class="day empty day-header">Sat</td>
     </tr>
 
     {% for week in month_days %}
     <tr>
       {% for day, events, current in week %}
-      <!-- TD style -->
-      <td class="{% if day == 0 %}empty{% endif %}
-        {% if day != 0 and not current %}day{% endif %}
-        {% if day != 0 and current %}current{% endif %}
+      <td class="day
+        {% if day == 0 %}empty{% endif %}
+        {% if current %} current{% endif %}
         ">
-        <!-- Day number and entry snippets -->
         {% if day != 0 %}
-        <div class="day-div">
-          <a href="{% url 'mccalendar:day' year month day %}" class="day-link">{{ day }}<span class="day-span"></span></a>
-<!--          TODO: FIX THIS URL TO BE PROPER -->
+          <a href="{% url 'mccalendar:day' year month day %}" class="day-link">{{ day }}</a>
           {% for event in events %}
-            <br />
-            <b>{{ event.subject }} - {{ event.start_time }}</b>
+            <p><a href="{% url 'mccalendar:event_detail' event.id %}">{{ event.subject }} - {{ event.start_time }}</a></p>
           {% endfor %}
         {% endif %}
-        </div>
       </td>
       {% endfor %}
     </tr>
@@ -44,7 +37,7 @@
     <!--  Placeholder row for now, to keep calendar off bottom of page  -->
     <tr>
       {% for i in "xxxxxxx" %}
-      <td class="empty"></td>
+      <td class="day empty"></td>
       {% endfor %}
     </tr>
   </table>
