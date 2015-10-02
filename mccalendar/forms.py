@@ -3,7 +3,7 @@ from functools import partial
 
 from models import McEvent
 
-DateInput = partial(forms.DateInput, {'class': 'datepicker'})
+DateInput = partial(forms.TextInput, {'class': 'datepicker'})
 TimeInput = partial(forms.TimeInput, {'class': 'timepicker'})
 
 class McEventForm(forms.ModelForm):

@@ -2,6 +2,10 @@
 
 {% load widget_tweaks %}
 
+{% block title %}
+Edit Study Abroad
+{% endblock %}
+
 {% block inner_content %}
 
 <div class="row">
@@ -12,6 +16,13 @@
     <li role="presentation" class="active"><a>Study Abroad</a></li>
   </ul>
   <br>
+  <div id="messageContainer">
+    {% if messages %}
+      {% for message in messages %}
+        <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst }}</div>
+      {% endfor %}
+    {% endif %}
+  </div>
   <form method="post" action="{% url 'edit_abroad' mcuser.norm_name %}" class="form-horizontal">
     {% csrf_token %}
 
@@ -109,7 +120,15 @@
 </div>
 
 <script>
+  var inputChanged = false;
   $(document).ready(function() {
+    $('input').change(function() {
+      if(!inputChanged) {
+        $('#messageContainer').empty();
+        $('#messageContainer').append('<div class="alert alert-info" role="alert">Don\'t forget to save your changes!</div>');
+        inputChanged = true;
+      }
+    });
     $('.datepicker').datepicker();
   });
 </script>

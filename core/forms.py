@@ -3,7 +3,7 @@ from functools import partial
 
 from models import McUser, Degree, Experience, StudyAbroad
 
-DateInput = partial(forms.DateInput, {'class': 'datepicker'})
+DateInput = partial(forms.TextInput, {'class': 'datepicker'})
 
 class ImageThumbnailInput(forms.ClearableFileInput):
   template_name = 'floppyforms/image_thumbnail.html'

@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.forms.models import modelformset_factory
 from django.http import Http404
@@ -29,6 +30,7 @@ def edit_info(request, name):
     form = McUserForm(request.POST, request.FILES, instance=user_info, prefix='base')
     if (form.is_valid()):
       form.save()
+      messages.add_message(request, messages.SUCCESS, 'Changes saved!')
       return redirect('edit_info', user_info.norm_name)
   else:
     form = McUserForm(instance=user_info, prefix='base')
@@ -48,6 +50,7 @@ def edit_edu(request, name):
     degrees_formset = DegreeFormSet(request.POST, queryset=degrees, initial=[{'user': user_info.id}])
     if (degrees_formset.is_valid()):
       degrees_formset.save()
+      messages.add_message(request, messages.SUCCESS, 'Changes saved!')
       return redirect('edit_edu', user_info.norm_name)
   else:
     degrees_formset = DegreeFormSet(queryset=degrees, initial=[{'user': user_info.id}])
@@ -67,6 +70,7 @@ def edit_exp(request, name):
     experiences_formset = ExperienceFormSet(request.POST, queryset=experiences, initial=[{'user': user_info.id}])
     if (experiences_formset.is_valid()):
       experiences_formset.save()
+      messages.add_message(request, messages.SUCCESS, 'Changes saved!')
       return redirect('edit_exp', user_info.norm_name)
   else:
     experiences_formset = ExperienceFormSet(queryset=experiences, initial=[{'user': user_info.id}])
@@ -86,6 +90,7 @@ def edit_abroad(request, name):
     study_abroad_formset = StudyAbroadFormSet(request.POST, queryset=study_abroad, initial=[{'user': user_info.id}])
     if (study_abroad_formset.is_valid()):
       study_abroad_formset.save()
+      messages.add_message(request, messages.SUCCESS, 'Changes saved!')
       return redirect('edit_abroad', user_info.norm_name)
   else:
     study_abroad_formset = StudyAbroadFormSet(queryset=study_abroad, initial=[{'user': user_info.id}])
