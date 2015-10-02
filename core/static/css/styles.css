@@ -212,7 +212,7 @@ footer {
   text-align: left;
   border-radius: 2px;
   border: 1px solid black;
-  overflow-y: scroll;
+  overflow-y: auto;
   background-color: #fff;
   border-color: black;
 }
