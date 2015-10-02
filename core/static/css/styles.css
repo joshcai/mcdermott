@@ -64,6 +64,11 @@ a.no-dec {
 .staff-only {
   color: #C75B12;
 }
+
+.scholar-card {
+  min-height: 140px;
+}
+
 /* rules for profile page, mostly */
 
 @media (min-width: 768px) {

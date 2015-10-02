@@ -48,7 +48,7 @@
       <div class="col-md-6">
         <div class="form-group margin-sm">
           <label for="id_degree_type" class="form-label">
-            Degree
+            Degree <small>(e.g. B.S., M.A., Ph.D.)</small>
           </label>
           {{ degree_form.degree_type|add_class:"form-control" }}
           <span class="error">{{ degree_form.degree_type.errors }}</span>
@@ -118,4 +118,10 @@
     <br>
   </form>
 </div>
+
+<script>
+  $(document).ready(function() {
+    $('.datepicker').datepicker();
+  });
+</script>
 {% endblock %}

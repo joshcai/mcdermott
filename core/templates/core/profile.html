@@ -13,7 +13,11 @@
 <!-- Name and contact info-->
 <div>
   <div class="profile-name">
-    <h3>{{ profile.get_full_name }}</h3>
+    <h3>{{ profile.get_full_name }}
+    {% if edit or user|can:'edit_all_info' %}
+      <a href="{% url 'edit_info' profile.norm_name %}" class="btn btn-default profile-show-btn"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;Edit Profile</a>
+    {% endif %}
+  </h3>
   </div>
   {% thumbnail profile.pic "200x200" crop="center" as im %}
     <img class="profile-pic" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
@@ -36,53 +40,58 @@
   </div>
 </div>
 
-<h4>Education
-  <button type="button" class="btn btn-sm profile-show-btn" data-toggle="collapse" data-target="#education">Show</button>
-</h4>
-<div id="education" class="collapse">
-{% for degree in profile.degrees.all %}
-  <div class="well experience">
-    <p class="school-name">School: {{ degree.school }}</p>
-    <p>Type: {{ degree.degree_type }}</p>
-    <p>Time period: {{ degree.start_time }} - {{ degree.end_time }}</p>
-    {% for major in degree.majors.all %}
-      {% if major.utd_major %}
-        <p>Major: {{ major.utd_major }}</p>
-<!--      {% elif major.other_major %}-->
-      {% else %}
-        <p>Major: {{ major.other_major }}</p>
-      {% endif %}
-    {% endfor %}
-    {% for minor in degree.minors.all %}
-      {% if minor.utd_minor %}
-        <p>Minor: {{ minor.utd_minor }}</p>
-      {% elif minor.other_minor %}
-        <p>Minor: {{ minor.other_minor }}</p>
-      {% endif %}
-    {% endfor %}
-  </div>
-{% endfor %}
-</div>
-
-<h4>Experience
-  <button type="button" class="btn btn-sm profile-show-btn" data-toggle="collapse" data-target="#experience">Show</button>
-</h4>
-<div id="experience" class="collapse">
-  {% for experience in profile.experiences.all %}
-  <div class="well experience">
-    <p>Title: {{ experience.title }}</p>
-    <p>Organization: {{ experience.organization }}</p>
-    <p>Location: {{ experience.location }}</p>
-    <p>Type: {{ experience.exp_type }}</p>
-    <p>Time period: {{ experience.start_time }} - {{ experience.end_time }}</p>
-  </div>
+{% if profile.degrees.all %}
+  <h4>Education
+    <!--<button type="button" class="btn btn-sm profile-show-btn" data-toggle="collapse" data-target="#education">Show</button>-->
+  </h4>
+  <div id="education">
+  {% for degree in profile.degrees.all %}
+    <div class="well experience">
+      <p class="school-name">School: {{ degree.school }}</p>
+      <p>Type: {{ degree.degree_type }}</p>
+      <p>Time period: {{ degree.start_time }} - {{ degree.end_time }}</p>
+      {% for major in degree.majors.all %}
+        {% if major.utd_major %}
+          <p>Major: {{ major.utd_major }}</p>
+  <!--      {% elif major.other_major %}-->
+        {% else %}
+          <p>Major: {{ major.other_major }}</p>
+        {% endif %}
+      {% endfor %}
+      {% for minor in degree.minors.all %}
+        {% if minor.utd_minor %}
+          <p>Minor: {{ minor.utd_minor }}</p>
+        {% elif minor.other_minor %}
+          <p>Minor: {{ minor.other_minor }}</p>
+        {% endif %}
+      {% endfor %}
+    </div>
   {% endfor %}
-</div>
+  </div>
+{% endif %}
 
+{% if profile.experiences.all %}
+  <h4>Experience
+    <!--<button type="button" class="btn btn-sm profile-show-btn" data-toggle="collapse" data-target="#experience">Show</button>-->
+  </h4>
+  <div id="experience">
+    {% for experience in profile.experiences.all %}
+    <div class="well experience">
+      <p>Title: {{ experience.title }}</p>
+      <p>Organization: {{ experience.organization }}</p>
+      <p>Location: {{ experience.location }}</p>
+      <p>Type: {{ experience.exp_type }}</p>
+      <p>Time period: {{ experience.start_time }} - {{ experience.end_time }}</p>
+    </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% if profile.studiesabroad.all %}
 <h4>Study Abroad
-  <button type="button" class="btn btn-sm profile-show-btn" data-toggle="collapse" data-target="#study-abroad">Show</button>
+  <!--<button type="button" class="btn btn-sm profile-show-btn" data-toggle="collapse" data-target="#study-abroad">Show</button>-->
 </h4>
-<div id="study-abroad" class="collapse">
+<div id="study-abroad">
   {% for study_abroad in profile.studiesabroad.all %}
   <div class="well experience">
     <p>Location: {{ study_abroad.primary_location }}</p>
@@ -93,13 +102,12 @@
   </div>
   {% endfor %}
 </div>
+{% endif %}
 
 {% if user|has_role:'staff' %}
   <p><span class="staff-only">Orange fields</span> can only be seen by staff.</p>
 {% endif %}
-{% if edit or user|can:'edit_all_info' %}
-  <a href="{% url 'edit_info' profile.norm_name %}" class="btn btn-default">Edit Profile</a>
-  <br>
-{% endif %}
+
+
 
 {% endblock %}

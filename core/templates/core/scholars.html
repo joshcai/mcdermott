@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load staticfiles %}
+{% load permission_tags %}
 {% load thumbnail %}
 {% load core_tags %}
 
@@ -17,7 +18,7 @@ All scholars
   {% for scholar in scholar_group %}
   <div class="col-md-4 col-sm-12">
   {# add picture here #}
-    <div class="well">
+    <div class="well scholar-card">
       <div class="pull-left">
       {% if scholar.pic %}
         {% thumbnail scholar.pic "100x100" crop="center" as im %}
@@ -32,16 +33,23 @@ All scholars
         <a class="no-dec" href ="/{{ scholar.first_name|removespaces }}{{ scholar.last_name|removespaces }}">
           <h4>{{ scholar.get_full_name }}</h4>
         </a>
-        {{ scholar.class_year }}</br>
+        <span style="font-size:16px;">
+        {% if scholar.user|has_role:'staff' %}
+          {{ scholar.staff_title }}
+        {% else %}
+          {{ scholar.class_year }}
+        {% endif %}
+        </span>
         <!-- Dropdown -->
+        <!--
         <button type="button" class="btn btn-sm profile-show-btn" data-toggle="collapse" data-target="#{{ scholar.norm_name }}">More</button>
         <div id="{{ scholar.norm_name }}" class="collapse">
           <div class="well experience text-left">
             {% if scholar.phone_number %}
-<!--              <p>{{ scholar.phone_number }}-->
+              <p>{{ scholar.phone_number }}
             {% endif %}
             {% if scholar.email %}
-<!--              <p>{{ scholar.email }}</p>-->
+              <p>{{ scholar.email }}</p>
             {% endif %}
             {% for degree in scholar.degrees.all %}
               <p>
@@ -52,7 +60,7 @@ All scholars
               </p>
             {% endfor %}
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
