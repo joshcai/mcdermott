@@ -124,7 +124,7 @@ Edit Experience
     $('input').change(function() {
       if(!inputChanged) {
         $('#messageContainer').empty();
-        $('#messageContainer').append('<div class="alert alert-info" role="alert">Don\'t forget to save your changes!</div>');
+        $('#messageContainer').append('<div class="alert alert-warning" role="alert">Don\'t forget to save your changes!</div>');
         inputChanged = true;
       }
     });

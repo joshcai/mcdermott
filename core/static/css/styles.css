@@ -69,6 +69,12 @@ a.no-dec {
   min-height: 140px;
 }
 
+
+.alert {
+  padding: 5px 13px;
+  margin-bottom: 13px;
+}
+
 /* rules for profile page, mostly */
 
 @media (min-width: 768px) {
@@ -204,8 +210,14 @@ footer {
 
 /* Calendar stuff (awful b/c written by Andrew) */
 .month {
+  margin-top: 25px;
   height: 500px;
   width: 85%;
+}
+
+.calendar {
+  border-spacing: 5px;
+  border-collapse: separate;
 }
 
 .day {
@@ -216,10 +228,8 @@ footer {
   vertical-align: top;
   text-align: left;
   border-radius: 2px;
-  border: 1px solid black;
   overflow-y: auto;
   background-color: #fff;
-  border-color: black;
 }
 
 .day:hover {

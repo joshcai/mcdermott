@@ -40,10 +40,9 @@
               <li><a href="{% url 'login' %}">Login</a></li>
             {% else %}
               <li><a href="{% url 'mccalendar:index' %}">Calendar</a></li>
-              <li><a href="{% url 'mccalendar:event_list' %}">Events</a></li>
               {# <li><a href="{% url 'documents' %}">Documents</a></li> #}
-              <li><a href="{% url 'scholars' %}">Scholars</a></li>
-              <li><a href="{% url 'own_profile' %}">My Profile</a></li>
+              <li><a href="{% url 'scholars' %}">Directory</a></li>
+              <li><a href="{% url 'own_profile' %}">Profile</a></li>
               <li><a href="{% url 'logout' %}">Logout</a></li>
             {% endif %}
           </ul>

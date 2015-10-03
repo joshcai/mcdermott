@@ -24,7 +24,9 @@
   {% endthumbnail %}
   <h4>Personal Information</h4>
   <div class="profile-contact-card">
-    <p><span class="profile-contact-field">Class:</span> {{ profile.class_year }}</p>
+    {% if profile.class_year %}
+      <p><span class="profile-contact-field">Class:</span> {{ profile.class_year }}</p>
+    {% endif %}
     <p><span class="profile-contact-field">Phone number:</span> {{ profile.phone_number|displayphone }}</p>
     <p><span class="profile-contact-field">Email:</span> {{ profile.user.email }}</p>
     <p>Birthday: {{ profile.birthday|date:"F j" }}</p>

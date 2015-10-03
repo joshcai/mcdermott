@@ -6,12 +6,14 @@ Calendar
 
 {% block content %}
 <div class="text-center">
-  <h4 class="center">{{ month_name }}, {{ year }}</h4>
-  <a href="{% url 'mccalendar:month' year month 'prev' %}" class="btn">Prev</a>
-  <a href="{% url 'mccalendar:month' year month 'next' %}" class="btn">Next</a>
+  <h4 class="center">
+  <a href="{% url 'mccalendar:month' year month 'prev' %}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
+    {{ month_name }} {{ year }}
+  <a href="{% url 'mccalendar:month' year month 'next' %}"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+  </h4>
 </div>
 <div class="month center">
-  <table class="center">
+  <table class="calendar center">
     <tr>
       <td class="day empty day-header">Sun</td>
       <td class="day empty day-header">Mon</td>
