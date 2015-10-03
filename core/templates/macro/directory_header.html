@@ -1,0 +1,22 @@
+{% if active %}
+  <ul class="nav nav-pills directory-header text-center">
+    <li role="presentation" class="{% if active == 'all' %}active{% endif %}">
+      <a {% if active != 'all' %} href="{% url 'scholars' %}" {%endif %}>All</a>
+    </li>
+    <li role="presentation" class="{% if active == '2012' %}active{% endif %}">
+      <a {% if active != '2012' %} href="{% url 'scholars_by_class' 2012 %}" {%endif %}>2012</a>
+    </li>
+    <li role="presentation" class="{% if active == '2013' %}active{% endif %}">
+      <a {% if active != '2013' %} href="{% url 'scholars_by_class' 2013 %}" {%endif %}>2013</a>
+    </li>
+    <li role="presentation" class="{% if active == '2014' %}active{% endif %}">
+      <a {% if active != '2014' %} href="{% url 'scholars_by_class' 2014 %}" {%endif %}>2014</a>
+    </li>
+    <li role="presentation" class="{% if active == '2015' %}active{% endif %}">
+      <a {% if active != '2015' %} href="{% url 'scholars_by_class' 2015 %}" {%endif %}>2015</a>
+    </li>
+    <li role="presentation" class="{% if active == 'staff' %}active{% endif %}">
+      <a {% if active != 'staff' %} href="{% url 'staff' %}" {% endif %}>Staff</a>
+    </li>
+  </ul>
+{% endif %}

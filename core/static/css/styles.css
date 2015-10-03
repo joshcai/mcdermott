@@ -75,8 +75,20 @@ a.no-dec {
   margin-bottom: 13px;
 }
 
+.directory-header {
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+.nav-pills>li:not(.active) {
+  background-color: #fbfbfb;
+}
+
 /* rules for profile page, mostly */
 
+.profile-pic {
+  border-radius: 2px;
+}
 @media (min-width: 768px) {
   .profile-pic {
     float: right;

@@ -105,7 +105,8 @@ def edit_abroad(request, name):
 def scholars(request):
   scholars = McUser.objects.all().order_by('first_name')
   context = {
-    'scholars': scholars
+    'scholars': scholars,
+    'active': 'all'
     }
   return render(request, 'core/scholars.html', context)
 
@@ -113,7 +114,8 @@ def scholars(request):
 def staff(request):
   scholars = McUser.objects.all().filter(user__groups__name='staff').order_by('staff_order')
   context = {
-    'scholars': scholars
+    'scholars': scholars,
+    'active': 'staff'
     }
   return render(request, 'core/staff.html', context)
 
@@ -121,7 +123,8 @@ def staff(request):
 def scholars_by_class(request, class_year):
   scholars = McUser.objects.all().filter(class_year=int(class_year)).order_by('first_name')
   context = {
-    'scholars': scholars
+    'scholars': scholars,
+    'active': str(class_year)
     }
   return render(request, 'core/scholars.html', context)
 

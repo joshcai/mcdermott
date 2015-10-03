@@ -12,7 +12,9 @@ Directory
 
 {% block content %}
 
-<div class="col-md-12">
+
+<div class="col-md-12 text-center">
+{% directory_header active %}
 {% for scholar_group in scholars|group_by:3 %}
 <div class="row">
   {% for scholar in scholar_group %}

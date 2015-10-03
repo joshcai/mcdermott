@@ -24,3 +24,7 @@ def displayphone(value):
 @register.filter
 def removespaces(value):
   return value.replace(' ', '')
+
+@register.inclusion_tag('macro/directory_header.html')
+def directory_header(active):
+  return {'active': active}
