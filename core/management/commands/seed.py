@@ -66,6 +66,7 @@ class Command(BaseCommand):
     user.mcuser.gender = ('Male' if scholar['Title'] == 'Mr.' else 'Female')
     user.mcuser.class_year = scholar['Class']
     user.mcuser.birthday = self.convertDate(scholar['DOB'])
+    user.mcuser.email = scholar['UTD email']
     user.mcuser.phone_number = scholar['Cell']
     user.mcuser.save()
     CurrentScholar.assign_role_to_user(user)
@@ -83,8 +84,10 @@ class Command(BaseCommand):
     user.mcuser.first_name = staff['First']
     user.mcuser.last_name = staff['Last']
     user.mcuser.gender = staff['Gender']
+    user.mcuser.email = staff['Email']
     user.mcuser.staff_title = staff['Title']
     user.mcuser.staff_phone = staff['Phone']
+    user.mcuser.staff_order = staff['Order']
     user.mcuser.save()
     Staff.assign_role_to_user(user)
     self.stdout.write('Created user %s %s' %

@@ -110,6 +110,14 @@ def scholars(request):
   return render(request, 'core/scholars.html', context)
 
 @login_required
+def staff(request):
+  scholars = McUser.objects.all().filter(user__groups__name='staff').order_by('staff_order')
+  context = {
+    'scholars': scholars
+    }
+  return render(request, 'core/staff.html', context)
+
+@login_required
 def scholars_by_class(request, class_year):
   scholars = McUser.objects.all().filter(class_year=int(class_year)).order_by('first_name')
   context = {

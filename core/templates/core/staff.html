@@ -7,14 +7,18 @@
 
 
 {% block title %}
-Directory
+Staff
 {% endblock %}
 
 {% block content %}
 
 <div class="col-md-12">
-{% for scholar_group in scholars|group_by:3 %}
+{% for scholar_group in scholars|group_by:2 %}
 <div class="row">
+  <div class="col-md-2"></div>
+  {% if forloop.last %}
+    <div class="col-md-2"></div>
+  {% endif %}
   {% for scholar in scholar_group %}
   <div class="col-md-4 col-sm-12">
   {# add picture here #}
@@ -40,34 +44,13 @@ Directory
           {{ scholar.class_year }}
         {% endif %}
         </span>
-        <!-- Dropdown -->
-        <!--
-        <button type="button" class="btn btn-sm profile-show-btn" data-toggle="collapse" data-target="#{{ scholar.norm_name }}">More</button>
-        <div id="{{ scholar.norm_name }}" class="collapse">
-          <div class="well experience text-left">
-            {% if scholar.phone_number %}
-              <p>{{ scholar.phone_number }}
-            {% endif %}
-            {% if scholar.email %}
-              <p>{{ scholar.email }}</p>
-            {% endif %}
-            {% for degree in scholar.degrees.all %}
-              <p>
-                {{ degree.degree_type }} in {{ degree.major1 }}
-                  {% if degree.major2 %}
-                    , {{ degree.major2 }}
-                  {% endif %}
-              </p>
-            {% endfor %}
-          </div>
-        </div> -->
       </div>
     </div>
   </div>
   {% endfor %}
 </div>
 {% empty %}
-  <h3>No scholars found.</h3>
+  <h3>No staff found.</h3>
 {% endfor %}
 </div>
 {% endblock %}

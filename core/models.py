@@ -63,13 +63,14 @@ class McUser(models.Model):
   hometown = models.CharField(max_length=200, blank=True)
   hometown_state = models.CharField(max_length=200, blank=True)
   high_school = models.CharField(max_length=200, blank=True)
+  email = models.CharField(max_length=200, blank=True)
   phone_number = models.CharField(max_length=200, blank=True)
   linkedin = models.CharField(max_length=200, blank=True)
   facebook = models.CharField(max_length=200, blank=True)
   website = models.CharField(max_length=200, blank=True)
 
   # birthday, phone number, email, linkedin, website, facebook can be hidden
-  visible_fields = JSONField()
+  hidden_fields = JSONField()
 
 
   pic = ImageField(upload_to='img', blank=True)
@@ -82,6 +83,7 @@ class McUser(models.Model):
   # Staff only fields
   staff_phone = models.CharField(max_length=200, blank=True)
   staff_title = models.CharField(max_length=200, blank=True)
+  staff_order = models.IntegerField(default=0, null=True, blank=True)
 
   def get_full_name(self):
     return '%s %s' % (self.first_name, self.last_name)
