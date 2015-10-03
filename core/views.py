@@ -29,7 +29,10 @@ def edit_info(request, name):
   if request.method == 'POST':
     form = McUserForm(request.POST, request.FILES, instance=user_info, prefix='base')
     if (form.is_valid()):
-      form.save()
+      mcuser = form.save(commit=False)
+      hidden_fields = [key.replace('checkbox_', '') for key in request.POST if key.startswith('checkbox_')]
+      mcuser.hidden_fields = hidden_fields
+      mcuser.save()
       messages.add_message(request, messages.SUCCESS, 'Changes saved!')
       return redirect('edit_info', user_info.norm_name)
   else:
@@ -165,7 +168,7 @@ def profile(request, name):
   # so use 'profile' as alias
   context = {
       'profile': profile,
-      'edit': profile == request.user.mcuser
+      'is_self': profile == request.user.mcuser
     }
   return render(request, 'core/profile.html', context)
 

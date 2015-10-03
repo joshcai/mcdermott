@@ -1,5 +1,6 @@
 {% extends "large_container.html" %}
 
+{% load core_tags %}
 {% load widget_tweaks %}
 {% load permission_tags %}
 
@@ -62,7 +63,7 @@ Edit Info
       <div class="form-group margin-sm">
         <label for="id_{{ form.birthday.name }}" class="form-label">
           Birthday
-            <input type="checkbox" id="checkbox_{{ form.birthday.name }}" value="true" class="visibility-checkbox">
+            <input type="checkbox" id="checkbox_{{ form.birthday.name }}" name="checkbox_{{ form.birthday.name }}" value="true" class="visibility-checkbox"{% if mcuser|fieldhidden:'birthday' %} checked {% endif %}>
         </label>
         {{ form.birthday|add_class:"form-control" }}
         <span class="error">{{ form.birthday.errors }}</span>
@@ -128,7 +129,7 @@ Edit Info
       <div class="form-group margin-sm">
         <label for="id_{{ form.phone_number.name }}" class="form-label">
           Phone Number
-          <input type="checkbox" id="checkbox_{{ form.phone_number.name }}" value="true" class="visibility-checkbox">
+          <input type="checkbox" id="checkbox_{{ form.phone_number.name }}" name="checkbox_{{ form.phone_number.name }}" value="true" class="visibility-checkbox" {% if mcuser|fieldhidden:'phone_number' %} checked {% endif %}>
         </label>
         {{ form.phone_number|add_class:"form-control" }}
         <span class="error">{{ form.phone_number.errors }}</span>
@@ -159,9 +160,13 @@ Edit Info
         inputChanged = true;
       }
     });
+    $('.visibility-checkbox:checked').each(function() {
+      var element = $(this).attr('id').replace('checkbox', 'id');
+      var label = $('label[for=' + element + ']');
+      label.addClass('staff-only');
+    });
     $('.visibility-checkbox').change(function() {
       var element = $(this).attr('id').replace('checkbox', 'id');
-      console.log(element);
       var label = $('label[for=' + element + ']');
       if($(this).is(':checked')) {
         label.addClass('staff-only');
