@@ -27,7 +27,7 @@
     {% if profile.class_year %}
       <p><span class="profile-contact-field">Class:</span> {{ profile.class_year }}</p>
     {% endif %}
-    {% if is_self or user|has_role:'staff' or not mcuser|fieldhidden:'phone_number' %}
+    {% if is_self or user|has_role:'staff' or not profile|fieldhidden:'phone_number' %}
       {% if profile.phone_number %}
         <p>
           <span class="profile-contact-field {% if profile|fieldhidden:'phone_number' %} staff-only {% endif %}">
@@ -37,7 +37,7 @@
         </p>
       {% endif %}
     {% endif %}
-    {% if is_self or user|has_role:'staff' or not mcuser|fieldhidden:'email' %}
+    {% if is_self or user|has_role:'staff' or not profile|fieldhidden:'email' %}
       {% if profile.email %}
         <p>
           <span class="profile-contact-field {% if profile|fieldhidden:'email' %} staff-only {% endif %}">
@@ -47,7 +47,7 @@
         </p>
       {% endif %}
     {% endif %}
-    {% if is_self or user|has_role:'staff' or not mcuser|fieldhidden:'birthday' %}
+    {% if is_self or user|has_role:'staff' or not profile|fieldhidden:'birthday' %}
       {% if profile.birthday %}
         <p>
           <span class="profile-contact-field {% if profile|fieldhidden:'birthday' %} staff-only {% endif %}">
