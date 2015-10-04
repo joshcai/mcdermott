@@ -1,17 +1,30 @@
 {% extends "base.html" %}
 
+{% load permission_tags %}
+
 {% block title %}
 Calendar
 {% endblock %}
 
 {% block content %}
+<div class="col-md-12">
 <div class="text-center">
-  <br>
-  <h4 class="center">
-  <a href="{% url 'mccalendar:month' year month 'prev' %}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
-    {{ month_name }} {{ year }}
-  <a href="{% url 'mccalendar:month' year month 'next' %}"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
-  </h4>
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <br>
+      <h4 class="center">
+      <a href="{% url 'mccalendar:month' year month 'prev' %}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
+        {{ month_name }} {{ year }}
+      <a href="{% url 'mccalendar:month' year month 'next' %}"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+      </h4>
+    </div>
+    <div class="col-md-3 text-md-left text-sm-center text-xs-center">
+      <br>
+      {% if user|has_role:'staff' %}
+        <a href="{% url 'mccalendar:create_event' %}" class="btn btn-default">Create event</a>
+      {% endif %}
+    </div>
+  </div>
 </div>
 <div class="month center">
   <table class="calendar center">
@@ -49,5 +62,6 @@ Calendar
       {% endfor %}
     </tr>
   </table>
+</div>
 </div>
 {% endblock %}

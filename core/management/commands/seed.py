@@ -65,7 +65,8 @@ class Command(BaseCommand):
     user.mcuser.last_name = scholar['Last']
     user.mcuser.gender = ('Male' if scholar['Title'] == 'Mr.' else 'Female')
     user.mcuser.class_year = scholar['Class']
-    user.mcuser.birthday = self.convertDate(scholar['DOB'])
+    if scholar['DOB']:
+      user.mcuser.birthday = self.convertDate(scholar['DOB'])
     user.mcuser.email = scholar['UTD email']
     user.mcuser.phone_number = scholar['Cell']
     user.mcuser.save()

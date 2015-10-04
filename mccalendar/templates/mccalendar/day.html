@@ -13,7 +13,7 @@ Calendar
   <p><a href="{% url 'mccalendar:event_detail' event.id %}">{{ event.subject }}</a> - {{ event.description }}</p>
 {% endfor %}
 {% if user|has_role:'staff' %}
-  <a href="{% url 'mccalendar:create_event' %}" class="btn">Create event</a>
+  <a href="{% url 'mccalendar:create_event' %}" class="btn btn-default">Create event</a>
 {% endif %}
 
 {% endblock %}
