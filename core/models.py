@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 import watson
+from localflavor.us.us_states import US_STATES
 from jsonfield import JSONField
 from sorl.thumbnail import ImageField
 import StringIO
@@ -61,7 +62,7 @@ class McUser(models.Model):
 
   # Personal info
   hometown = models.CharField(max_length=200, blank=True)
-  hometown_state = models.CharField(max_length=200, blank=True)
+  hometown_state = models.CharField(blank=True, max_length=2, choices=US_STATES)
   high_school = models.CharField(max_length=200, blank=True)
   email = models.CharField(max_length=200, blank=True)
   phone_number = models.CharField(max_length=200, blank=True)
@@ -144,7 +145,7 @@ class StudyAbroad(models.Model):
   start_time = models.DateField(null=True, blank=True)
   end_time = models.DateField(null=True, blank=True)
 
-watson.register(McUser, fields=('first_name', 'last_name', 'gender', 'class_year', 'hometown', 'high_school',
+watson.register(McUser, fields=('first_name', 'last_name', 'gender', 'class_year', 'hometown', 'hometown_state', 'high_school',
                                 'norm_name'))
 watson.register(Degree)
 watson.register(Experience)

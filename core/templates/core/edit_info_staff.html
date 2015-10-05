@@ -61,21 +61,21 @@ Edit Info
     </div>
     <div class="col-md-6">
       <div class="form-group margin-sm">
+        <label for="id_{{ form.staff_title.name }}" class="form-label">
+          Title / Position
+        </label>
+        {{ form.staff_title|add_class:"form-control" }}
+        <span class="error">{{ form.staff_title.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group margin-sm">
         <label for="id_{{ form.birthday.name }}" class="form-label">
           Birthday
             <input type="checkbox" id="checkbox_{{ form.birthday.name }}" name="checkbox_{{ form.birthday.name }}" value="true" class="visibility-checkbox"{% if mcuser|fieldhidden:'birthday' %} checked {% endif %}>
         </label>
         {{ form.birthday|add_class:"form-control" }}
         <span class="error">{{ form.birthday.errors }}</span>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="form-group margin-sm">
-        <label for="id_{{ form.class_year.name }}" class="form-label">
-          Class year
-        </label>
-        {{ form.class_year|add_class:"form-control" }}
-        <span class="error">{{ form.class_year.errors }}</span>
       </div>
     </div>
     <div class="col-md-3">
@@ -87,13 +87,23 @@ Edit Info
         <span class="error">{{ form.gender.errors }}</span>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-3">
       <div class="form-group margin-sm">
-        <label for="id_{{ form.utd_id.name }}" class="form-label staff-only">
-          UTD ID
+        <label for="id_{{ form.phone_number.name }}" class="form-label">
+          Phone Number
+          <input type="checkbox" id="checkbox_{{ form.phone_number.name }}" name="checkbox_{{ form.phone_number.name }}" value="true" class="visibility-checkbox" {% if mcuser|fieldhidden:'phone_number' %} checked {% endif %}>
         </label>
-        {{ form.utd_id|add_class:"form-control" }}
-        <span class="error">{{ form.utd_id.errors }}</span>
+        {{ form.phone_number|add_class:"form-control" }}
+        <span class="error">{{ form.phone_number.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.staff_phone.name }}" class="form-label">
+          Office Phone Number
+        </label>
+        {{ form.staff_phone|add_class:"form-control" }}
+        <span class="error">{{ form.staff_phone.errors }}</span>
       </div>
     </div>
     <div class="col-md-3">
@@ -112,25 +122,6 @@ Edit Info
         </label>
         {{ form.hometown_state|add_class:"form-control" }}
         <span class="error">{{ form.hometown_state.errors }}</span>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="form-group margin-sm">
-        <label for="id_{{ form.high_school.name }}" class="form-label">
-          High School
-        </label>
-        {{ form.high_school|add_class:"form-control" }}
-        <span class="error">{{ form.high_school.errors }}</span>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="form-group margin-sm">
-        <label for="id_{{ form.phone_number.name }}" class="form-label">
-          Phone Number
-          <input type="checkbox" id="checkbox_{{ form.phone_number.name }}" name="checkbox_{{ form.phone_number.name }}" value="true" class="visibility-checkbox" {% if mcuser|fieldhidden:'phone_number' %} checked {% endif %}>
-        </label>
-        {{ form.phone_number|add_class:"form-control" }}
-        <span class="error">{{ form.phone_number.errors }}</span>
       </div>
     </div>
     <!--TODO: Replace this with something else later -->

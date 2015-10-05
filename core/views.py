@@ -5,7 +5,7 @@ from django.forms.models import modelformset_factory
 from django.http import Http404
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
-from rolepermissions.verifications import has_permission
+from rolepermissions.verifications import has_role, has_permission
 import watson
 
 from forms import McUserForm, DegreeForm, ExperienceForm, StudyAbroadForm
@@ -41,7 +41,10 @@ def edit_info(request, name):
       'form': form,
       'mcuser': user_info
       }
-  return render(request, 'core/edit_info.html', context)
+  template = 'core/edit_info.html'
+  if has_role(user_info.user, 'staff'):
+    template = 'core/edit_info_staff.html'
+  return render(request, template, context)
 
 @login_required
 def edit_edu(request, name):

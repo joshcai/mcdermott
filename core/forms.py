@@ -24,7 +24,9 @@ class McUserForm(forms.ModelForm):
         'high_school',
         'phone_number',
         'id',
-        'pic'
+        'pic',
+        'staff_title',
+        'staff_phone'
     ]
     widgets = {
         'id': forms.HiddenInput(),
