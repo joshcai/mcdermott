@@ -17,7 +17,7 @@ class McEvent(models.Model):
     end_time = models.TimeField()
     all_day_event = models.BooleanField()
     description = models.TextField(max_length=200, blank=True)
-    location = models.TextField(max_length=200, blank=True)
+    location = models.CharField(max_length=200, blank=True)
     private = models.BooleanField()
 
     #additional fields

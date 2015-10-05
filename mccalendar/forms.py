@@ -30,7 +30,6 @@ class McEventForm(forms.ModelForm):
       'end_date': DateInput(),
       'end_time': TimeInput(),
       'description': forms.Textarea(attrs={'rows':4}),
-      'location': forms.Textarea(attrs={'rows':4}),
     }
 
 class UploadFileForm(forms.Form):
