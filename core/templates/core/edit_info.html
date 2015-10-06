@@ -41,7 +41,7 @@ Edit Info
     {% endfor %}
 
     <!-- Manual HTML for McUser form -->
-    <div class="col-md-6">
+    <div class="col-md-6 col-sm-6 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.first_name.name }}" class="form-label">
           First name
@@ -50,7 +50,7 @@ Edit Info
         <span class="error">{{ form.first_name.errors }}</span>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.last_name.name }}" class="form-label">
           Last name
@@ -59,7 +59,16 @@ Edit Info
         <span class="error">{{ form.last_name.errors }}</span>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.utd_id.name }}" class="form-label staff-only">
+          UTD ID
+        </label>
+        {{ form.utd_id|add_class:"form-control" }}
+        <span class="error">{{ form.utd_id.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.birthday.name }}" class="form-label">
           Birthday
@@ -69,7 +78,7 @@ Edit Info
         <span class="error">{{ form.birthday.errors }}</span>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.class_year.name }}" class="form-label">
           Class year
@@ -78,7 +87,7 @@ Edit Info
         <span class="error">{{ form.class_year.errors }}</span>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.gender.name }}" class="form-label">
           Gender
@@ -87,34 +96,7 @@ Edit Info
         <span class="error">{{ form.gender.errors }}</span>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="form-group margin-sm">
-        <label for="id_{{ form.utd_id.name }}" class="form-label staff-only">
-          UTD ID
-        </label>
-        {{ form.utd_id|add_class:"form-control" }}
-        <span class="error">{{ form.utd_id.errors }}</span>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="form-group margin-sm">
-        <label for="id_{{ form.hometown.name }}" class="form-label">
-          Hometown City
-        </label>
-        {{ form.hometown|add_class:"form-control" }}
-        <span class="error">{{ form.hometown.errors }}</span>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="form-group margin-sm">
-        <label for="id_{{ form.hometown_state.name }}" class="form-label">
-          Hometown State
-        </label>
-        {{ form.hometown_state|add_class:"form-control" }}
-        <span class="error">{{ form.hometown_state.errors }}</span>
-      </div>
-    </div>
-    <div class="col-md-6">
+    <div class="col-md-6 col-sm-12">
       <div class="form-group margin-sm">
         <label for="id_{{ form.high_school.name }}" class="form-label">
           High School
@@ -123,7 +105,44 @@ Edit Info
         <span class="error">{{ form.high_school.errors }}</span>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.hometown.name }}" class="form-label">
+          Hometown City
+        </label>
+        {{ form.hometown|add_class:"form-control" }}
+        <span class="error">{{ form.hometown.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.hometown_state.name }}" class="form-label">
+          Hometown State
+        </label>
+        {{ form.hometown_state|add_class:"form-control" }}
+        <span class="error">{{ form.hometown_state.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.dorm_type.name }}" class="form-label">
+          Housing
+        </label>
+        {{ form.dorm_type|add_class:"form-control" }}
+        <span class="error">{{ form.dorm_type.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.dorm_number.name }}" class="form-label">
+          Room / Apt Number
+          <input type="checkbox" id="checkbox_{{ form.dorm_number.name }}" name="checkbox_{{ form.dorm_number.name }}" value="true" class="visibility-checkbox" {% if mcuser|fieldhidden:'dorm_number' %} checked {% endif %}>
+        </label>
+        {{ form.dorm_number|add_class:"form-control" }}
+        <span class="error">{{ form.dorm_number.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.phone_number.name }}" class="form-label">
           Phone Number
@@ -133,12 +152,49 @@ Edit Info
         <span class="error">{{ form.phone_number.errors }}</span>
       </div>
     </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.email.name }}" class="form-label">
+          Email
+          <input type="checkbox" id="checkbox_{{ form.email.name }}" name="checkbox_{{ form.email.name }}" value="true" class="visibility-checkbox" {% if mcuser|fieldhidden:'email' %} checked {% endif %}>
+        </label>
+        {{ form.email|add_class:"form-control" }}
+        <span class="error">{{ form.email.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.website.name }}" class="form-label">
+          Personal Website
+        </label>
+        {{ form.website|add_class:"form-control" }}
+        <span class="error">{{ form.website.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.facebook.name }}" class="form-label">
+          Facebook
+        </label>
+        {{ form.facebook|add_class:"form-control" }}
+        <span class="error">{{ form.facebook.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-12">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.linkedin.name }}" class="form-label">
+          LinkedIn
+        </label>
+        {{ form.linkedin|add_class:"form-control" }}
+        <span class="error">{{ form.linkedin.errors }}</span>
+      </div>
+    </div>
     <!--TODO: Replace this with something else later -->
-    <div class="col-md-4 col-md-offset-4 text-center margin-height-md">
+    <div class="col-md-4 col-md-offset-4 col-sm-12 text-center margin-height-md">
       {{ form.pic }}
       <span class="error">{{ form.pic.errors }}</span>
     </div>
-    <div class="col-md-12 text-center">
+    <div class="col-md-12 col-sm-12 text-center">
       <span class="staff-only">Orange fields</span> are viewable by staff only.
       <br>
       <br>

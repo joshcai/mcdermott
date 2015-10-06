@@ -69,8 +69,13 @@ class McUser(models.Model):
   linkedin = models.CharField(max_length=200, blank=True)
   facebook = models.CharField(max_length=200, blank=True)
   website = models.CharField(max_length=200, blank=True)
+  dorm_type= models.CharField(
+    max_length=30, blank=True,
+    choices=(('', ''), ('Residence Hall South', 'Residence Hall South'), ('Apartment', 'Apartments')))
+  dorm_number = models.CharField(max_length=20, blank=True)
 
-  # birthday, phone number, email, linkedin, website, facebook can be hidden
+
+  # birthday, phone number, email, address can be hidden
   hidden_fields = JSONField()
 
 

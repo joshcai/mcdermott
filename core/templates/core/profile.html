@@ -40,6 +40,17 @@
         </p>
       {% endif %}
     {% endif %}
+    {% if is_self or user|has_role:'staff' or not profile|fieldhidden:'dorm_number' %}
+      {% if profile.dorm_number %}
+        <p>
+          <span class="profile-contact-field {% if profile|fieldhidden:'dorm_number' %} staff-only {% endif %}">
+            Address:
+          </span>
+          {% if profile.dorm_type %}{{ profile.dorm_type }}{% endif %}
+          {{ profile.dorm_number }}
+        </p>
+      {% endif %}
+    {% endif %}
     {% if is_self or user|has_role:'staff' or not profile|fieldhidden:'phone_number' %}
       {% if profile.phone_number %}
         <p>
@@ -81,6 +92,20 @@
     {% endif %}
     {% if profile.high_school %}
       <p>High School: {{ profile.high_school }}</p>
+    {% endif %}
+    {% if profile.website or profile.facebook or profile.linkedin %}
+      <p>
+        Links:
+        {% if profile.website %}
+          <a href="{{ profile.website|absoluteurl }}">Website</a>
+        {% endif %}
+        {% if profile.facebook %}
+          <a href="{{ profile.facebook|absoluteurl }}">Facebook</a>
+        {% endif %}
+        {% if profile.linkedin %}
+          <a href="{{ profile.linkedin|absoluteurl }}">LinkedIn</a>
+        {% endif %}
+      </p>
     {% endif %}
     {% if user|has_role:'staff' %}
       {% if profile.utd_id %}

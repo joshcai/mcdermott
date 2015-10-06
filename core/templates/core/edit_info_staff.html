@@ -41,7 +41,7 @@ Edit Info
     {% endfor %}
 
     <!-- Manual HTML for McUser form -->
-    <div class="col-md-6">
+    <div class="col-md-6 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.first_name.name }}" class="form-label">
           First name
@@ -50,7 +50,7 @@ Edit Info
         <span class="error">{{ form.first_name.errors }}</span>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.last_name.name }}" class="form-label">
           Last name
@@ -59,7 +59,7 @@ Edit Info
         <span class="error">{{ form.last_name.errors }}</span>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6 col-sm-12">
       <div class="form-group margin-sm">
         <label for="id_{{ form.staff_title.name }}" class="form-label">
           Title / Position
@@ -68,7 +68,7 @@ Edit Info
         <span class="error">{{ form.staff_title.errors }}</span>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.birthday.name }}" class="form-label">
           Birthday
@@ -78,7 +78,7 @@ Edit Info
         <span class="error">{{ form.birthday.errors }}</span>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.gender.name }}" class="form-label">
           Gender
@@ -87,7 +87,7 @@ Edit Info
         <span class="error">{{ form.gender.errors }}</span>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.phone_number.name }}" class="form-label">
           Phone Number
@@ -97,7 +97,7 @@ Edit Info
         <span class="error">{{ form.phone_number.errors }}</span>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.staff_phone.name }}" class="form-label">
           Office Phone Number
@@ -106,7 +106,7 @@ Edit Info
         <span class="error">{{ form.staff_phone.errors }}</span>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.hometown.name }}" class="form-label">
           Hometown City
@@ -115,13 +115,50 @@ Edit Info
         <span class="error">{{ form.hometown.errors }}</span>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.hometown_state.name }}" class="form-label">
           Hometown State
         </label>
         {{ form.hometown_state|add_class:"form-control" }}
         <span class="error">{{ form.hometown_state.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.email.name }}" class="form-label">
+          Email
+          <input type="checkbox" id="checkbox_{{ form.email.name }}" name="checkbox_{{ form.email.name }}" value="true" class="visibility-checkbox" {% if mcuser|fieldhidden:'email' %} checked {% endif %}>
+        </label>
+        {{ form.email|add_class:"form-control" }}
+        <span class="error">{{ form.email.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.website.name }}" class="form-label">
+          Personal Website
+        </label>
+        {{ form.website|add_class:"form-control" }}
+        <span class="error">{{ form.website.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.facebook.name }}" class="form-label">
+          Facebook
+        </label>
+        {{ form.facebook|add_class:"form-control" }}
+        <span class="error">{{ form.facebook.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.linkedin.name }}" class="form-label">
+          LinkedIn
+        </label>
+        {{ form.linkedin|add_class:"form-control" }}
+        <span class="error">{{ form.linkedin.errors }}</span>
       </div>
     </div>
     <!--TODO: Replace this with something else later -->

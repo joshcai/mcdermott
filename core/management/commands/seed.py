@@ -50,15 +50,19 @@ class Command(BaseCommand):
     # Converts from 09/24/15 to 2015-24-09
     return datetime.datetime.strptime(date, '%m/%d/%y').strftime('%Y-%m-%d')
 
+  def getUsername(self, email):
+    return email.split('@')[0].lower()
+
   def add_from_csv(self, scholar):
     if not scholar['UTD email']:
       self.stdout.write('No email found for %s' % (scholar['V3']))
       return
-    if User.objects.filter(username=scholar['UTD email'].lower()).exists():
+    username = self.getUsername(scholar['UTD email'])
+    if User.objects.filter(username=username).exists():
       self.stdout.write('Account for user %s already exists' % scholar['V3'])
-      user = User.objects.get(username=scholar['UTD email'].lower())
+      user = User.objects.get(username=username)
     else:
-      user = User.objects.create_user(scholar['UTD email'].lower(), email=scholar['UTD email'].lower(), password='password')
+      user = User.objects.create_user(username, email=scholar['UTD email'].lower(), password='password')
     user.mcuser.real_name = scholar['First']
     user.mcuser.first_name = scholar['Pref First']
     user.mcuser.middle_name = scholar['Middle']
@@ -76,11 +80,12 @@ class Command(BaseCommand):
                       (user.mcuser.first_name, user.mcuser.last_name))
 
   def add_staff_from_csv(self, staff):
-    if User.objects.filter(username=staff['Email'].lower()).exists():
+    username = self.getUsername(staff['Email'])
+    if User.objects.filter(username=username).exists():
       self.stdout.write('Account for user %s %s already exists' % (staff['First'], staff['Last']))
-      user = User.objects.get(username=staff['Email'].lower())
+      user = User.objects.get(username=username)
     else:
-      user = User.objects.create_user(staff['Email'].lower(), email=staff['Email'].lower(), password='password')
+      user = User.objects.create_user(username, email=staff['Email'].lower(), password='password')
     user.mcuser.real_name = staff['Real']
     user.mcuser.first_name = staff['First']
     user.mcuser.last_name = staff['Last']

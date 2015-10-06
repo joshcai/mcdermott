@@ -9,10 +9,10 @@ Calendar
 {% block inner_content %}
 
 {# TODO: allow staff to create event from day (should populate view with current day for start date) #}
-<h3 class="center margin-top-lg margin-bot-lg">{{ month_name }} {{ day }}, {{ year }}</h3>
+<h3 class="center margin-top-lg">{{ month_name }} {{ day }}, {{ year }}</h3>
+<br>
 {% for event in events %}
-  <h5><a href="{% url 'mccalendar:event_detail' event.id %}">{{ event.subject }}</a> - {{ event.description }}</h5>
-  <br>
+  <h5 class="margin-bot-md"><a href="{% url 'mccalendar:event_detail' event.id %}">{{ event.subject }}</a> - {{ event.description }}</h5>
 {% endfor %}
 
 

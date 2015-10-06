@@ -76,7 +76,7 @@ a.no-dec {
   margin-bottom: 20px;
 }
 
-.margin-top-lg {
+.margin-bot-lg {
   margin-bottom: 30px;
 }
 
@@ -102,6 +102,11 @@ a.no-dec {
 
 .nav-pills>li:not(.active) {
   background-color: #fbfbfb;
+}
+
+.form-add-extra {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 /* rules for profile page, mostly */
@@ -236,8 +241,8 @@ footer {
 }
 
 #logo {
-  margin-top: 20px;
-  margin-bottom: 30px;
+  margin-top: 50px;
+  margin-bottom: 40px;
 }
 
 .search-bar {

@@ -37,8 +37,8 @@ Edit Experience
             {% endfor %}
           {% endfor %}
       {% endif %}
-      {% if forloop.last %}
-        <div class="col-md-12">
+      {% if forloop.last and not forloop.first %}
+        <div class="col-md-12 form-add-extra">
           <h4>Add another experience:</h4>
         </div>
       {% endif %}

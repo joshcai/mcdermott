@@ -30,6 +30,12 @@ def fieldhidden(value, field):
   # value is a McUser object
   return field in value.hidden_fields
 
+@register.filter
+def absoluteurl(url):
+  if url.startswith('http://') or url.startswith('https://'):
+    return url
+  return 'http://%s' % url
+
 @register.inclusion_tag('macro/directory_header.html')
 def directory_header(active):
   return {'active': active}
