@@ -63,6 +63,8 @@ class Command(BaseCommand):
       user = User.objects.get(username=username)
     else:
       user = User.objects.create_user(username, email=scholar['UTD email'].lower(), password='password')
+      user.is_active = False
+      user.save()
     user.mcuser.real_name = scholar['First']
     user.mcuser.first_name = scholar['Pref First']
     user.mcuser.middle_name = scholar['Middle']
@@ -86,6 +88,8 @@ class Command(BaseCommand):
       user = User.objects.get(username=username)
     else:
       user = User.objects.create_user(username, email=staff['Email'].lower(), password='password')
+      user.is_active = False
+      user.save()
     user.mcuser.real_name = staff['Real']
     user.mcuser.first_name = staff['First']
     user.mcuser.last_name = staff['Last']

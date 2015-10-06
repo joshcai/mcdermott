@@ -63,6 +63,7 @@ INSTALLED_APPS = (
 
 MIDDLEWARE_CLASSES = (
   'django.contrib.sessions.middleware.SessionMiddleware',
+  'unslashed.middleware.RemoveSlashMiddleware',
   'django.middleware.common.CommonMiddleware',
   'django.middleware.csrf.CsrfViewMiddleware',
   'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -172,3 +173,14 @@ REST_FRAMEWORK = {
 THUMBNAIL_DEBUG = os.environ.get('DEBUG') or config.DEBUG
 
 ROLEPERMISSIONS_MODULE = 'mcdermott.roles'
+
+# Removes trailing slash and tries URL again if it fails with the slash
+APPEND_SLASH = False
+REMOVE_SLASH = True
+
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST = 'smtpauth.utdallas.edu'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER') or config.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') or config.EMAIL_HOST_PASSWORD
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL') or config.DEFAULT_FROM_EMAIL

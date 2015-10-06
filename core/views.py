@@ -134,6 +134,9 @@ def scholars_by_class(request, class_year):
     }
   return render(request, 'core/scholars.html', context)
 
+def resolveurl(request, url):
+  return redirect('/%s' % url)
+
 @login_required
 def own_profile(request):
   name = request.user.mcuser.norm_name

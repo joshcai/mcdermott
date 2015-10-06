@@ -19,5 +19,6 @@ urlpatterns = [
   url(r'^staff$', views.staff, name='staff'),
   url(r'^profile$', views.own_profile, name='own_profile'),
   url(r'^search$', views.search, name='search'),
+  url(r'^(\w+)/$', views.resolveurl, name='resolveurl'),
   url(r'^(\w+)$', views.profile, name='profile'),
 ]

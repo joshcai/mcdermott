@@ -3,6 +3,7 @@ django-discover-runner==1.0
 django-floppyforms==1.4.1
 django-localflavor==1.1
 django-role-permissions==0.6.0
+django-unslashed==0.3.0
 django-watson==1.1.8
 django-widget-tweaks==1.4.1
 djangorestframework==3.1.3
