@@ -19,7 +19,7 @@ Edit Study Abroad
   <div class="col-md-12" id="messageContainer">
     {% if messages %}
       {% for message in messages %}
-        <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst }}</div>
+        <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst|safe }}</div>
       {% endfor %}
     {% endif %}
   </div>

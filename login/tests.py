@@ -9,7 +9,7 @@ class LoginTestCase(TestCase):
     self.user = User.objects.create_user('test', 'a@a.com', 'password')
 
   def login(self):
-    self.app.login(username='test', password='password')    
+    self.app.login(username='test', password='password')
 
   def testLoginRenders(self):
     response = self.app.get('/login/')
@@ -18,4 +18,4 @@ class LoginTestCase(TestCase):
   def testLogoutRenders(self):
     self.login()
     response = self.app.get('/logout/')
-    self.assertEqual(response.status_code, 302)
+    self.assertEqual(response.status_code, 200)

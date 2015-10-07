@@ -7,6 +7,8 @@
 McDermott Network
 {% endblock %}
 
+{% block searchbox %}{% endblock %}
+
 {% block content %}
 
 {% if user.is_authenticated %}
@@ -18,9 +20,11 @@ McDermott Network
   <form method="get" action="{% url 'search' %}">
     <div class="col-md-4 col-md-offset-4">
       <input style="padding-left: 10px" class="form-control search-bar" type="text" name="q"
-             id="searchbox" placeholder="Search..."/>
+             id="searchbox-main" placeholder="Search..."/>
     </div>
   </form>
+  <script type="text/javascript">document.getElementById("searchbox-main").focus();</script>
+</div>
 </div>
 
 {% else %}

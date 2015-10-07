@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+  Activate Users
+{% endblock %}
+
+{% block content %}
+<br>
+<br>
+<div class="col-md-4 col-md-offset-4 text-center">
+  <h4># Unactivated: {{ unactivated }}</h4>
+  <h4># Activated: {{ activated }}</h4>
+  <form class="form-horizontal" method="post" action="{% url 'activate_users' %}">
+    {% csrf_token %}
+    <input class="btn btn-default" type="submit" value="Send Password Reset Emails" />
+  </form>
+  <br>
+{% for user in users_sent %}
+  {% if forloop.first %}
+  <h4>Sent emails to:</h4>
+  {% endif %}
+  <p>{{ user }}</p>
+{% endfor %}
+</div>
+
+{% endblock %}

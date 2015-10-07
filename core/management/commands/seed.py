@@ -7,7 +7,7 @@ import sys
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 
-from mcdermott.roles import Staff, Scholar, CurrentScholar
+from mcdermott.roles import Staff, Scholar, CurrentScholar, Admin
 
 def randomString():
   return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
@@ -16,6 +16,12 @@ class Command(BaseCommand):
   help = 'Seeds with some default users'
 
   def add_arguments(self, parser):
+
+    parser.add_argument('--flush',
+        action='store_true',
+        dest='flush',
+        default=False,
+        help='Remove all users first')
 
     parser.add_argument('--scholars',
         action='store_true',
@@ -37,19 +43,21 @@ class Command(BaseCommand):
 
   def add_user(self, username, password, name, class_year, birthday='1/1/2000', superuser=False, email=None):
     if User.objects.filter(username=username).exists():
-      self.stdout.write('User %s already exists' % username)
-      return
-    if superuser:
-      user = User.objects.create_superuser(username, email, password)
+      user = User.objects.get(username=username)
+      self.stdout.write('Account for user %s already exists' % username)
     else:
-      user = User.objects.create_user(username, password=password)
+      if superuser:
+        user = User.objects.create_superuser(username, email, password)
+      else:
+        user = User.objects.create_user(username, email=email, password=password)
+      self.stdout.write('Added user %s - username: %s, password: %s' %
+                        (name, username, password))
     first, last = name.split()
     user.mcuser.first_name = first
     user.mcuser.last_name = last
     user.mcuser.class_year = class_year
     user.mcuser.save()
-    self.stdout.write('Added user %s - username: %s, password: %s' %
-                      (name, username, password))
+    return user
 
   def convertDate(self, date):
     # Converts from 09/24/15 to 2015-24-09
@@ -67,7 +75,11 @@ class Command(BaseCommand):
       self.stdout.write('Account for user %s already exists' % scholar['V3'])
       user = User.objects.get(username=username)
     else:
-      user = User.objects.create_user(username, email=scholar['UTD email'].lower(), password=randomString())
+      if scholar['Last'] == 'Cai':
+        user = User.objects.create_superuser(username, scholar['UTD email'].lower(), randomString())
+        Admin.assign_role_to_user(user)
+      else:
+        user = User.objects.create_user(username, email=scholar['UTD email'].lower(), password=randomString())
     user.mcuser.real_name = scholar['First']
     user.mcuser.first_name = scholar['Pref First']
     user.mcuser.middle_name = scholar['Middle']
@@ -106,6 +118,10 @@ class Command(BaseCommand):
 
 
   def handle(self, *args, **options):
+    if options['flush']:
+      self.stdout.write('Deleting all users...')
+      User.objects.all().delete()
+      self.stdout.write('%s users in the database' % User.objects.all().count())
     if options['scholars']:
       with open('scholars.csv', 'rU') as csvfile:
         scholars = list(csv.reader(csvfile))
@@ -117,7 +133,8 @@ class Command(BaseCommand):
         for staff in staff_members[1:]:
           self.add_staff_from_csv({key: value for (key, value) in zip(staff_members[0], staff)})
     if options['testing']:
-      self.add_user('joshcai', 'password', 'Josh Cai', 2012, email='jxc124730@utdallas.edu')
+      josh = self.add_user('joshcai', 'password', 'Josh Cai', 2012, email='jxc124730@utdallas.edu')
+      Admin.assign_role_to_user(josh)
       self.add_user('atvaccaro', 'password', 'Andrew Vaccaro', 2013, email='andrew.vaccaro@utdallas.edu')
       self.add_user('hajieren', 'password', 'Hans Ajieren', 2014)
       self.add_user('dhruvn', 'password', 'Dhruv Narayanan', 2014)

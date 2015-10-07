@@ -136,7 +136,7 @@ class StudyAbroad(models.Model):
   end_time = models.DateField(null=True, blank=True)
 
 watson.register(McUser, fields=('first_name', 'last_name', 'gender', 'class_year', 'hometown', 'hometown_state', 'high_school',
-                                'norm_name'))
+                                'norm_name', 'staff_title'))
 watson.register(Degree)
 watson.register(Experience)
 watson.register(StudyAbroad)
