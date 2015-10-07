@@ -1,0 +1,137 @@
+{% extends "large_container.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %}
+Edit Experience
+{% endblock %}
+
+{% block inner_content %}
+
+<div class="row">
+  <ul class="nav nav-tabs nav-justified">
+    <li role="presentation"><a href="{% url 'edit_info' mcuser.norm_name %}">Profile</a></li>
+    <li role="presentation"><a href="{% url 'edit_edu' mcuser.norm_name %}">Education</a></li>
+    <li role="presentation" class="active"><a>Experience</a></li>
+    <li role="presentation"><a href="{% url 'edit_abroad' mcuser.norm_name %}">Study Abroad</a></li>
+  </ul>
+  <br>
+  <div class="col-md-12" id="messageContainer">
+    {% if messages %}
+      {% for message in messages %}
+        <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst|safe }}</div>
+      {% endfor %}
+    {% endif %}
+  </div>
+  <div class="col-md-12 margin-bot-md text-center">
+    Experiences are displayed in reverse chronological order on your profile, i.e. the first experience you enter should be the oldest one.
+  </div>
+  <form method="post" action="{% url 'edit_exp' mcuser.norm_name %}" class="form-horizontal" id="formExp">
+    {% csrf_token %}
+
+    {{ experiences_formset.management_form }}
+
+    {% for experience_form in experiences_formset %}
+      {% if experience_form.errors %}
+        There were errors!
+          {% for field in experience_form %}
+            {% for error in field.errors %}
+              <p> {{ error }} {{ field.label_tag }} </p>
+            {% endfor %}
+          {% endfor %}
+      {% endif %}
+      {% if forloop.last and not forloop.first %}
+        <div class="col-md-12 form-add-extra">
+          <h4>Add another experience:</h4>
+        </div>
+      {% endif %}
+      {{ experience_form.id }}
+      {{ experience_form.user }}
+      <div class="col-md-6 {% if not forloop.first %}margin-top-lg{% endif %}">
+        <div class="form-group margin-sm">
+          <label for="id_title" class="form-label">
+            Title / Position
+          </label>
+          {{ experience_form.title|add_class:"form-control" }}
+          <span class="error">{{ experience_form.title.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-6 {% if not forloop.first %}margin-top-lg{% endif %}">
+        <div class="form-group margin-sm">
+          <label for="id_organization" class="form-label">
+            Organization
+          </label>
+          {% if not forloop.last %}
+          <span class="text-right pull-right">Delete: {{ experience_form.DELETE }}</span>
+          {% endif %}
+          {{ experience_form.organization|add_class:"form-control" }}
+          <span class="error">{{ experience_form.organization.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group margin-sm">
+          <label for="id_location" class="form-label">
+            Location
+          </label>
+          {{ experience_form.location|add_class:"form-control" }}
+          <span class="error">{{ experience_form.location.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group margin-sm">
+          <label for="id_exp_type" class="form-label">
+            Experience Type
+          </label>
+          {{ experience_form.exp_type|add_class:"form-control" }}
+          <span class="error">{{ experience_form.exp_type.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group margin-sm">
+          <label for="id_start_time" class="form-label">
+            Start Date
+          </label>
+          {{ experience_form.start_time|add_class:"form-control" }}
+          <span class="error">{{ experience_form.start_time.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group margin-sm">
+          <label for="id_end_time" class="form-label">
+            End Date <span class="small">(leave blank if ongoing)</span>
+          </label>
+          {{ experience_form.end_time|add_class:"form-control" }}
+          <span class="error">{{ experience_form.end_time.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="form-group margin-sm">
+          <label for="id_description" class="form-label">
+            Description
+          </label>
+          {{ experience_form.description|add_class:"form-control" }}
+          <span class="error">{{ experience_form.description.errors }}</span>
+        </div>
+      </div>
+    {% endfor %}
+    <br>
+    <div class="col-md-12 text-center">
+      <input class="btn btn-default" type="submit" value="SAVE" />
+    </div>
+    <br>
+  </form>
+</div>
+<script>
+  var inputChanged = false;
+  $(document).ready(function() {
+    $('#formExp input').change(function() {
+      if(!inputChanged) {
+        $('#messageContainer').empty();
+        $('#messageContainer').append('<div class="alert alert-warning" role="alert">Don\'t forget to save your changes!</div>');
+        inputChanged = true;
+      }
+    });
+    $('.datepicker').datepicker();
+  });
+</script>
+{% endblock %}

@@ -47,9 +47,84 @@ a.no-dec {
   margin: 0px auto;
 }
 
+.margin-sm {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.margin-height-md {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.padding-top-md {
+  padding-top: 20px;
+}
+.margin-top-sm {
+  margin-top: 10px;
+}
+
+.margin-top-md {
+  margin-top: 20px;
+}
+
+.margin-top-lg {
+  margin-top: 30px;
+}
+
+.margin-bot-sm {
+  margin-bottom: 15px;
+}
+
+.margin-bot-md {
+  margin-bottom: 20px;
+}
+
+.margin-bot-lg {
+  margin-bottom: 30px;
+}
+
+.staff-only {
+  color: #C75B12;
+}
+
+.scholar-card {
+  min-height: 140px;
+}
+
+
+.alert {
+  padding: 5px 13px;
+  margin-bottom: 13px;
+}
+
+.directory-header {
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+.nav-pills>li:not(.active) {
+  background-color: #fbfbfb;
+}
+
+.form-add-extra {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 /* rules for profile page, mostly */
+
+.profile-pic {
+  border-radius: 2px;
+}
+@media (min-width: 768px) {
+  .profile-pic {
+    float: right;
+  }
+}
+
 .profile-name h3 {
-    line-height: 1;
+  line-height: 1;
 }
 
 .profile-contact-card {
@@ -57,18 +132,35 @@ a.no-dec {
 }
 
 .profile-contact-card p {
-    color: grey;
-    font-size: 16px;
-    line-height: 1;
+  color: grey;
+  font-size: 16px;
+  line-height: 1;
 }
 
 .profile-contact-field {
 }
 
+.indented {
+  padding-left: 20px;
+}
 .experience {
+  line-height: 0.60;
+  margin-bottom: 2em;
+}
+
+.experience p:not(.school-name) {
+  font-size: 15px;
 }
 
 .school-name {
+  font-size: 17px;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+.description-pre {
+  line-height:20px;
+  white-space:pre;
 }
 
 /*
@@ -79,6 +171,7 @@ body {
   padding-top: 80px;
   background-color: #f5f5f5;
 }
+
 footer {
   padding-left: 15px;
   padding-right: 15px;
@@ -157,61 +250,104 @@ footer {
   font-weight: bold;
 }
 
-/* Calendar code */
-.empty {
-  width: 100px;
-  height: 80px;
-  text-align: center;
+.profile-show-btn {
+  background: white;
+  -webkit-box-shadow: none;
+	-moz-box-shadow: none;
+  box-shadow: none;
 }
 
+#logo {
+  margin-top: 50px;
+  margin-bottom: 40px;
+}
+
+.search-bar {
+  background-color: #fafafa;
+}
+
+/* responsive text align */
+.text-xs-left { text-align: left; }
+.text-xs-right { text-align: right; }
+.text-xs-center { text-align: center; }
+.text-xs-justify { text-align: justify; }
+
+@media (min-width: 768px) {
+    .text-sm-left { text-align: left; }
+    .text-sm-right { text-align: right; }
+    .text-sm-center { text-align: center; }
+    .text-sm-justify { text-align: justify; }
+}
+
+@media (min-width: 992px) {
+    .text-md-left { text-align: left; }
+    .text-md-right { text-align: right; }
+    .text-md-center { text-align: center; }
+    .text-md-justify { text-align: justify; }
+}
+
+@media (min-width: 1200px) {
+    .text-lg-left { text-align: left; }
+    .text-lg-right { text-align: right; }
+    .text-lg-center { text-align: center; }
+    .text-lg-justify { text-align: justify; }
+}
+
+/* Calendar stuff (awful b/c written by Andrew) */
 .month {
+  margin-top: 25px;
   height: 500px;
-  width: 70%;
-  background-color: red;
+  width: 85%;
+}
+
+.calendar {
+  border-spacing: 5px;
+  border-collapse: separate;
 }
 
 .day {
-  width: 100px;
-  height: 80px;
-  border: 1px solid black;
+  width: 140px;
+  height: 120px;
+  padding: 2px;
+  margin: 2px;
+  vertical-align: top;
+  text-align: left;
+  border-radius: 2px;
+  overflow-y: auto;
+  background-color: #fff;
 }
 
 .day:hover {
   border: 2px solid black;
 }
 
+.day-header {
+  height: 60px;
+}
+
+.empty {
+  text-align: center;
+  font-size: 20px;
+  background: none;
+  border: none;
+}
+
+.empty:hover {
+  border: none;
+}
+
 .current {
-  width: 100px;
-  height: 80px;
-  border: 1px solid black;
+  background-color: azure;
 }
 
 .current:hover {
   border: 2px solid black;
 }
 
-.day-div {
-  display: inline-block;
-  height: 100%;
-  width: 100%;
-  text-align: left;
-  background-color: #f0f0f0;
-  position: relative;
-  overflow-y: auto;
-}
-
-.day-span {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
 .day-link {
   margin: 10px 0px 0px 10px;
 }
+
 a.day-link:link {
     text-decoration: none;
 }
@@ -226,3 +362,5 @@ a.day-link:hover {
 
 a.day-link:active {
     text-decoration: none;
+}
+

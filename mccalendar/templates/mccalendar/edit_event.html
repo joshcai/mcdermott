@@ -1,0 +1,87 @@
+{% extends "large_container.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %}
+Edit event
+{% endblock %}
+
+{% block inner_content %}
+
+<form method="post" action="{{ form_url }}" class="form-horizontal padding-top-md">
+{% csrf_token %}
+  {{ form.id }}
+  <div class="col-md-6">
+    <div class="form-group margin-sm">
+      <label for="id_{{ form.subject.name }}" class="form-label">
+        Title
+      </label>
+      {{ form.subject|add_class:"form-control" }}
+      <span class="errors">{{ form.subject.errors }}</span>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group margin-sm">
+      <label for="id_{{ form.location.name }}" class="form-label">
+        Location
+      </label>
+      {{ form.location|add_class:"form-control" }}
+      <span class="errors">{{ form.location.errors }}</span>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="form-group margin-sm">
+      <label for="id_{{ form.description.name }}" class="form-label">
+        Description
+      </label>
+      {{ form.description|add_class:"form-control" }}
+      <span class="errors">{{ form.description.errors }}</span>
+    </div>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <div class="form-group margin-sm">
+      <label for="id_{{ form.start_date.name }}">
+        Start Date
+      </label>
+      {{ form.start_date|add_class:"form-control" }}
+      <span class="errors">{{ form.start_date.errors }}</span>
+    </div>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <div class="form-group margin-sm">
+      <label for="id_{{ form.end_date.name }}">
+        End Date
+      </label>
+      {{ form.end_date|add_class:"form-control" }}
+      <span class="errors">{{ form.end_date.errors }}</span>
+    </div>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <div class="form-group margin-sm">
+      <label for="id_{{ form.start_time.name }}">
+        Start Time
+      </label>
+      {{ form.start_time|add_class:"form-control" }}
+      <span class="errors">{{ form.start_time.errors }}</span>
+    </div>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <div class="form-group margin-sm">
+      <label for="id_{{ form.end_time.name }}">
+        End Time
+      </label>
+      {{ form.end_time|add_class:"form-control" }}
+      <span class="errors">{{ form.end_time.errors }}</span>
+    </div>
+  </div>
+  <div class="col-md-12 text-center margin-top-md">
+    <input type="submit" value="Save" class="btn btn-default"/>
+  </div>
+</form>
+
+<script>
+  $(document).ready(function() {
+    $('.datepicker').datepicker();
+  });
+</script>
+{% endblock %}

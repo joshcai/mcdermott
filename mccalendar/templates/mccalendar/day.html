@@ -1,10 +1,19 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "large_container.html" %}
 
-<h4 class="center">{{ month_name }} {{ day }}, {{ year }}</h4>
-<a href="{% url 'mccalendar:create_event' %}">Create event</a>
+{% load permission_tags %}
 
+{% block title %}
+Calendar
+{% endblock %}
+
+{% block inner_content %}
+
+{# TODO: allow staff to create event from day (should populate view with current day for start date) #}
+<h3 class="center margin-top-lg">{{ month_name }} {{ day }}, {{ year }}</h3>
+<br>
 {% for event in events %}
-  <p><a href={% url 'mccalendar:event_detail' event.id %}>{{ event.subject }}</a> - {{ event.description }}</p>
+  <h5 class="margin-bot-md"><a href="{% url 'mccalendar:event_detail' event.id %}">{{ event.subject }}</a> - {{ event.description }}</h5>
 {% endfor %}
+
+
 {% endblock %}

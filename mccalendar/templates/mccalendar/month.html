@@ -1,44 +1,67 @@
 {% extends "base.html" %}
+
+{% load permission_tags %}
+
+{% block title %}
+Calendar
+{% endblock %}
+
 {% block content %}
-<h4 class="center">{{ month_name }}, {{ year }}</h4>
-<a href="{% url 'mccalendar:month' year month 'prev' %}">Prev month</a>
-<a href="">Current month</a>
-<a href="{% url 'mccalendar:month' year month 'next' %}">Next month</a>
+<div class="col-md-12">
+<div class="text-center">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <br>
+      <h4 class="center">
+      <a href="{% url 'mccalendar:month' year month 'prev' %}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
+        {{ month_name }} {{ year }}
+      <a href="{% url 'mccalendar:month' year month 'next' %}"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+      </h4>
+    </div>
+    <div class="col-md-3 text-md-left text-sm-center text-xs-center">
+      <br>
+      {% if user|has_role:'staff' %}
+        <a href="{% url 'mccalendar:create_event' %}" class="btn btn-default">Create event</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
 <div class="month center">
-  <table class="center">
+  <table class="calendar center">
     <tr>
-      <td class="empty">Sun</td>
-      <td class="empty">Mon</td>
-      <td class="empty">Tue</td>
-      <td class="empty">Wed</td>
-      <td class="empty">Thu</td>
-      <td class="empty">Fri</td>
-      <td class="empty">Sat</td>
+      <td class="day empty day-header">Sun</td>
+      <td class="day empty day-header">Mon</td>
+      <td class="day empty day-header">Tue</td>
+      <td class="day empty day-header">Wed</td>
+      <td class="day empty day-header">Thu</td>
+      <td class="day empty day-header">Fri</td>
+      <td class="day empty day-header">Sat</td>
     </tr>
 
     {% for week in month_days %}
     <tr>
       {% for day, events, current in week %}
-      <!-- TD style -->
-      <td class="{% if day == 0 %}empty{% endif %}
-        {% if day != 0 and not current %}day{% endif %}
-        {% if day != 0 and current %}current{% endif %}
+      <td class="day
+        {% if day == 0 %}empty{% endif %}
+        {% if current %} current{% endif %}
         ">
-        <!-- Day number and entry snippets -->
         {% if day != 0 %}
-        <div class="day-div">
-          <a href="{% url 'mccalendar:day' year month day %}" class="day-link">{{ day }}<span class="day-span"></span></a>
-<!--          TODO: FIX THIS URL TO BE PROPER -->
+          <a href="{% url 'mccalendar:day' year month day %}" class="day-link">{{ day }}</a>
           {% for event in events %}
-            <br />
-            <b>{{ event.subject }} - {{ event.start_time }}</b>
+            <p><a href="{% url 'mccalendar:event_detail' event.id %}">{{ event.subject }} - {{ event.start_time }}</a></p>
           {% endfor %}
         {% endif %}
-        </div>
       </td>
       {% endfor %}
     </tr>
     {% endfor %}
+    <!--  Placeholder row for now, to keep calendar off bottom of page  -->
+    <tr>
+      {% for i in "xxxxxxx" %}
+      <td class="day empty"></td>
+      {% endfor %}
+    </tr>
   </table>
+</div>
 </div>
 {% endblock %}

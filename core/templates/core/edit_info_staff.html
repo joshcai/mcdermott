@@ -18,15 +18,12 @@ Edit Info
     <li role="presentation"><a href="{% url 'edit_abroad' mcuser.norm_name %}">Study Abroad</a></li>
   </ul>
   <br>
-  <div class="col-md-12" id="messageContainer">
+  <div id="messageContainer">
     {% if messages %}
       {% for message in messages %}
-        <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst|safe }}</div>
+        <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst }}</div>
       {% endfor %}
     {% endif %}
-  </div>
-  <div class="col-md-12 margin-bot-md text-center">
-    <span class="staff-only">Orange fields</span> are viewable by staff only.
   </div>
   {% if form.errors %}
     There were errors!
@@ -44,7 +41,7 @@ Edit Info
     {% endfor %}
 
     <!-- Manual HTML for McUser form -->
-    <div class="col-md-6 col-sm-6 col-sm-6">
+    <div class="col-md-6 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.first_name.name }}" class="form-label">
           First name
@@ -62,13 +59,13 @@ Edit Info
         <span class="error">{{ form.last_name.errors }}</span>
       </div>
     </div>
-    <div class="col-md-3 col-sm-6">
+    <div class="col-md-6 col-sm-12">
       <div class="form-group margin-sm">
-        <label for="id_{{ form.utd_id.name }}" class="form-label staff-only">
-          UTD ID
+        <label for="id_{{ form.staff_title.name }}" class="form-label">
+          Title / Position
         </label>
-        {{ form.utd_id|add_class:"form-control" }}
-        <span class="error">{{ form.utd_id.errors }}</span>
+        {{ form.staff_title|add_class:"form-control" }}
+        <span class="error">{{ form.staff_title.errors }}</span>
       </div>
     </div>
     <div class="col-md-3 col-sm-6">
@@ -83,15 +80,6 @@ Edit Info
     </div>
     <div class="col-md-3 col-sm-6">
       <div class="form-group margin-sm">
-        <label for="id_{{ form.class_year.name }}" class="form-label">
-          Class year
-        </label>
-        {{ form.class_year|add_class:"form-control" }}
-        <span class="error">{{ form.class_year.errors }}</span>
-      </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-      <div class="form-group margin-sm">
         <label for="id_{{ form.gender.name }}" class="form-label">
           Gender
         </label>
@@ -99,13 +87,23 @@ Edit Info
         <span class="error">{{ form.gender.errors }}</span>
       </div>
     </div>
-    <div class="col-md-6 col-sm-12">
+    <div class="col-md-3 col-sm-6">
       <div class="form-group margin-sm">
-        <label for="id_{{ form.high_school.name }}" class="form-label">
-          High School
+        <label for="id_{{ form.phone_number.name }}" class="form-label">
+          Phone Number
+          <input type="checkbox" id="checkbox_{{ form.phone_number.name }}" name="checkbox_{{ form.phone_number.name }}" value="true" class="visibility-checkbox" {% if mcuser|fieldhidden:'phone_number' %} checked {% endif %}>
         </label>
-        {{ form.high_school|add_class:"form-control" }}
-        <span class="error">{{ form.high_school.errors }}</span>
+        {{ form.phone_number|add_class:"form-control" }}
+        <span class="error">{{ form.phone_number.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.staff_phone.name }}" class="form-label">
+          Office Phone Number
+        </label>
+        {{ form.staff_phone|add_class:"form-control" }}
+        <span class="error">{{ form.staff_phone.errors }}</span>
       </div>
     </div>
     <div class="col-md-3 col-sm-6">
@@ -124,35 +122,6 @@ Edit Info
         </label>
         {{ form.hometown_state|add_class:"form-control" }}
         <span class="error">{{ form.hometown_state.errors }}</span>
-      </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-      <div class="form-group margin-sm">
-        <label for="id_{{ form.dorm_type.name }}" class="form-label">
-          Housing
-        </label>
-        {{ form.dorm_type|add_class:"form-control" }}
-        <span class="error">{{ form.dorm_type.errors }}</span>
-      </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-      <div class="form-group margin-sm">
-        <label for="id_{{ form.dorm_number.name }}" class="form-label">
-          Room / Apt Number
-          <input type="checkbox" id="checkbox_{{ form.dorm_number.name }}" name="checkbox_{{ form.dorm_number.name }}" value="true" class="visibility-checkbox" {% if mcuser|fieldhidden:'dorm_number' %} checked {% endif %}>
-        </label>
-        {{ form.dorm_number|add_class:"form-control" }}
-        <span class="error">{{ form.dorm_number.errors }}</span>
-      </div>
-    </div>
-    <div class="col-md-6 col-sm-6">
-      <div class="form-group margin-sm">
-        <label for="id_{{ form.phone_number.name }}" class="form-label">
-          Phone Number
-          <input type="checkbox" id="checkbox_{{ form.phone_number.name }}" name="checkbox_{{ form.phone_number.name }}" value="true" class="visibility-checkbox" {% if mcuser|fieldhidden:'phone_number' %} checked {% endif %}>
-        </label>
-        {{ form.phone_number|add_class:"form-control" }}
-        <span class="error">{{ form.phone_number.errors }}</span>
       </div>
     </div>
     <div class="col-md-6 col-sm-6">
@@ -183,7 +152,7 @@ Edit Info
         <span class="error">{{ form.facebook.errors }}</span>
       </div>
     </div>
-    <div class="col-md-6 col-sm-12">
+    <div class="col-md-6 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.linkedin.name }}" class="form-label">
           LinkedIn
@@ -193,11 +162,13 @@ Edit Info
       </div>
     </div>
     <!--TODO: Replace this with something else later -->
-    <div class="col-md-4 col-md-offset-4 col-sm-12 text-center margin-height-md">
+    <div class="col-md-4 col-md-offset-4 text-center margin-height-md">
       {{ form.pic }}
       <span class="error">{{ form.pic.errors }}</span>
     </div>
-    <div class="col-md-12 col-sm-12 text-center">
+    <div class="col-md-12 text-center">
+      <span class="staff-only">Orange fields</span> are viewable by staff only.
+      <br>
       <br>
       <input class="btn btn-default" type="submit" value="SAVE" />
     </div>
@@ -208,7 +179,7 @@ Edit Info
 <script>
   var inputChanged = false;
   $(document).ready(function() {
-    $('#formInfo input').change(function() {
+    $('input').change(function() {
       if(!inputChanged) {
         $('#messageContainer').empty();
         $('#messageContainer').append('<div class="alert alert-warning" role="alert">Don\'t forget to save your changes!</div>');

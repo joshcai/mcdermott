@@ -17,7 +17,7 @@ with open('majors.py', 'w') as file:
 
 #minors
 minor_urls = ('ah', 'bbs', 'ecs', 'epps', 'is', 'jsom', 'nsm')
-
+'''
 with open('minors.py', 'w') as file:
     file.write('MINOR_CHOICES = (\n)')
     for url in minor_urls:
@@ -26,3 +26,4 @@ with open('minors.py', 'w') as file:
             soup = BeautifulSoup(html, 'html.parser')
             for a in soup.findAll("a", { "class":"external" })
     file.close()
+'''

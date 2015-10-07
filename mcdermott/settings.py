@@ -36,28 +36,34 @@ if allowed_hosts_env:
   allowed_hosts_env = [x.strip() for x in allowed_hosts_env.split(',')]
 ALLOWED_HOSTS = allowed_hosts_env or config.ALLOWED_HOSTS
 
+use_postgres = os.environ.get('USE_POSTGRES') or config.USE_POSTGRES
+db_password = os.environ.get('DB_PASSWORD') or config.DB_PASSWORD
+
 
 # Application definition
 
 INSTALLED_APPS = (
+  'login',
   'django.contrib.admin',
   'django.contrib.auth',
   'django.contrib.contenttypes',
   'django.contrib.sessions',
   'django.contrib.messages',
   'django.contrib.staticfiles',
+  'localflavor',
   'floppyforms',
   'rest_framework',
+  'rolepermissions',
   'sorl.thumbnail',
   'watson',
   'widget_tweaks',
-  'login',
   'core',
   'mccalendar',
 )
 
 MIDDLEWARE_CLASSES = (
   'django.contrib.sessions.middleware.SessionMiddleware',
+  'unslashed.middleware.RemoveSlashMiddleware',
   'django.middleware.common.CommonMiddleware',
   'django.middleware.csrf.CsrfViewMiddleware',
   'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -96,12 +102,22 @@ WSGI_APPLICATION = 'mcdermott.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
+sqlite_settings = {
+  'ENGINE': 'django.db.backends.sqlite3',
+  'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+}
+
+postgres_settings = {
+  'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+  'NAME': 'mcdermott',                      # Or path to database file if using sqlite3.
+  'USER': 'postgres',
+  'PASSWORD': db_password,
+  'HOST': 'localhost',                      # Empty for localhost through domain sockets or           '127.0.0.1' for localhost through TCP.
+  'PORT': '',                      # Set to empty string for default.
+}
 
 DATABASES = {
-  'default': {
-    'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-  }
+  'default': postgres_settings if use_postgres else sqlite_settings
 }
 
 # Caches
@@ -155,3 +171,21 @@ REST_FRAMEWORK = {
 }
 
 THUMBNAIL_DEBUG = os.environ.get('DEBUG') or config.DEBUG
+
+ROLEPERMISSIONS_MODULE = 'mcdermott.roles'
+
+# Removes trailing slash and tries URL again if it fails with the slash
+APPEND_SLASH = False
+REMOVE_SLASH = True
+
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST = 'smtpauth.utdallas.edu'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER') or config.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') or config.EMAIL_HOST_PASSWORD
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL') or config.DEFAULT_FROM_EMAIL
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+admin_email = os.environ.get('ADMIN_EMAIL') or config.ADMIN_EMAIL
+
+ADMINS = (('Josh', admin_email))

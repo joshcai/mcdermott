@@ -1,18 +1,21 @@
+import time
+import calendar
+
+from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render, redirect
 
-import time
-import calendar
+from rolepermissions.decorators import has_role_decorator
 
 from models import McEvent
 from forms import McEventForm
 
 # Create your views here.
 
-month_names = "January February March April May June July August September October November December".split()
+month_names = 'January February March April May June July August September October November December'.split()
 
 #Default calendar view
 @login_required
@@ -22,32 +25,17 @@ def index(request):
   context = {
     'events': events,
   }
-  return redirect('/mccalendar/%s/%s/' % (cur_year, cur_month))
+  return redirect('/calendar/%s/%s/' % (cur_year, cur_month))
 
-"""
 @login_required
-def year(request, year=None):
-  cur_year, cur_month = time.localtime()[:2]
-
-  #create list of months
-  month_list = []
-  for nm, month in enumerate(months):
-    event = current = False
-    events = McEvent.objects.filter(start_date__year=year, start_date__month=n+1)
-
-    if events:
-      event = True
-    if year == cur_year and nm+1 == cur_month:  #enumerate starts at 0, but months at 1
-      current = True  #to highlight the current month?
-    month_list.append(dict(n=n+1, name=month, entry=entry, current=current))
-
+def event_list(request):
+  #only want events that occur this month; will change later
+  cur_year, cur_month, cur_day = time.localtime()[:3]
+  events = McEvent.objects.filter(start_date__year=cur_year, start_date__month=cur_month)
   context = {
-    'n':n,
-    'months':month_list,
-    'year':year,
+    'events': events,
   }
-  return render(request, 'mccalendar/year.html', context)
-"""
+  return render(request, 'mccalendar/event_list.html', context)
 
 @login_required
 def month(request, year=None, month=None, change=None):
@@ -66,7 +54,7 @@ def month(request, year=None, month=None, change=None):
       if month == 0:
         month = 12
         year -= 1
-    return redirect('/mccalendar/%s/%s/' % (year, month))
+    return redirect('/calendar/%s/%s/' % (year, month))
 
   cur_year, cur_month, cur_day = time.localtime()[:3]
 
@@ -113,21 +101,45 @@ def day(request, year=None, month=None, day=None):
   return render(request, 'mccalendar/day.html', context)
 
 @login_required
+@has_role_decorator('staff')
 def create_event(request):
   if request.method == 'POST':
     event = McEvent(owner=request.user.mcuser)
     form = McEventForm(request.POST, instance=event)
     if (form.is_valid()):
       form.save()
-      return redirect('index')
+      return redirect(reverse('mccalendar:event_detail', args=[event.id]))
     else:
       form = McEventForm(request.POST, instance=event)
   else:
     form = McEventForm()
   context = {
     'form':form,
+    'form_url': reverse('mccalendar:create_event')
   }
-  return render(request, 'mccalendar/create_event.html', context)
+  return render(request, 'mccalendar/edit_event.html', context)
+
+@login_required
+@has_role_decorator('staff')
+def edit_event(request, event_id=None):
+  try:
+    event = McEvent.objects.get(id=event_id)
+  except McEvent.DoesNotExist:
+    return redirect('mccalendar:create_event')
+  if request.method == 'POST':
+    form = McEventForm(request.POST, instance=event)
+    if (form.is_valid()):
+      form.save()
+      return redirect(reverse('mccalendar:event_detail', args=[event.id]))
+    else:
+      form = McEventForm(request.POST, instance=event)
+  else:
+    form = McEventForm(instance=event)
+  context = {
+    'form':form,
+    'form_url': reverse('mccalendar:edit_event', args=[event_id])
+  }
+  return render(request, 'mccalendar/edit_event.html', context)
 
 @login_required
 def event_detail(request, event_id):
@@ -137,30 +149,6 @@ def event_detail(request, event_id):
     raise Http404('Event %s does not exist' %event_id)
   else:
     context = {
-      'event':event
-    }
-    return render(request, 'mccalendar/event_detail.html', context)
-
-@login_required
-def delete_event(request, event_id):
-  try:
-    event = McEvent.objects.get(id=event_id)
-  except McEvent.DoesNotExist:
-    raise Http404('Event %s does not exist' %event_id)
-  '''if request.method == 'POST':
-    if 'yes' in request.POST:
-      print "yes button"
-    else:
-      print "no button"
-    return redirect('/mccalendar/%s/%s/' % (cur_year, cur_month))
-  else:
-    context = {
       'event': event,
     }
-    return render(request, 'mccalendar/delete_event.html', context)'''
-  event_subject = event.subject
-  event.delete()
-  context = {
-    'event_subject': event_subject,
-  }
-  return render(request, 'mccalendar/delete_event.html', context)
+    return render(request, 'mccalendar/event_detail.html', context)

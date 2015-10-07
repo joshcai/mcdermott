@@ -1,10 +1,9 @@
 from django.contrib.auth.models import User
-from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 import watson
+from localflavor.us.us_states import US_STATES
+from jsonfield import JSONField
 from sorl.thumbnail import ImageField
-import StringIO
-from PIL import Image, ImageOps
 
 from util import normalize_name
 
@@ -32,10 +31,11 @@ class McUser(models.Model):
   https://docs.djangoproject.com/en/1.8/ref/contrib/auth/
   """
   user = models.OneToOneField(User)
+  activated = models.BooleanField(default=False)
   first_name = models.CharField(max_length=200, blank=True)
+  middle_name = models.CharField(max_length=200, blank=True)
   last_name = models.CharField(max_length=200, blank=True)
-  # Real first name, use first_name as preferred first name so we don't
-  # have to join on tables when fetching by name.
+  # Real first name
   real_name = models.CharField(max_length=200, blank=True)
 
   # Gender
@@ -43,7 +43,7 @@ class McUser(models.Model):
   gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False)
 
   # Birthday
-  birthday = models.CharField(max_length=200,blank=True) # models.DateField()
+  birthday = models.DateField(null=True, blank=True)
 
   # e.g. 2012
   YEARS = (
@@ -60,8 +60,23 @@ class McUser(models.Model):
 
   # Personal info
   hometown = models.CharField(max_length=200, blank=True)
+  hometown_state = models.CharField(blank=True, max_length=2, choices=US_STATES)
   high_school = models.CharField(max_length=200, blank=True)
+  email = models.CharField(max_length=200, blank=True)
   phone_number = models.CharField(max_length=200, blank=True)
+  linkedin = models.CharField(max_length=200, blank=True)
+  facebook = models.CharField(max_length=200, blank=True)
+  website = models.CharField(max_length=200, blank=True)
+  dorm_type= models.CharField(
+    max_length=30, blank=True,
+    choices=(('', ''), ('Residence Hall South', 'Residence Hall South'), ('Apartment', 'Apartments')))
+  dorm_number = models.CharField(max_length=20, blank=True)
+
+
+  # birthday, phone number, email, address can be hidden
+  hidden_fields = JSONField()
+
+
   pic = ImageField(upload_to='img', blank=True)
   # normalized name, e.g. joshcai
   norm_name = models.CharField(max_length=400, blank=True)
@@ -69,24 +84,16 @@ class McUser(models.Model):
   #TODO: allow multiple phone
   #TODO: allow backup emails
 
+  # Staff only fields
+  staff_phone = models.CharField(max_length=200, blank=True)
+  staff_title = models.CharField(max_length=200, blank=True)
+  staff_order = models.IntegerField(default=0, null=True, blank=True)
+
   def get_full_name(self):
     return '%s %s' % (self.first_name, self.last_name)
 
   def save(self, *args, **kwargs):
     self.norm_name = normalize_name(self.get_full_name())
-    if self.pic:
-      image = Image.open(StringIO.StringIO(self.pic.read()))
-      if image.mode not in ('L', 'RGB'):
-        image = image.convert('RGB')
-
-      # Resize to 400x400
-      imagefit = ImageOps.fit(image, (400, 400), Image.ANTIALIAS)
-      output = StringIO.StringIO()
-      imagefit.save(output, 'JPEG', quality=75)
-      output.seek(0)
-      # TODO: Find a way to delete old image files.
-      self.pic = InMemoryUploadedFile(output, 'ImageField',
-          '%s.jpg'  % self.norm_name, 'image/jpeg', output.len, None)
     super(McUser, self).save(*args, **kwargs)
 
 class Degree(models.Model):
@@ -95,30 +102,43 @@ class Degree(models.Model):
   degree_type = models.CharField(max_length=200, blank=True)
   start_time = models.DateField(null=True, blank=True)
   end_time = models.DateField(null=True, blank=True)
+  major1 = models.CharField(max_length=200, choices=MAJOR_CHOICES, blank=True)
+  major2 = models.CharField(max_length=200, choices=MAJOR_CHOICES, blank=True)
+  minor1 = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
+  minor2 = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
 
-class Major(models.Model):
-  degree = models.ForeignKey(Degree, related_name='majors')
-  utd_major = models.CharField(max_length=200, choices=MAJOR_CHOICES, blank=True)
-  other_major = models.CharField(max_length=200, blank=True)
-
-class Minor(models.Model):
-  degree = models.ForeignKey(Degree, related_name='minors')
-  utd_minor = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
-  other_minor = models.CharField(max_length=200, blank=True)
+EXP_CHOICES = (('', ''), ('Research', 'Research'), ('Internship', 'Internship'),
+               ('Volunteer', 'Volunteer'), ('Clubs / Leadership', 'Clubs / Leadership'),
+               ('Athletic', 'Athletic'), ('Other', 'Other'))
 
 class Experience(models.Model):
   user = models.ForeignKey(McUser, related_name='experiences')
   title = models.CharField(max_length=200, blank=True)
+  exp_type = models.CharField(max_length=200, choices=EXP_CHOICES, blank=True)
   organization = models.CharField(max_length=200, blank=True)
   description = models.TextField(blank=True)
   location = models.CharField(max_length=200, blank=True)
   start_time = models.DateField(null=True, blank=True)
   end_time = models.DateField(null=True, blank=True)
 
-watson.register(McUser)
+STUDY_ABROAD_CHOICES = (('', ''), ('Internship', 'Internship'), ('Coursework', 'Coursework'),
+                        ('Independent Study', 'Independent Study'), ('Other', 'Other'))
+
+class StudyAbroad(models.Model):
+  user = models.ForeignKey(McUser, related_name='studiesabroad')
+  study_abroad_type = models.CharField(max_length=200,
+                                       choices=STUDY_ABROAD_CHOICES, blank=True)
+  organization = models.CharField(max_length=200, blank=True)
+  description = models.TextField(blank=True)
+  primary_location = models.CharField(max_length=200, blank=True)
+  other_locations = models.CharField(max_length=200, blank=True)
+  start_time = models.DateField(null=True, blank=True)
+  end_time = models.DateField(null=True, blank=True)
+
+watson.register(McUser, fields=('first_name', 'last_name', 'gender', 'class_year', 'hometown', 'hometown_state', 'high_school',
+                                'norm_name', 'staff_title'))
 watson.register(Degree)
-watson.register(Major)
-watson.register(Minor)
 watson.register(Experience)
+watson.register(StudyAbroad)
 # at bottom for circular dependency
 import signals

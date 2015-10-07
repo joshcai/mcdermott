@@ -1,0 +1,148 @@
+{% extends "large_container.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %}
+Edit Education
+{% endblock %}
+
+{% block inner_content %}
+
+<div class="row">
+  <ul class="nav nav-tabs nav-justified">
+    <li role="presentation"><a href="{% url 'edit_info' mcuser.norm_name %}">Profile</a></li>
+    <li role="presentation" class="active"><a>Education</a></li>
+    <li role="presentation"><a href="{% url 'edit_exp' mcuser.norm_name %}">Experience</a></li>
+    <li role="presentation"><a href="{% url 'edit_abroad' mcuser.norm_name %}">Study Abroad</a></li>
+  </ul>
+  <br>
+  <div class="col-md-12" id="messageContainer">
+    {% if messages %}
+      {% for message in messages %}
+        <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst|safe }}</div>
+      {% endfor %}
+    {% endif %}
+  </div>
+  <div class="col-md-12 margin-bot-md text-center">
+    Degrees are displayed in reverse chronological order on your profile, i.e. the first degree you enter should be the oldest one.
+  </div>
+  <form method="post" action="{% url 'edit_edu' mcuser.norm_name %}" class="form-horizontal" id="formEdu">
+    {% csrf_token %}
+
+    {{ degrees_formset.management_form }}
+
+    {% for degree_form in degrees_formset %}
+      {% if degree_form.errors %}
+        There were errors!
+          {% for field in degree_form %}
+            {% for error in field.errors %}
+              <p> {{ error }} {{ field.label_tag }} </p>
+            {% endfor %}
+          {% endfor %}
+      {% endif %}
+      {% if forloop.last and not forloop.first %}
+        <div class="col-md-12 form-add-extra">
+          <h4>Add another degree:</h4>
+        </div>
+      {% endif %}
+      {{ degree_form.id }}
+      {{ degree_form.user }}
+      <div class="col-md-12 {% if not forloop.first %}margin-top-lg{% endif %}">
+        <div class="form-group margin-sm">
+          <label for="id_school" class="form-label">
+            School
+          </label>
+          {% if not forloop.last %}
+          <span class="text-right pull-right">Delete: {{ degree_form.DELETE }}</span>
+          {% endif %}
+          {{ degree_form.school|add_class:"form-control" }}
+          <span class="error">{{ degree_form.school.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group margin-sm">
+          <label for="id_degree_type" class="form-label">
+            Degree <small>(e.g. B.S., M.A., Ph.D.)</small>
+          </label>
+          {{ degree_form.degree_type|add_class:"form-control" }}
+          <span class="error">{{ degree_form.degree_type.errors }}</span>
+        </div>
+      </div>
+      <!--TODO: Replace with Date picker -->
+      <div class="col-md-3">
+        <div class="form-group margin-sm">
+          <label for="id_start_time" class="form-label">
+            Start Date
+          </label>
+          {{ degree_form.start_time|add_class:"form-control" }}
+          <span class="error">{{ degree_form.start_time.errors }}</span>
+        </div>
+      </div>
+      <!--TODO: Replace with Date picker -->
+      <div class="col-md-3">
+        <div class="form-group margin-sm">
+          <label for="id_end_time" class="form-label">
+            End Date
+          </label>
+          {{ degree_form.end_time|add_class:"form-control" }}
+          <span class="error">{{ degree_form.end_time.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group margin-sm">
+          <label for="id_major1" class="form-label">
+            Primary Major
+          </label>
+          {{ degree_form.major1|add_class:"form-control" }}
+          <span class="error">{{ degree_form.major1.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group margin-sm">
+          <label for="id_major2" class="form-label">
+            Major
+          </label>
+          {{ degree_form.major2|add_class:"form-control" }}
+          <span class="error">{{ degree_form.major2.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group margin-sm">
+          <label for="id_minor1" class="form-label">
+            Minor
+          </label>
+          {{ degree_form.minor1|add_class:"form-control" }}
+          <span class="error">{{ degree_form.minor1.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group margin-sm">
+          <label for="id_minor2" class="form-label">
+            Minor
+          </label>
+          {{ degree_form.minor2|add_class:"form-control" }}
+          <span class="error">{{ degree_form.minor2.errors }}</span>
+        </div>
+      </div>
+    {% endfor %}
+    <br>
+    <div class="col-md-12 text-center">
+      <input class="btn btn-default" type="submit" value="SAVE" />
+    </div>
+    <br>
+  </form>
+</div>
+<script>
+  var inputChanged = false;
+  $(document).ready(function() {
+    $('#formEdu input').change(function() {
+      if(!inputChanged) {
+        $('#messageContainer').empty();
+        $('#messageContainer').append('<div class="alert alert-warning" role="alert">Don\'t forget to save your changes!</div>');
+        inputChanged = true;
+      }
+    });
+    $('.datepicker').datepicker();
+  });
+</script>
+{% endblock %}

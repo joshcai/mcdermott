@@ -1,0 +1,138 @@
+{% extends "large_container.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %}
+Edit Study Abroad
+{% endblock %}
+
+{% block inner_content %}
+
+<div class="row">
+  <ul class="nav nav-tabs nav-justified">
+    <li role="presentation"><a href="{% url 'edit_info' mcuser.norm_name %}">Profile</a></li>
+    <li role="presentation"><a href="{% url 'edit_edu' mcuser.norm_name %}">Education</a></li>
+    <li role="presentation"><a href="{% url 'edit_exp' mcuser.norm_name %}">Experience</a></li>
+    <li role="presentation" class="active"><a>Study Abroad</a></li>
+  </ul>
+  <br>
+  <div class="col-md-12" id="messageContainer">
+    {% if messages %}
+      {% for message in messages %}
+        <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst|safe }}</div>
+      {% endfor %}
+    {% endif %}
+  </div>
+  <div class="col-md-12 margin-bot-md text-center">
+    Experiences are displayed in reverse chronological order on your profile, i.e. the first experience you enter should be the oldest one.
+  </div>
+  <form method="post" action="{% url 'edit_abroad' mcuser.norm_name %}" class="form-horizontal" id="formAbroad">
+    {% csrf_token %}
+
+    {{ study_abroad_formset.management_form }}
+
+    {% for study_abroad_form in study_abroad_formset %}
+      {% if study_abroad_form.errors %}
+        There were errors!
+          {% for field in study_abroad_form %}
+            {% for error in field.errors %}
+              <p> {{ error }} {{ field.label_tag }} </p>
+            {% endfor %}
+          {% endfor %}
+      {% endif %}
+      {% if forloop.last and not forloop.first %}
+        <div class="col-md-12 form-add-extra">
+          <h4>Add another study abroad experience:</h4>
+        </div>
+      {% endif %}
+      {{ study_abroad_form.id }}
+      {{ study_abroad_form.user }}
+      <div class="col-md-6 {% if not forloop.first %}margin-top-lg{% endif %}">
+        <div class="form-group margin-sm">
+          <label for="id_primary_location" class="form-label">
+            Primary Location
+          </label>
+          {{ study_abroad_form.primary_location|add_class:"form-control" }}
+          <span class="error">{{ study_abroad_form.primary_location.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-6 {% if not forloop.first %}margin-top-lg{% endif %}">
+        <div class="form-group margin-sm">
+          <label for="id_organization" class="form-label">
+            Organization / School
+          </label>
+          {% if not forloop.last %}
+          <span class="text-right pull-right">Delete: {{ study_abroad_form.DELETE }}</span>
+          {% endif %}
+          {{ study_abroad_form.organization|add_class:"form-control" }}
+          <span class="error">{{ study_abroad_form.organization.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group margin-sm">
+          <label for="id_other_locations" class="form-label">
+            Other Locations Visited
+          </label>
+          {{ study_abroad_form.other_locations|add_class:"form-control" }}
+          <span class="error">{{ study_abroad_form.other_locations.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group margin-sm">
+          <label for="id_study_abroad_type" class="form-label">
+            Experience Type
+          </label>
+          {{ study_abroad_form.study_abroad_type|add_class:"form-control" }}
+          <span class="error">{{ study_abroad_form.exp_type.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group margin-sm">
+          <label for="id_start_time" class="form-label">
+            Start Date
+          </label>
+          {{ study_abroad_form.start_time|add_class:"form-control" }}
+          <span class="error">{{ study_abroad_form.start_time.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group margin-sm">
+          <label for="id_end_time" class="form-label">
+            End Date
+          </label>
+          {{ study_abroad_form.end_time|add_class:"form-control" }}
+          <span class="error">{{ study_abroad_form.end_time.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="form-group margin-sm">
+          <label for="id_description" class="form-label">
+            Description
+          </label>
+          {{ study_abroad_form.description|add_class:"form-control" }}
+          <span class="error">{{ study_abroad_form.description.errors }}</span>
+        </div>
+      </div>
+    {% endfor %}
+    <br>
+    <div class="col-md-12 text-center">
+      <input class="btn btn-default" type="submit" value="SAVE" />
+    </div>
+    <br>
+  </form>
+</div>
+
+<script>
+  var inputChanged = false;
+  $(document).ready(function() {
+    $('#formAbroad input').change(function() {
+      if(!inputChanged) {
+        $('#messageContainer').empty();
+        $('#messageContainer').append('<div class="alert alert-warning" role="alert">Don\'t forget to save your changes!</div>');
+        inputChanged = true;
+      }
+    });
+    $('.datepicker').datepicker();
+  });
+</script>
+{% endblock %}
