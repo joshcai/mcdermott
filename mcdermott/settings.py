@@ -43,6 +43,7 @@ db_password = os.environ.get('DB_PASSWORD') or config.DB_PASSWORD
 # Application definition
 
 INSTALLED_APPS = (
+  'login',
   'django.contrib.admin',
   'django.contrib.auth',
   'django.contrib.contenttypes',
@@ -56,7 +57,6 @@ INSTALLED_APPS = (
   'sorl.thumbnail',
   'watson',
   'widget_tweaks',
-  'login',
   'core',
   'mccalendar',
 )

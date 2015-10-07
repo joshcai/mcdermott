@@ -34,6 +34,7 @@ class McUser(models.Model):
   https://docs.djangoproject.com/en/1.8/ref/contrib/auth/
   """
   user = models.OneToOneField(User)
+  activated = models.BooleanField(default=False)
   first_name = models.CharField(max_length=200, blank=True)
   middle_name = models.CharField(max_length=200, blank=True)
   last_name = models.CharField(max_length=200, blank=True)
