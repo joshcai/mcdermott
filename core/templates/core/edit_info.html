@@ -18,12 +18,15 @@ Edit Info
     <li role="presentation"><a href="{% url 'edit_abroad' mcuser.norm_name %}">Study Abroad</a></li>
   </ul>
   <br>
-  <div id="messageContainer">
+  <div class="col-md-12" id="messageContainer">
     {% if messages %}
       {% for message in messages %}
         <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst }}</div>
       {% endfor %}
     {% endif %}
+  </div>
+  <div class="col-md-12 margin-bot-md text-center">
+    <span class="staff-only">Orange fields</span> are viewable by staff only.
   </div>
   {% if form.errors %}
     There were errors!
@@ -195,8 +198,6 @@ Edit Info
       <span class="error">{{ form.pic.errors }}</span>
     </div>
     <div class="col-md-12 col-sm-12 text-center">
-      <span class="staff-only">Orange fields</span> are viewable by staff only.
-      <br>
       <br>
       <input class="btn btn-default" type="submit" value="SAVE" />
     </div>
@@ -207,7 +208,7 @@ Edit Info
 <script>
   var inputChanged = false;
   $(document).ready(function() {
-    $('input').change(function() {
+    $('#formInfo input').change(function() {
       if(!inputChanged) {
         $('#messageContainer').empty();
         $('#messageContainer').append('<div class="alert alert-warning" role="alert">Don\'t forget to save your changes!</div>');

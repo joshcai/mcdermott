@@ -184,3 +184,8 @@ EMAIL_HOST = 'smtpauth.utdallas.edu'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER') or config.EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') or config.EMAIL_HOST_PASSWORD
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL') or config.DEFAULT_FROM_EMAIL
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+admin_email = os.environ.get('ADMIN_EMAIL') or config.ADMIN_EMAIL
+
+ADMINS = (('Josh', admin_email))

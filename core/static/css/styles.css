@@ -72,6 +72,10 @@ a.no-dec {
   margin-top: 30px;
 }
 
+.margin-bot-sm {
+  margin-bottom: 15px;
+}
+
 .margin-bot-md {
   margin-bottom: 20px;
 }
@@ -136,13 +140,27 @@ a.no-dec {
 .profile-contact-field {
 }
 
+.indented {
+  padding-left: 20px;
+}
 .experience {
-  line-height: 0.5;
+  line-height: 0.60;
   margin-bottom: 2em;
 }
 
+.experience p:not(.school-name) {
+  font-size: 15px;
+}
+
 .school-name {
-  font-size: 1.2em;
+  font-size: 17px;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+.description-pre {
+  line-height:20px;
+  white-space:pre;
 }
 
 /*

@@ -16,14 +16,17 @@ Edit Education
     <li role="presentation"><a href="{% url 'edit_abroad' mcuser.norm_name %}">Study Abroad</a></li>
   </ul>
   <br>
-  <div id="messageContainer">
+  <div class="col-md-12" id="messageContainer">
     {% if messages %}
       {% for message in messages %}
         <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst }}</div>
       {% endfor %}
     {% endif %}
   </div>
-  <form method="post" action="{% url 'edit_edu' mcuser.norm_name %}" class="form-horizontal">
+  <div class="col-md-12 margin-bot-md text-center">
+    Degrees are displayed in reverse chronological order on your profile, i.e. the first degree you enter should be the oldest one.
+  </div>
+  <form method="post" action="{% url 'edit_edu' mcuser.norm_name %}" class="form-horizontal" id="formEdu">
     {% csrf_token %}
 
     {{ degrees_formset.management_form }}
@@ -132,7 +135,7 @@ Edit Education
 <script>
   var inputChanged = false;
   $(document).ready(function() {
-    $('input').change(function() {
+    $('#formEdu input').change(function() {
       if(!inputChanged) {
         $('#messageContainer').empty();
         $('#messageContainer').append('<div class="alert alert-warning" role="alert">Don\'t forget to save your changes!</div>');
