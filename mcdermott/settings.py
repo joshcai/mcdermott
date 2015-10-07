@@ -26,18 +26,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY') or config.SECRET_KEY
+SECRET_KEY = config.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = TEMPLATE_DEBUG = os.environ.get('DEBUG') or config.DEBUG
+DEBUG = TEMPLATE_DEBUG = config.DEBUG
 
-allowed_hosts_env = os.environ.get('ALLOWED_HOSTS')
-if allowed_hosts_env:
-  allowed_hosts_env = [x.strip() for x in allowed_hosts_env.split(',')]
-ALLOWED_HOSTS = allowed_hosts_env or config.ALLOWED_HOSTS
+ALLOWED_HOSTS = config.ALLOWED_HOSTS
 
-use_postgres = os.environ.get('USE_POSTGRES') or config.USE_POSTGRES
-db_password = os.environ.get('DB_PASSWORD') or config.DB_PASSWORD
+use_postgres = config.USE_POSTGRES
+db_password = config.DB_PASSWORD
 
 
 # Application definition
@@ -117,7 +114,7 @@ postgres_settings = {
 }
 
 DATABASES = {
-  'default': postgres_settings if use_postgres else sqlite_settings
+  'default': postgres_settings
 }
 
 # Caches
@@ -170,7 +167,7 @@ REST_FRAMEWORK = {
     ]
 }
 
-THUMBNAIL_DEBUG = os.environ.get('DEBUG') or config.DEBUG
+THUMBNAIL_DEBUG = config.DEBUG
 
 ROLEPERMISSIONS_MODULE = 'mcdermott.roles'
 
@@ -181,11 +178,11 @@ REMOVE_SLASH = True
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST = 'smtpauth.utdallas.edu'
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER') or config.EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') or config.EMAIL_HOST_PASSWORD
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL') or config.DEFAULT_FROM_EMAIL
+EMAIL_HOST_USER = config.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = config.EMAIL_HOST_PASSWORD
+DEFAULT_FROM_EMAIL = config.DEFAULT_FROM_EMAIL
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
-admin_email = os.environ.get('ADMIN_EMAIL') or config.ADMIN_EMAIL
+admin_email = config.ADMIN_EMAIL
 
 ADMINS = (('Josh', admin_email))
