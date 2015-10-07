@@ -62,9 +62,7 @@ class Command(BaseCommand):
       self.stdout.write('Account for user %s already exists' % scholar['V3'])
       user = User.objects.get(username=username)
     else:
-      user = User.objects.create_user(username, email=scholar['UTD email'].lower(), password='password')
-      user.is_active = False
-      user.save()
+      user = User.objects.create_user(username, email=scholar['UTD email'].lower())
     user.mcuser.real_name = scholar['First']
     user.mcuser.first_name = scholar['Pref First']
     user.mcuser.middle_name = scholar['Middle']
@@ -87,9 +85,7 @@ class Command(BaseCommand):
       self.stdout.write('Account for user %s %s already exists' % (staff['First'], staff['Last']))
       user = User.objects.get(username=username)
     else:
-      user = User.objects.create_user(username, email=staff['Email'].lower(), password='password')
-      user.is_active = False
-      user.save()
+      user = User.objects.create_user(username, email=staff['Email'].lower())
     user.mcuser.real_name = staff['Real']
     user.mcuser.first_name = staff['First']
     user.mcuser.last_name = staff['Last']

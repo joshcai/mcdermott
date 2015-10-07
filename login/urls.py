@@ -2,33 +2,33 @@ from django.conf.urls import url
 
 urlpatterns = [
   url(
-      r'^login',
+      r'^login$',
       'django.contrib.auth.views.login',
       name='login'
   ),
   url(
-      r'^logout',
+      r'^logout$',
       'django.contrib.auth.views.logout',
       {'next_page': '/'},
       name='logout'
   ),
   url(
-      r'^password_change',
+      r'^password_change$',
       'django.contrib.auth.views.password_change',
       name='password_change'
   ),
   url(
-      r'^password_change_done',
+      r'^password_change_done$',
       'django.contrib.auth.views.password_change_done',
       name='password_change_done'
   ),
   url(
-      r'^password_reset',
+      r'^password_reset$',
       'django.contrib.auth.views.password_reset',
       name='password_reset'
   ),
   url(
-      r'^password_reset_done',
+      r'^password_reset_done$',
       'django.contrib.auth.views.password_reset_done',
       name='password_reset_done'
   ),
@@ -38,7 +38,7 @@ urlpatterns = [
       name='password_reset_confirm'
   ),
   url(
-      r'^reset/done',
+      r'^reset/done$',
       'django.contrib.auth.views.password_reset_complete',
       name='password_reset_complete'
   ),

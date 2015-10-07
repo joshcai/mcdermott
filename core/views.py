@@ -19,6 +19,9 @@ StudyAbroadFormSet = modelformset_factory(StudyAbroad, form=StudyAbroadForm, ext
 
 # Create your views here.
 def index(request):
+  if request.user.is_authenticated() and not request.user.mcuser.activated:
+    request.user.mcuser.activated = True
+    request.user.mcuser.save()
   return render(request, 'core/index.html')
 
 @login_required
