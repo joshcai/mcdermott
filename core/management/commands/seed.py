@@ -7,7 +7,7 @@ import sys
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 
-from mcdermott.roles import Staff, Scholar, CurrentScholar, Admin
+from mcdermott.roles import Staff, Scholar, CurrentScholar, Dev
 
 def randomString():
   return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
@@ -75,11 +75,7 @@ class Command(BaseCommand):
       self.stdout.write('Account for user %s already exists' % scholar['V3'])
       user = User.objects.get(username=username)
     else:
-      if scholar['Last'] == 'Cai':
-        user = User.objects.create_superuser(username, scholar['UTD email'].lower(), randomString())
-        Admin.assign_role_to_user(user)
-      else:
-        user = User.objects.create_user(username, email=scholar['UTD email'].lower(), password=randomString())
+      user = User.objects.create_user(username, email=scholar['UTD email'].lower(), password=randomString())
     user.mcuser.real_name = scholar['First']
     user.mcuser.first_name = scholar['Pref First']
     user.mcuser.middle_name = scholar['Middle']

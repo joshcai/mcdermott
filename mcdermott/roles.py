@@ -16,7 +16,7 @@ class CurrentScholar(AbstractUserRole):
 class Alumni(AbstractUserRole):
   available_permissions = {}
 
-class Admin(AbstractUserRole):
+class Dev(AbstractUserRole):
   available_permissions = {
     'create_users': True
   }

@@ -193,7 +193,7 @@ def profile(request, name):
     }
   return render(request, 'core/profile.html', context)
 
-@has_role_decorator('admin')
+@has_role_decorator('dev')
 def activated_users(request):
   scholars = McUser.objects.filter(activated=True).order_by('first_name')
   context = {
@@ -201,7 +201,7 @@ def activated_users(request):
     }
   return render(request, 'core/scholars.html', context)
 
-@has_role_decorator('admin')
+@has_role_decorator('dev')
 def unactivated_users(request):
   scholars = McUser.objects.filter(activated=False).order_by('first_name')
   context = {
@@ -209,7 +209,7 @@ def unactivated_users(request):
     }
   return render(request, 'core/scholars.html', context)
 
-@has_role_decorator('admin')
+@has_role_decorator('dev')
 def activate_users(request):
   users_sent = []
   if request.method == 'POST':
