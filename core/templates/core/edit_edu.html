@@ -135,7 +135,7 @@ Edit Education
 <script>
   var inputChanged = false;
   $(document).ready(function() {
-    $('#formEdu input').change(function() {
+    $('#formEdu input').on('input', function() {
       if(!inputChanged) {
         $('#messageContainer').empty();
         $('#messageContainer').append('<div class="alert alert-warning" role="alert">Don\'t forget to save your changes!</div>');

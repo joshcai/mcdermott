@@ -12,10 +12,10 @@ class LoginTestCase(TestCase):
     self.app.login(username='test', password='password')
 
   def testLoginRenders(self):
-    response = self.app.get('/login/')
+    response = self.app.get('/login')
     self.assertEqual(response.status_code, 200)
 
   def testLogoutRenders(self):
     self.login()
-    response = self.app.get('/logout/')
-    self.assertEqual(response.status_code, 200)
+    response = self.app.get('/logout')
+    self.assertEqual(response.status_code, 302)

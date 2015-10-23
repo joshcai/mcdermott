@@ -36,6 +36,11 @@ def absoluteurl(url):
     return url
   return 'http://%s' % url
 
+@register.filter
+def pwrap(value):
+  lines = value.split('\n')
+  return ''.join(['<p>%s</p>' % line for line in lines])
+
 @register.inclusion_tag('macro/directory_header.html')
 def directory_header(active):
   return {'active': active}

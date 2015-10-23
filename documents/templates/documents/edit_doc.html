@@ -1,0 +1,46 @@
+{% extends "large_container.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %}
+Documents
+{% endblock %}
+
+{% block inner_content %}
+
+<form enctype="multipart/form-data" method="post" action="{{ form.url }}" class="form-horizontal">
+  {% csrf_token %}
+  {{ form.id }}
+  <div class="form-group margin-sm">
+    <label for="id_{{ form.name.name }}" class="form-label">
+      Name
+    </label>
+    {{ form.name|add_class:"form-control" }}
+    <span class="errors">{{ form.subject.errors }}</span>
+  </div>
+  <div class="form-group margin-sm">
+    <label for="id_{{ form.category.name }}" class="form-label">    
+      Category
+    </label>
+    {{ form.category }}
+    <span class="errors">{{ form.category.errors }}</span>
+  </div>
+  <div class="form-group margin-sm">
+    <label for="id_{{ form.description.name }}" class="form-label">
+      Description
+    </label>
+    {{ form.description }}
+    <span class="errors">{{ form.description.errors }}</span>
+  </div>
+  <div class="form-group margin-sm">
+    <label for="id_{{ form.actual_file.name }}" class="form-label">
+      File
+    </label>
+    {{ form.actual_file }}
+    <span class="errors">{{ form.actual_file.errors }}</span>
+  </div>
+  
+  <input type="submit" value="Save" class="btn btn-default">
+</form>
+
+{% endblock %}

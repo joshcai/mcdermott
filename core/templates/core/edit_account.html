@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %}
+  Edit Account
+{% endblock %}
+
+
+{% block content %}
+
+<br>
+<br>
+<div class="col-md-4 col-md-offset-4 text-center">
+  <div class="col-md-12" id="messageContainer">
+    {% if messages %}
+      {% for message in messages %}
+        <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst|safe }}</div>
+      {% endfor %}
+    {% endif %}
+  </div>
+  {% if form.errors %}
+    <p class="errornote">
+    {% if form.errors.items|length == 1 %}Please correct the error below.{% else %}Please correct the errors below.{% endif %}
+    </p>
+  {% endif %}
+  <form action="" method="post" class="form-horizontal" id="accountForm">
+  {% csrf_token %}
+    <div class="form-group">
+      {{ form.username.errors }}
+      <div class="form-group">
+        <label for="id_oldpassword" class="col-sm-4 control-label">
+          Username
+        </label>
+        <div class="col-sm-8">
+          {{ form.username|add_class:"form-control" }}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      {{ form.email.errors }}
+      <div class="form-group">
+        <label for="id_newpassword1" class="col-sm-4 control-label">
+          Email (for notifications)
+        </label>
+        <div class="col-sm-8">
+          {{ form.email|add_class:"form-control" }}
+        </div>
+      </div>
+      {% if form.email.help_text %}
+      <p class="help">{{ form.email.help_text|safe }}</p>
+      {% endif %}
+    </div>
+
+
+    <input type="submit" value="Save" class="btn btn-default" />
+  </form>
+</div>
+<script>
+  var inputChanged = false;
+  $(document).ready(function() {
+    $('#accountForm input').on('input', function() {
+      if(!inputChanged) {
+        $('#messageContainer').empty();
+        inputChanged = true;
+      }
+    });
+  });
+</script>
+{% endblock %}

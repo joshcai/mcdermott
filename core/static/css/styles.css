@@ -60,6 +60,11 @@ a.no-dec {
 .padding-top-md {
   padding-top: 20px;
 }
+
+.padding-left-md {
+  padding-left: 20px;
+}
+
 .margin-top-sm {
   margin-top: 10px;
 }
@@ -144,23 +149,23 @@ a.no-dec {
   padding-left: 20px;
 }
 .experience {
-  line-height: 0.60;
   margin-bottom: 2em;
 }
 
 .experience p:not(.school-name) {
   font-size: 15px;
+  margin-bottom: 0;
 }
 
 .school-name {
   font-size: 17px;
   font-weight: 500;
-  margin-bottom: 15px;
+  line-height: 1.25;
+  margin-bottom: -2px;
 }
 
-.description-pre {
-  line-height:20px;
-  white-space:pre;
+.profile-description {
+  line-height: 1.75;
 }
 
 /*
