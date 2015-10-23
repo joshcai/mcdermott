@@ -124,7 +124,7 @@ Edit Experience
 <script>
   var inputChanged = false;
   $(document).ready(function() {
-    $('#formExp input').change(function() {
+    $('#formExp input').on('input', function() {
       if(!inputChanged) {
         $('#messageContainer').empty();
         $('#messageContainer').append('<div class="alert alert-warning" role="alert">Don\'t forget to save your changes!</div>');

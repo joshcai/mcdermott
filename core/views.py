@@ -12,7 +12,7 @@ import watson
 
 import requests
 
-from forms import McUserForm, DegreeForm, ExperienceForm, StudyAbroadForm
+from forms import McUserForm, DegreeForm, ExperienceForm, StudyAbroadForm, UserForm
 from models import McUser, Degree, Experience, StudyAbroad
 from serializers import UserSerializer
 from util import normalize_name
@@ -120,6 +120,24 @@ def edit_abroad(request, name):
       'mcuser': user_info
       }
   return render(request, 'core/edit_abroad.html', context)
+
+@login_required
+def edit_account(request):
+  user = request.user
+  if request.method == 'POST':
+    user_form = UserForm(request.POST, instance=user)
+    if (user_form.is_valid()):
+      user_form.save()
+      messages.add_message(
+        request, messages.SUCCESS,
+        'Changes saved!')
+      return redirect('edit_account')
+  else:
+    user_form = UserForm(instance=user)
+  context = {
+      'form': user_form
+      }
+  return render(request, 'core/edit_account.html', context)
 
 
 @login_required

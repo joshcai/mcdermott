@@ -62,16 +62,7 @@ Edit Info
         <span class="error">{{ form.last_name.errors }}</span>
       </div>
     </div>
-    <div class="col-md-3 col-sm-6">
-      <div class="form-group margin-sm">
-        <label for="id_{{ form.utd_id.name }}" class="form-label staff-only">
-          UTD ID
-        </label>
-        {{ form.utd_id|add_class:"form-control" }}
-        <span class="error">{{ form.utd_id.errors }}</span>
-      </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
+    <div class="col-md-6 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.birthday.name }}" class="form-label">
           Birthday
@@ -81,7 +72,7 @@ Edit Info
         <span class="error">{{ form.birthday.errors }}</span>
       </div>
     </div>
-    <div class="col-md-3 col-sm-6">
+    <div class="col-md-3 col-sm-3">
       <div class="form-group margin-sm">
         <label for="id_{{ form.class_year.name }}" class="form-label">
           Class year
@@ -90,7 +81,7 @@ Edit Info
         <span class="error">{{ form.class_year.errors }}</span>
       </div>
     </div>
-    <div class="col-md-3 col-sm-6">
+    <div class="col-md-3 col-sm-3">
       <div class="form-group margin-sm">
         <label for="id_{{ form.gender.name }}" class="form-label">
           Gender
@@ -208,7 +199,7 @@ Edit Info
 <script>
   var inputChanged = false;
   $(document).ready(function() {
-    $('#formInfo input').change(function() {
+    $('#formInfo input').on('input', function() {
       if(!inputChanged) {
         $('#messageContainer').empty();
         $('#messageContainer').append('<div class="alert alert-warning" role="alert">Don\'t forget to save your changes!</div>');

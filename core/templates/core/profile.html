@@ -109,11 +109,6 @@
         {% endif %}
       </p>
     {% endif %}
-    {% if user|has_role:'staff' %}
-      {% if profile.utd_id %}
-        <p><span class="staff-only">UTD ID:</span> {{ profile.utd_id }}</p>
-      {% endif %}
-    {% endif %}
   </div>
 </div>
 
