@@ -1,3 +1,5 @@
+from django.contrib.auth.models import User
+
 import floppyforms as forms
 from functools import partial
 
@@ -103,3 +105,11 @@ class StudyAbroadForm(forms.ModelForm):
       'start_time': DateInput(),
       'end_time': DateInput(),
     }
+
+class UserForm(forms.ModelForm):
+  class Meta:
+    model = User
+    fields = [
+      'username',
+      'email',
+    ]

@@ -1,0 +1,36 @@
+{% extends "large_container.html" %}
+
+{% load core_tags %}
+{% load permission_tags %}
+{% load doc_tags %}
+
+{% block title %}
+Documents
+{% endblock %}
+
+{% block inner_content %}
+
+<div class="col-md-3">
+  <ul class="nav nav-pills nav-stacked pull-left">
+    {% for choice in choices %}
+    <li role="presentation" class=""><a href="{% url 'documents:view_docs' choice|normalize_category %}">{{ choice }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+
+{% if user|has_role:'staff' %}
+<a href="{% url 'documents:create_doc' %}" class="btn pull-right btn-warning">New</a>
+{% endif %}
+<div class="padding-left-md">
+  {% for document in documents %}
+  <h5>
+    <a href="{{ document.actual_file.url }}">{{ document.name }}</a>
+    {% if user|has_role:'staff' %}
+    <a href="{% url 'documents:edit_doc' document.id %}" class="btn btn-xs staff-only">Edit</a>
+    {% endif %}
+  </h5>
+  <p>{{ document.description }}</p>
+  {% endfor %}
+</div>
+
+{% endblock %}

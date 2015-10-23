@@ -56,6 +56,7 @@ INSTALLED_APPS = (
   'widget_tweaks',
   'core',
   'mccalendar',
+  'documents',
 )
 
 MIDDLEWARE_CLASSES = (
