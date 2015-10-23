@@ -13,7 +13,7 @@ Documents
 <div class="col-md-3">
   <ul class="nav nav-pills nav-stacked pull-left">
     {% for choice in choices %}
-    <li role="presentation" class="{% if choice.category %}"><a href="{% url 'documents:view_docs' choice|normalize_category %}">{{ choice }}</a></li>
+    <li role="presentation" class=""><a href="{% url 'documents:view_docs' choice|normalize_category %}">{{ choice }}</a></li>
     {% endfor %}
   </ul>
 </div>
