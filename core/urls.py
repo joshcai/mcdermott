@@ -9,7 +9,6 @@ router.register(r'users', views.UserViewSet)
 urlpatterns = [
   url(r'^$', views.index, name='index'),
   url(r'^api/', include(router.urls)),
-  url(r'^documents$', views.documents, name='documents'),
   url(r'^(\w+)/edit_info$', views.edit_info, name='edit_info'),
   url(r'^(\w+)/edit_edu$', views.edit_edu, name='edit_edu'),
   url(r'^(\w+)/edit_exp$', views.edit_exp, name='edit_exp'),

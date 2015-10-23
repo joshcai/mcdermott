@@ -59,6 +59,7 @@ INSTALLED_APPS = (
   'login',
   'core',
   'mccalendar',
+  'documents',
 )
 
 MIDDLEWARE_CLASSES = (

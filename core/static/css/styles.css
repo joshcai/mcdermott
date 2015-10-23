@@ -60,6 +60,11 @@ a.no-dec {
 .padding-top-md {
   padding-top: 20px;
 }
+
+.padding-left-md {
+  padding-left: 20px;
+}
+
 .margin-top-sm {
   margin-top: 10px;
 }
