@@ -16,14 +16,17 @@ Edit Experience
     <li role="presentation"><a href="{% url 'edit_abroad' mcuser.norm_name %}">Study Abroad</a></li>
   </ul>
   <br>
-  <div id="messageContainer">
+  <div class="col-md-12" id="messageContainer">
     {% if messages %}
       {% for message in messages %}
-        <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst }}</div>
+        <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst|safe }}</div>
       {% endfor %}
     {% endif %}
   </div>
-  <form method="post" action="{% url 'edit_exp' mcuser.norm_name %}" class="form-horizontal">
+  <div class="col-md-12 margin-bot-md text-center">
+    Experiences are displayed in reverse chronological order on your profile, i.e. the first experience you enter should be the oldest one.
+  </div>
+  <form method="post" action="{% url 'edit_exp' mcuser.norm_name %}" class="form-horizontal" id="formExp">
     {% csrf_token %}
 
     {{ experiences_formset.management_form }}
@@ -95,7 +98,7 @@ Edit Experience
       <div class="col-md-3">
         <div class="form-group margin-sm">
           <label for="id_end_time" class="form-label">
-            End Date
+            End Date <span class="small">(leave blank if ongoing)</span>
           </label>
           {{ experience_form.end_time|add_class:"form-control" }}
           <span class="error">{{ experience_form.end_time.errors }}</span>
@@ -121,7 +124,7 @@ Edit Experience
 <script>
   var inputChanged = false;
   $(document).ready(function() {
-    $('input').change(function() {
+    $('#formExp input').on('input', function() {
       if(!inputChanged) {
         $('#messageContainer').empty();
         $('#messageContainer').append('<div class="alert alert-warning" role="alert">Don\'t forget to save your changes!</div>');

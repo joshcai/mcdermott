@@ -1,12 +1,9 @@
 from django.contrib.auth.models import User
-from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 import watson
 from localflavor.us.us_states import US_STATES
 from jsonfield import JSONField
 from sorl.thumbnail import ImageField
-import StringIO
-from PIL import Image, ImageOps
 
 from util import normalize_name
 
@@ -34,6 +31,7 @@ class McUser(models.Model):
   https://docs.djangoproject.com/en/1.8/ref/contrib/auth/
   """
   user = models.OneToOneField(User)
+  activated = models.BooleanField(default=False)
   first_name = models.CharField(max_length=200, blank=True)
   middle_name = models.CharField(max_length=200, blank=True)
   last_name = models.CharField(max_length=200, blank=True)
@@ -96,19 +94,6 @@ class McUser(models.Model):
 
   def save(self, *args, **kwargs):
     self.norm_name = normalize_name(self.get_full_name())
-    if self.pic:
-      image = Image.open(StringIO.StringIO(self.pic.read()))
-      if image.mode not in ('L', 'RGB'):
-        image = image.convert('RGB')
-
-      # Resize to 400x400
-      imagefit = ImageOps.fit(image, (400, 400), Image.ANTIALIAS)
-      output = StringIO.StringIO()
-      imagefit.save(output, 'JPEG', quality=75)
-      output.seek(0)
-      # TODO: Find a way to delete old image files.
-      self.pic = InMemoryUploadedFile(output, 'ImageField',
-          '%s.jpg'  % self.norm_name, 'image/jpeg', output.len, None)
     super(McUser, self).save(*args, **kwargs)
 
 class Degree(models.Model):
@@ -151,7 +136,7 @@ class StudyAbroad(models.Model):
   end_time = models.DateField(null=True, blank=True)
 
 watson.register(McUser, fields=('first_name', 'last_name', 'gender', 'class_year', 'hometown', 'hometown_state', 'high_school',
-                                'norm_name'))
+                                'norm_name', 'staff_title'))
 watson.register(Degree)
 watson.register(Experience)
 watson.register(StudyAbroad)

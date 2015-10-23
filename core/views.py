@@ -1,14 +1,18 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.forms.models import modelformset_factory
 from django.http import Http404
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from rolepermissions.verifications import has_role, has_permission
+from rolepermissions.decorators import has_role_decorator
 import watson
 
-from forms import McUserForm, DegreeForm, ExperienceForm, StudyAbroadForm
+import requests
+
+from forms import McUserForm, DegreeForm, ExperienceForm, StudyAbroadForm, UserForm
 from models import McUser, Degree, Experience, StudyAbroad
 from serializers import UserSerializer
 from util import normalize_name
@@ -19,6 +23,9 @@ StudyAbroadFormSet = modelformset_factory(StudyAbroad, form=StudyAbroadForm, ext
 
 # Create your views here.
 def index(request):
+  if request.user.is_authenticated() and not request.user.mcuser.activated:
+    request.user.mcuser.activated = True
+    request.user.mcuser.save()
   return render(request, 'core/index.html')
 
 @login_required
@@ -33,7 +40,9 @@ def edit_info(request, name):
       hidden_fields = [key.replace('checkbox_', '') for key in request.POST if key.startswith('checkbox_')]
       mcuser.hidden_fields = hidden_fields
       mcuser.save()
-      messages.add_message(request, messages.SUCCESS, 'Changes saved!')
+      messages.add_message(
+        request, messages.SUCCESS,
+        'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[mcuser.norm_name]))
       return redirect('edit_info', user_info.norm_name)
   else:
     form = McUserForm(instance=user_info, prefix='base')
@@ -56,7 +65,9 @@ def edit_edu(request, name):
     degrees_formset = DegreeFormSet(request.POST, queryset=degrees, initial=[{'user': user_info.id}])
     if (degrees_formset.is_valid()):
       degrees_formset.save()
-      messages.add_message(request, messages.SUCCESS, 'Changes saved!')
+      messages.add_message(
+        request, messages.SUCCESS,
+        'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[user_info.norm_name]))
       return redirect('edit_edu', user_info.norm_name)
   else:
     degrees_formset = DegreeFormSet(queryset=degrees, initial=[{'user': user_info.id}])
@@ -76,7 +87,9 @@ def edit_exp(request, name):
     experiences_formset = ExperienceFormSet(request.POST, queryset=experiences, initial=[{'user': user_info.id}])
     if (experiences_formset.is_valid()):
       experiences_formset.save()
-      messages.add_message(request, messages.SUCCESS, 'Changes saved!')
+      messages.add_message(
+        request, messages.SUCCESS,
+        'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[user_info.norm_name]))
       return redirect('edit_exp', user_info.norm_name)
   else:
     experiences_formset = ExperienceFormSet(queryset=experiences, initial=[{'user': user_info.id}])
@@ -96,7 +109,9 @@ def edit_abroad(request, name):
     study_abroad_formset = StudyAbroadFormSet(request.POST, queryset=study_abroad, initial=[{'user': user_info.id}])
     if (study_abroad_formset.is_valid()):
       study_abroad_formset.save()
-      messages.add_message(request, messages.SUCCESS, 'Changes saved!')
+      messages.add_message(
+        request, messages.SUCCESS,
+        'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[user_info.norm_name]))
       return redirect('edit_abroad', user_info.norm_name)
   else:
     study_abroad_formset = StudyAbroadFormSet(queryset=study_abroad, initial=[{'user': user_info.id}])
@@ -105,6 +120,24 @@ def edit_abroad(request, name):
       'mcuser': user_info
       }
   return render(request, 'core/edit_abroad.html', context)
+
+@login_required
+def edit_account(request):
+  user = request.user
+  if request.method == 'POST':
+    user_form = UserForm(request.POST, instance=user)
+    if (user_form.is_valid()):
+      user_form.save()
+      messages.add_message(
+        request, messages.SUCCESS,
+        'Changes saved!')
+      return redirect('edit_account')
+  else:
+    user_form = UserForm(instance=user)
+  context = {
+      'form': user_form
+      }
+  return render(request, 'core/edit_account.html', context)
 
 
 @login_required
@@ -177,6 +210,45 @@ def profile(request, name):
       'is_self': profile == request.user.mcuser
     }
   return render(request, 'core/profile.html', context)
+
+@has_role_decorator('admin')
+def activated_users(request):
+  scholars = McUser.objects.filter(activated=True).order_by('first_name')
+  context = {
+    'scholars': scholars,
+    }
+  return render(request, 'core/scholars.html', context)
+
+@has_role_decorator('admin')
+def unactivated_users(request):
+  scholars = McUser.objects.filter(activated=False).order_by('first_name')
+  context = {
+    'scholars': scholars,
+    }
+  return render(request, 'core/scholars.html', context)
+
+@has_role_decorator('admin')
+def activate_users(request):
+  users_sent = []
+  if request.method == 'POST':
+    unactivated_users = McUser.objects.filter(activated=False)
+    for user in unactivated_users:
+      if user.user.email:
+        session = requests.session()
+        url = request.build_absolute_uri(reverse('password_reset'))
+        response = session.get(url)
+        csrftoken = session.cookies['csrftoken']
+        r = session.post(
+          url,
+          data={'email': user.user.email, 'csrfmiddlewaretoken': csrftoken},
+          headers=dict(Referer=url))
+        users_sent.append('%s - %s' % (user.get_full_name(), user.user.email))
+  context = {
+    'users_sent': users_sent,
+    'unactivated': McUser.objects.filter(activated=False).count(),
+    'activated': McUser.objects.filter(activated=True).count(),
+  }
+  return render(request, 'core/activate_users.html', context)
 
 @login_required
 def documents(request):

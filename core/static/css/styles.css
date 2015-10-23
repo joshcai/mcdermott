@@ -77,6 +77,10 @@ a.no-dec {
   margin-top: 30px;
 }
 
+.margin-bot-sm {
+  margin-bottom: 15px;
+}
+
 .margin-bot-md {
   margin-bottom: 20px;
 }
@@ -84,7 +88,6 @@ a.no-dec {
 .margin-bot-lg {
   margin-bottom: 30px;
 }
-
 
 .staff-only {
   color: #C75B12;
@@ -142,13 +145,27 @@ a.no-dec {
 .profile-contact-field {
 }
 
+.indented {
+  padding-left: 20px;
+}
 .experience {
-  line-height: 0.5;
   margin-bottom: 2em;
 }
 
+.experience p:not(.school-name) {
+  font-size: 15px;
+  margin-bottom: 0;
+}
+
 .school-name {
-  font-size: 1.2em;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.25;
+  margin-bottom: -2px;
+}
+
+.profile-description {
+  line-height: 1.75;
 }
 
 /*

@@ -14,9 +14,7 @@
 <div>
   <div class="profile-name">
     <h3>{{ profile.get_full_name }}
-    {% if is_self or user|can:'edit_all_info' %}
-      <a href="{% url 'edit_info' profile.norm_name %}" class="btn btn-default profile-show-btn"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;&nbsp;Edit Profile</a>
-    {% endif %}
+
   </h3>
   {% if profile.user|has_role:'staff' %}
     {% if profile.staff_title %}
@@ -27,8 +25,12 @@
   {% thumbnail profile.pic "200x200" crop="center" as im %}
     <img class="profile-pic" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
   {% endthumbnail %}
-  <h4>Personal Information</h4>
-  <div class="profile-contact-card">
+  <h4 class="margin-bot-sm">Personal Information
+    {% if is_self or user|can:'edit_all_info' %}
+      <a href="{% url 'edit_info' profile.norm_name %}" class="btn btn-default btn-sm profile-show-btn"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;&nbsp;Edit</a>
+    {% endif %}
+  </h4>
+  <div class="profile-contact-card indented">
     {% if profile.class_year %}
       <p><span class="profile-contact-field">Class:</span> {{ profile.class_year }}</p>
     {% endif %}
@@ -107,80 +109,115 @@
         {% endif %}
       </p>
     {% endif %}
-    {% if user|has_role:'staff' %}
-      {% if profile.utd_id %}
-        <p><span class="staff-only">UTD ID:</span> {{ profile.utd_id }}</p>
-      {% endif %}
-    {% endif %}
   </div>
 </div>
 
 {% if profile.degrees.all %}
-  <h4>Education
+  <h4 class="margin-bot-md">Education
+    {% if is_self or user|can:'edit_all_info' %}
+      <a href="{% url 'edit_edu' profile.norm_name %}" class="btn btn-default btn-sm profile-show-btn"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;&nbsp;Edit</a>
+    {% endif %}
     <!--<button type="button" class="btn btn-sm profile-show-btn" data-toggle="collapse" data-target="#education">Show</button>-->
   </h4>
-  <div id="education">
+  <div id="education" class="indented">
   {% for degree in profile.degrees.all %}
-    <div class="well experience">
-      <p class="school-name">School: {{ degree.school }}</p>
-      <p>Type: {{ degree.degree_type }}</p>
-      <p>Time period: {{ degree.start_time }} - {{ degree.end_time }}</p>
-      {% for major in degree.majors.all %}
-        {% if major.utd_major %}
-          <p>Major: {{ major.utd_major }}</p>
-  <!--      {% elif major.other_major %}-->
-        {% else %}
-          <p>Major: {{ major.other_major }}</p>
-        {% endif %}
-      {% endfor %}
-      {% for minor in degree.minors.all %}
-        {% if minor.utd_minor %}
-          <p>Minor: {{ minor.utd_minor }}</p>
-        {% elif minor.other_minor %}
-          <p>Minor: {{ minor.other_minor }}</p>
-        {% endif %}
-      {% endfor %}
+    <div class="experience">
+      <p class="school-name">
+        {{ degree.school }}{% if degree.degree_type and degree.school %},{% endif %}
+        {{ degree.degree_type }}
+      </p>
+      {% if degree.start_time or degree.end_time %}
+        <p>{{ degree.start_time|date:"F Y" }}{% if degree.start_time and degree.end_time %} - {% endif %}{{ degree.end_time|date:"F Y" }}</p>
+      {% endif %}
+      {% if degree.major1 or degree.major2 %}
+        <p>
+          Major{% if degree.major1 and degree.major2 %}s{% endif %}:
+          {{ degree.major1 }}{% if degree.major1 and degree.major2 %}, {% endif %}{{ degree.major2 }}
+        </p>
+      {% endif %}
+      {% if degree.minor1 or degree.minor2 %}
+        <p>
+          Minor{% if degree.minor1 and degree.minor2 %}s{% endif %}:
+          {{ degree.minor1 }}{% if degree.minor1 and degree.minor2 %}, {% endif %}{{ degree.minor2 }}
+        </p>
+      {% endif %}
     </div>
   {% endfor %}
   </div>
 {% endif %}
 
 {% if profile.experiences.all %}
-  <h4>Experience
+  <h4 class="margin-bot-md">Experience
+    {% if is_self or user|can:'edit_all_info' %}
+      <a href="{% url 'edit_exp' profile.norm_name %}" class="btn btn-default btn-sm profile-show-btn"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;&nbsp;Edit</a>
+    {% endif %}
     <!--<button type="button" class="btn btn-sm profile-show-btn" data-toggle="collapse" data-target="#experience">Show</button>-->
   </h4>
-  <div id="experience">
-    {% for experience in profile.experiences.all %}
-    <div class="well experience">
-      <p>Title: {{ experience.title }}</p>
-      <p>Organization: {{ experience.organization }}</p>
-      <p>Location: {{ experience.location }}</p>
-      <p>Type: {{ experience.exp_type }}</p>
-      <p>Time period: {{ experience.start_time }} - {{ experience.end_time }}</p>
+  <div id="experience" class="indented">
+    {% for exp in profile.experiences.all %}
+    <div class="experience">
+      <p class="school-name">
+        {{ exp.title }}{% if exp.title and exp.organization %} &mdash; {% endif %}
+        {{ exp.organization }}
+      </p>
+      <p>
+        {% if exp.location %}
+          {{ exp.location }}
+        {% endif %}
+        {% if exp.location and exp.start_time %}&bull;{% endif %}
+        {% if exp.start_time %}
+          {{ exp.start_time|date:"n/j/y" }} - {% if exp.end_time %}{{ exp.end_time|date:"n/j/y" }}{% else %}Present{% endif %}
+        {% endif %}
+      </p>
+      {% if exp.description %}
+        <div class="profile-description">
+          {{ exp.description|pwrap|safe }}
+        </div>
+      {% endif %}
     </div>
     {% endfor %}
   </div>
 {% endif %}
 
 {% if profile.studiesabroad.all %}
-<h4>Study Abroad
+  <h4 class="margin-bot-md">Study Abroad
+    {% if is_self or user|can:'edit_all_info' %}
+      <a href="{% url 'edit_abroad' profile.norm_name %}" class="btn btn-default btn-sm profile-show-btn"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;&nbsp;Edit</a>
+    {% endif %}
   <!--<button type="button" class="btn btn-sm profile-show-btn" data-toggle="collapse" data-target="#study-abroad">Show</button>-->
-</h4>
-<div id="study-abroad">
-  {% for study_abroad in profile.studiesabroad.all %}
-  <div class="well experience">
-    <p>Location: {{ study_abroad.primary_location }}</p>
-    <p>Organization: {{ study_abroad.organization }}</p>
-    <p>Other locations: {{ study_abroad.other_locations }}</p>
-    <p>Type: {{ study_abroad.study_abroad_type }}</p>
-    <p>Time period: {{ study_abroad.start_time }} - {{ study_abroad.end_time }}</p>
+  </h4>
+  <div id="study-abroad" class="indented">
+    {% for study_abroad in profile.studiesabroad.all %}
+    <div class="experience">
+      <p class="school-name">
+        {{ study_abroad.primary_location }}
+        {% if study_abroad.primary_location and study_abroad.organization %}&mdash;{% endif %}
+        {{ study_abroad.organization }}
+      </p>
+      {% if study_abroad.start_time or study_abroad.end_time %}
+        <p>
+          {{ study_abroad.start_time|date:"n/j/y" }}
+          {% if study_abroad.start_time and study_abroad.end_time %}-{% endif %}
+          {{ study_abroad.end_time|date:"n/j/y" }}
+        </p>
+      {% endif %}
+      {% if study_abroad.other_locations %}
+        <p>Other locations: {{ study_abroad.other_locations }}</p>
+      {% endif %}
+      {% if study_abroad.description %}
+        <div class="profile-description">
+          {{ study_abroad.description|pwrap|safe }}
+        </div>
+      {% endif %}
+    </div>
+    {% endfor %}
   </div>
-  {% endfor %}
-</div>
 {% endif %}
 
 {% if is_self or user|has_role:'staff' %}
-  <p><span class="staff-only">Orange fields</span> can only be seen by staff.</p>
+  <div class="text-center">
+    <p><span class="staff-only">Orange fields</span> can only be seen by staff.</p>
+  </div>
 {% endif %}
 
 

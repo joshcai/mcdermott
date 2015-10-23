@@ -16,14 +16,17 @@ Edit Study Abroad
     <li role="presentation" class="active"><a>Study Abroad</a></li>
   </ul>
   <br>
-  <div id="messageContainer">
+  <div class="col-md-12" id="messageContainer">
     {% if messages %}
       {% for message in messages %}
-        <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst }}</div>
+        <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst|safe }}</div>
       {% endfor %}
     {% endif %}
   </div>
-  <form method="post" action="{% url 'edit_abroad' mcuser.norm_name %}" class="form-horizontal">
+  <div class="col-md-12 margin-bot-md text-center">
+    Experiences are displayed in reverse chronological order on your profile, i.e. the first experience you enter should be the oldest one.
+  </div>
+  <form method="post" action="{% url 'edit_abroad' mcuser.norm_name %}" class="form-horizontal" id="formAbroad">
     {% csrf_token %}
 
     {{ study_abroad_formset.management_form }}
@@ -122,7 +125,7 @@ Edit Study Abroad
 <script>
   var inputChanged = false;
   $(document).ready(function() {
-    $('input').change(function() {
+    $('#formAbroad input').on('input', function() {
       if(!inputChanged) {
         $('#messageContainer').empty();
         $('#messageContainer').append('<div class="alert alert-warning" role="alert">Don\'t forget to save your changes!</div>');
