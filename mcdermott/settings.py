@@ -115,7 +115,7 @@ postgres_settings = {
 }
 
 DATABASES = {
-  'default': postgres_settings
+  'default': postgres_settings if use_postgres else sqlite_settings
 }
 
 # Caches
