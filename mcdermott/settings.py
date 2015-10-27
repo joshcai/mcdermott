@@ -19,6 +19,10 @@ try:
 except ImportError:
   import example_config as config
 
+#GitHub auth
+GITHUB_USERNAME = config.GITHUB_USERNAME
+GITHUB_PASSWORD = config.GITHUB_PASSWORD
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -60,6 +64,7 @@ INSTALLED_APPS = (
   'core',
   'mccalendar',
   'documents',
+  'issues',
 )
 
 MIDDLEWARE_CLASSES = (
