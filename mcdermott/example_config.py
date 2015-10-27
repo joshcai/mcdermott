@@ -8,3 +8,6 @@ EMAIL_HOST_USER = 'user'
 EMAIL_HOST_PASSWORD = 'password'
 DEFAULT_FROM_EMAIL = 'user@example.com'
 ADMIN_EMAIL = 'user@example.com'
+
+GITHUB_USERNAME = 'user'
+GITHUB_PASSWORD = 'password'
