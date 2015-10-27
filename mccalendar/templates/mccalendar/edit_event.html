@@ -6,6 +6,11 @@
 Edit event
 {% endblock %}
 
+{% block additional_include %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.3/jquery.timepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.3/jquery.timepicker.min.css">
+{% endblock %}
+
 {% block inner_content %}
 
 <form method="post" action="{{ form_url }}" class="form-horizontal padding-top-md">
@@ -82,6 +87,7 @@ Edit event
 <script>
   $(document).ready(function() {
     $('.datepicker').datepicker();
+    $('.timepicker').timepicker();
   });
 </script>
 {% endblock %}
