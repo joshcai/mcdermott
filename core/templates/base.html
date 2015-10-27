@@ -19,6 +19,8 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% block additional_include %}
+    {% endblock %}
 
   </head>
   <body>
@@ -40,7 +42,7 @@
               <li><a href="{% url 'login' %}">Login</a></li>
             {% else %}
               <li><a href="{% url 'mccalendar:index' %}">Calendar</a></li>
-              <li><a href="{% url 'documents:index' %}">Documents</a></li>
+              {# <li><a href="{% url 'documents:index' %}">Documents</a></li> #}
               <li><a href="{% url 'scholars' %}">Directory</a></li>
               <li><a href="{% url 'issues:index' %}">Issues</a></li>
 
