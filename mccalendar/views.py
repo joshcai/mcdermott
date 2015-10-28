@@ -1,3 +1,4 @@
+import datetime
 import time
 import calendar
 
@@ -69,7 +70,10 @@ def month(request, year=None, month=None, change=None):
   for day in month_days:
     entries = current = False
     if day:
-      events = McEvent.objects.filter(start_date__year=year, start_date__month=month, start_date__day=day)
+      events = McEvent.objects.filter(
+          start_date__lte=datetime.date(year, month, day),
+          end_date__gte=datetime.date(year, month, day)
+          )
       if day == cur_day and year == cur_year and month == cur_month:
         current = True
     lst[week].append((day, events, current))

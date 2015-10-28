@@ -92,12 +92,12 @@ Edit event
 <script>
   $(document).ready(function() {
     $('#timeInput .datepicker').datepicker({
-      'showDuration': true,
-      'timeFormat': 'g:ia'
-    });
-    $('#timeInput .timepicker').timepicker({
       'format': 'm/d/yyyy',
       'autoclose': true
+    });
+    $('#timeInput .timepicker').timepicker({
+      'timeFormat': 'h:iA',
+      'showDuration': true
     });
     $('#timeInput').datepair({
       parseDate: function (el) {
