@@ -1,6 +1,5 @@
 from django.db import models
 from core.models import McUser
-from django import forms
 
 class McEvent(models.Model):
 	"""Calendar event model

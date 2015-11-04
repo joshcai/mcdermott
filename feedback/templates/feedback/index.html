@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% load thumbnail %}
+{% load core_tags %}
+
+
+{% block title %}
+Feedback - Directory
+{% endblock %}
+
+{% block content %}
+
+<div class="col-md-12 text-center">
+{% for applicant_group in applicants|group_by:3 %}
+<div class="row">
+  {% for applicant in applicant_group %}
+  <div class="col-md-4 col-sm-12">
+    <div class="well scholar-card">
+      <div class="pull-left">
+      {% if applicant.pic %}
+        {% thumbnail applicant.pic "100x100" crop="center" as im %}
+          <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+        {% endthumbnail %}
+      {% else %}
+        <img src="{% static 'img/user.png' %}" height="100" width="100">
+      {% endif %}
+      </div>
+      <!-- applicant quick info -->
+      <div class="text-right">
+        <a class="no-dec" href ="{% url 'feedback:applicant_profile' applicant.norm_name %}">
+          <h4>{{ applicant.get_full_name }}</h4>
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% empty %}
+  <h3>No applicants found.</h3>
+{% endfor %}
+</div>
+{% endblock %}

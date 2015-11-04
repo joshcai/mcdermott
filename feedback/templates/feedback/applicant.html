@@ -1,0 +1,71 @@
+{% extends "large_container.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %}
+Feedback - {{ applicant.get_full_name }}
+{% endblock %}
+
+{% block inner_content %}
+
+<div class="row">
+  <div class="col-md-6">
+    <h4>{{ applicant.get_full_name }}</h4>
+    {% if applicant.hometown or applicant.hometown_state %}
+      <h5>Hometown:
+        {% if applicant.hometown %}
+        {{ applicant.hometown }}{% endif %}{% if applicant.hometown and applicant.hometown_state %},{% endif %}
+        {% if applicant.hometown_state %}
+        {{ applicant.hometown_state }}
+        {% endif %}
+      </h5>
+    {% endif %}
+    {% if applicant.high_school %}
+      <h5>High School: {{ applicant.high_school }}</h5>
+    {% endif %}
+  </div>
+  <div class="col-md-6">
+    <div class="row">
+      <form method="post" action="" class="form-horizontal">
+        {% csrf_token %}
+        {% if form.errors %}
+          There were errors!
+        {% endif %}
+        <div class="col-md-12">
+          <div class="form-group margin-sm">
+            <label for="id_rating" class="form-label">
+              Overall Impression: Invite to Finalists’ Weekend?
+            </label>
+            {{ form.rating|add_class:"form-control" }}
+            <span class="error">{{ form.rating.errors }}</span>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group margin-sm">
+            <label for="id_interest" class="form-label">
+              Their interest in McDermott Scholars Program?
+            </label>
+            {{ form.interest|add_class:"form-control" }}
+            <span class="error">{{ form.interest.errors }}</span>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group margin-sm">
+            <label for="id_comments" class="form-label">
+              Additional comments (especially about personality, soft skills):
+            </label>
+            {{ form.comments|add_class:"form-control" }}
+            <span class="error">{{ form.comments.errors }}</span>
+          </div>
+        </div>
+        <br>
+        <div class="col-md-12 text-center">
+          <input class="btn btn-default" type="submit" value="SAVE" />
+        </div>
+        <br>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
