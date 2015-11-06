@@ -19,6 +19,8 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% block additional_include %}
+    {% endblock %}
 
   </head>
   <body>
@@ -48,6 +50,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Account <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                   <li><a href="{% url 'own_profile' %}">My Profile</a></li>
+                  <li><a href="{% url 'issues:index' %}">Report Issue</a></li>
                   <li role="separator" class="divider"></li>
                   <li><a href="{% url 'password_change' %}">Change Password</a></li>
                   <li><a href="{% url 'edit_account' %}">Change Account</a></li>

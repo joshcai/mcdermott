@@ -202,7 +202,10 @@ def profile(request, name):
   try:
     profile = McUser.objects.get(norm_name=name)
   except McUser.DoesNotExist:
-    raise Http404('Page does not exist')
+    #TODO: check if URL with slash resolves then redirect to it
+    if name in ('admin', 'calendar', 'documents', 'feedback', 'issues'):
+      return redirect('%s/' % name)
+    raise Http404('Page does not exist.')
   # 'user' is already passed in as default (the logged in user),
   # so use 'profile' as alias
   context = {

@@ -1,9 +1,17 @@
 {% extends "large_container.html" %}
 
+{% load staticfiles %}
 {% load widget_tweaks %}
 
 {% block title %}
 Edit event
+{% endblock %}
+
+{% block additional_include %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.3/jquery.timepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.3/jquery.timepicker.min.css">
+<script src="{% static 'js/datepair.min.js' %}"></script>
+<script src="{% static 'js/jquery.datepair.min.js' %}"></script>
 {% endblock %}
 
 {% block inner_content %}
@@ -38,40 +46,42 @@ Edit event
       <span class="errors">{{ form.description.errors }}</span>
     </div>
   </div>
-  <div class="col-md-3 col-sm-6">
-    <div class="form-group margin-sm">
-      <label for="id_{{ form.start_date.name }}">
-        Start Date
-      </label>
-      {{ form.start_date|add_class:"form-control" }}
-      <span class="errors">{{ form.start_date.errors }}</span>
+  <div id="timeInput">
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.start_date.name }}">
+          Start Date
+        </label>
+        {{ form.start_date|add_class:"form-control date start" }}
+        <span class="errors">{{ form.start_date.errors }}</span>
+      </div>
     </div>
-  </div>
-  <div class="col-md-3 col-sm-6">
-    <div class="form-group margin-sm">
-      <label for="id_{{ form.end_date.name }}">
-        End Date
-      </label>
-      {{ form.end_date|add_class:"form-control" }}
-      <span class="errors">{{ form.end_date.errors }}</span>
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.end_date.name }}">
+          End Date
+        </label>
+        {{ form.end_date|add_class:"form-control date end" }}
+        <span class="errors">{{ form.end_date.errors }}</span>
+      </div>
     </div>
-  </div>
-  <div class="col-md-3 col-sm-6">
-    <div class="form-group margin-sm">
-      <label for="id_{{ form.start_time.name }}">
-        Start Time
-      </label>
-      {{ form.start_time|add_class:"form-control" }}
-      <span class="errors">{{ form.start_time.errors }}</span>
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.start_time.name }}">
+          Start Time
+        </label>
+        {{ form.start_time|add_class:"form-control time start" }}
+        <span class="errors">{{ form.start_time.errors }}</span>
+      </div>
     </div>
-  </div>
-  <div class="col-md-3 col-sm-6">
-    <div class="form-group margin-sm">
-      <label for="id_{{ form.end_time.name }}">
-        End Time
-      </label>
-      {{ form.end_time|add_class:"form-control" }}
-      <span class="errors">{{ form.end_time.errors }}</span>
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.end_time.name }}">
+          End Time
+        </label>
+        {{ form.end_time|add_class:"form-control time end" }}
+        <span class="errors">{{ form.end_time.errors }}</span>
+      </div>
     </div>
   </div>
   <div class="col-md-12 text-center margin-top-md">
@@ -81,7 +91,24 @@ Edit event
 
 <script>
   $(document).ready(function() {
-    $('.datepicker').datepicker();
+    $('#timeInput .datepicker').datepicker({
+      'format': 'm/d/yyyy',
+      'autoclose': true
+    });
+    $('#timeInput .timepicker').timepicker({
+      'timeFormat': 'h:iA',
+      'showDuration': true
+    });
+    $('#timeInput').datepair({
+      parseDate: function (el) {
+        var utc = new Date($(el).datepicker('getDate'));
+        return utc && new Date(utc.getTime() + (utc.getTimezoneOffset() * 60000));
+      },
+      updateDate: function (el, v) {
+        var utc = new Date();
+        $(el).datepicker('setDate', new Date(v.getTime() - (utc.getTimezoneOffset() * 60000)));
+      }
+    });
   });
 </script>
 {% endblock %}
