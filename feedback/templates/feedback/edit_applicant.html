@@ -1,0 +1,88 @@
+{% extends "large_container.html" %}
+
+{% load core_tags %}
+{% load widget_tweaks %}
+{% load permission_tags %}
+
+{% block title %}
+Feedback - Edit {{ applicant.get_full_name }}
+{% endblock %}
+
+{% block inner_content %}
+
+<div class="row">
+  {% if form.errors %}
+    There were errors!
+  {% endif %}
+  <form enctype="multipart/form-data" method="post" action="">
+  {% csrf_token %}
+    <div class="col-md-6 col-sm-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.first_name.name }}" class="form-label">
+          First name
+        </label>
+        {{ form.first_name|add_class:"form-control" }}
+        <span class="error">{{ form.first_name.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.last_name.name }}" class="form-label">
+          Last name
+        </label>
+        {{ form.last_name|add_class:"form-control" }}
+        <span class="error">{{ form.last_name.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.gender.name }}" class="form-label">
+          Gender
+        </label>
+        {{ form.gender|add_class:"form-control" }}
+        <span class="error">{{ form.gender.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.high_school.name }}" class="form-label">
+          High School
+        </label>
+        {{ form.high_school|add_class:"form-control" }}
+        <span class="error">{{ form.high_school.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.hometown.name }}" class="form-label">
+          Hometown City
+        </label>
+        {{ form.hometown|add_class:"form-control" }}
+        <span class="error">{{ form.hometown.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.hometown_state.name }}" class="form-label">
+          Hometown State
+        </label>
+        {{ form.hometown_state|add_class:"form-control" }}
+        <span class="error">{{ form.hometown_state.errors }}</span>
+      </div>
+    </div>
+    <!--TODO: Replace this with something else later -->
+    <div class="col-md-4 col-md-offset-4 col-sm-12 text-center margin-height-md">
+      {{ form.pic }}
+      <span class="error">{{ form.pic.errors }}</span>
+    </div>
+    <div class="col-md-12 col-sm-12 text-center">
+      <br>
+      {% block links %}
+      <a href="{% url 'feedback:applicant_profile' applicant.norm_name %}" class="btn btn-default">BACK</a>
+      &nbsp;&nbsp;
+      <input class="btn btn-default" type="submit" value="SAVE" />
+      {% endblock %}
+    </div>
+  </form>
+</div>
+{% endblock %}

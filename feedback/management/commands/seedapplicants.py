@@ -8,7 +8,7 @@ from feedback.models import Applicant
 
 
 def randomString(length):
-  return ''.join(random.choice(string.ascii_uppercase) for _ in range(length))
+  return ''.join(random.choice(string.ascii_uppercase) for _ in range(length)).capitalize()
 
 class Command(BaseCommand):
   help = 'Seeds with some default applicants'
@@ -30,7 +30,7 @@ class Command(BaseCommand):
       applicant = Applicant()
       applicant.first_name = randomString(10)
       applicant.last_name = randomString(10)
-      applicant.high_school = '%s High School ' % randomString(14)
+      applicant.high_school = '%s High School ' % randomString(8)
       applicant.hometown = randomString(7)
       applicant.hometown_state = random.choice(US_STATES)[0]
       applicant.gender = random.choice(['Male', 'Female'])

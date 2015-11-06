@@ -6,6 +6,9 @@ from models import Applicant, Feedback
 class ImageThumbnailInput(forms.ClearableFileInput):
   template_name = 'floppyforms/image_thumbnail.html'
 
+class RadioNoULInput(forms.RadioSelect):
+  template_name = 'floppyforms/radio_no_ul.html'
+
 class ApplicantForm(forms.ModelForm):
   class Meta:
     model = Applicant
@@ -30,3 +33,8 @@ class FeedbackForm(forms.ModelForm):
       'interest',
       'comments',
     ]
+    widgets = {
+      'rating': RadioNoULInput,
+      'interest': RadioNoULInput,
+      'comments': forms.Textarea(attrs={'rows':4}),
+    }

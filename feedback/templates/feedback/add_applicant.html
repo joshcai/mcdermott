@@ -1,0 +1,11 @@
+{% extends "feedback/edit_applicant.html" %}
+
+{% block title %}
+Feedback - Add Applicant
+{% endblock %}
+
+{% block links %}
+<a href="{% url 'feedback:index' %}" class="btn btn-default">BACK</a>
+&nbsp;&nbsp;
+<input class="btn btn-default" type="submit" value="CREATE" />
+{% endblock %}

@@ -37,7 +37,8 @@ class Feedback(models.Model):
       (4, '4: Yes - little or no reservations'),
       (3, '3: Yes - some reservations'),
       (2, '2: No - significant reservations'),
-      (1, '1: Strong No')
+      (1, '1: Strong No'),
+      ('', 'None'),
   )
   rating = models.IntegerField(choices=RATING_CHOICES, null=True, blank=True)
 
@@ -45,7 +46,8 @@ class Feedback(models.Model):
       (4, '4: Very enthusiastic!'),
       (3, '3: Interested'),
       (2, '2: Not interested'),
-      (1, '1: Could not tell based on interaction')
+      (1, '1: Could not tell based on interaction'),
+      ('', 'None'),
   )
   interest = models.IntegerField(choices=INTEREST_CHOICES, null=True, blank=True)
 

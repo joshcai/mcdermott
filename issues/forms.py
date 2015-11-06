@@ -8,3 +8,6 @@ class IssueForm(forms.ModelForm):
      'title',
      'body',
     ]
+    widgets = {
+      'body': forms.Textarea(attrs={'rows':5})
+    }

@@ -8,30 +8,37 @@ Issues
 {% endblock %}
 
 {% block inner_content %}
-<h4>Submit an issue</h4>
-{% if messages %}
-  {% for message in messages %}
-    <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst|safe }}</div>
-  {% endfor %}
-{% endif %}
-<form method="post" action="{{ form.url }}" class="form-horizontal">
-  {% csrf_token %}
-  <div class="form-group margin-sm">
-    <label for="id_{{ form.title.name }}" class="form-label">
-      Title
-    </label>
-    {{ form.title|add_class:"form-control" }}
-    <span class="errors">{{ form.title.errors }}</span>
+<div class="text-center">
+  <h4>Submit an issue or feature request</h4>
+  {% if messages %}
+    {% for message in messages %}
+      <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst|safe }}</div>
+    {% endfor %}
+  {% endif %}
+</div>
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <form method="post" action="{{ form.url }}" class="form-horizontal">
+      {% csrf_token %}
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.title.name }}" class="form-label">
+          Title
+        </label>
+        {{ form.title|add_class:"form-control" }}
+        <span class="errors">{{ form.title.errors }}</span>
+      </div>
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.body.name }}" class="form-label">
+          Description
+        </label>
+        {{ form.body|add_class:"form-control" }}
+        <span class="errors">{{ form.body.errors }}</span>
+      </div>
+      <div class="text-center">
+        <input type="submit" value="Submit" class="btn btn-default">
+      </div>
+    </form>
   </div>
-  <div class="form-group margin-sm">
-    <label for="id_{{ form.body.name }}" class="form-label">
-      Body
-    </label>
-    {{ form.body|add_class:"form-control" }}
-    <span class="errors">{{ form.body.errors }}</span>
-  </div>
-  
-  <input type="submit" value="Save" class="btn btn-default">
-</form>
+</div>
 
 {% endblock %}

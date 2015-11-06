@@ -135,6 +135,8 @@ class Command(BaseCommand):
     if options['testing']:
       josh = self.add_user('joshcai', 'password', 'Josh Cai', 2012, email='jxc124730@utdallas.edu')
       Admin.assign_role_to_user(josh)
+      staff = self.add_user('staff', 'password', 'Staff User', 2012)
+      Staff.assign_role_to_user(staff)
       self.add_user('atvaccaro', 'password', 'Andrew Vaccaro', 2013, email='andrew.vaccaro@utdallas.edu')
       self.add_user('hajieren', 'password', 'Hans Ajieren', 2014)
       self.add_user('dhruvn', 'password', 'Dhruv Narayanan', 2014)

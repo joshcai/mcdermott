@@ -28,7 +28,6 @@ def applicant_profile(request, name):
     feedback = Feedback()
     feedback.applicant = applicant
     feedback.scholar = request.user.mcuser
-    feedback.save()
   if request.method == 'POST':
     form = FeedbackForm(request.POST, instance=feedback)
     if (form.is_valid()):
@@ -36,7 +35,9 @@ def applicant_profile(request, name):
       return redirect('feedback:index')
   else:
     form = FeedbackForm(instance=feedback)
+  all_feedback = Feedback.objects.filter(applicant=applicant)
   context = {
+      'feedback': all_feedback,
       'applicant': applicant,
       'form': form,
       }
@@ -44,8 +45,34 @@ def applicant_profile(request, name):
 
 @login_required
 def edit_applicant(request, name):
-  pass
+  try:
+    applicant = Applicant.objects.get(norm_name=normalize_name(name))
+  except Applicant.DoesNotExist:
+    raise Http404('Applicant does not exist.')
+  if request.method == 'POST':
+    form = ApplicantForm(request.POST, request.FILES, instance=applicant)
+    if (form.is_valid()):
+      form.save()
+      return redirect('feedback:applicant_profile', applicant.norm_name)
+  else:
+    form = ApplicantForm(instance=applicant)
+  context = {
+      'applicant': applicant,
+      'form': form,
+      }
+  return render(request, 'feedback/edit_applicant.html', context)
 
 @login_required
 def add_applicant(request):
-  pass
+  applicant = Applicant()
+  if request.method == 'POST':
+    form = ApplicantForm(request.POST, request.FILES, instance=applicant)
+    if (form.is_valid()):
+      form.save()
+      return redirect('feedback:applicant_profile', applicant.norm_name)
+  else:
+    form = ApplicantForm(instance=applicant)
+  context = {
+      'form': form,
+  }
+  return render(request, 'feedback/add_applicant.html', context)

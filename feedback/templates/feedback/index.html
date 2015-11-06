@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+{% load permission_tags %}
 {% load staticfiles %}
 {% load thumbnail %}
 {% load core_tags %}
@@ -10,7 +11,11 @@ Feedback - Directory
 {% endblock %}
 
 {% block content %}
-
+{% if user|has_role:'staff' %}
+  <div class="col-md-12 margin-bot-md">
+    <a href="{% url 'feedback:add_applicant' %}" class="btn btn-default">Add Applicant</a>
+  </div>
+{% endif %}
 <div class="col-md-12 text-center">
 {% for applicant_group in applicants|group_by:3 %}
 <div class="row">
@@ -30,6 +35,19 @@ Feedback - Directory
       <div class="text-right">
         <a class="no-dec" href ="{% url 'feedback:applicant_profile' applicant.norm_name %}">
           <h4>{{ applicant.get_full_name }}</h4>
+          <p class="card-extra-info">
+            {% if applicant.high_school %}
+              {{ applicant.high_school }}
+              {% if applicant.hometown or applicant.hometown_state %}
+                &bull;
+              {% endif %}
+            {% endif %}
+            {% if applicant.hometown %}
+            {{ applicant.hometown }}{% endif %}{% if applicant.hometown and applicant.hometown_state %},{% endif %}
+            {% if applicant.hometown_state %}
+            {{ applicant.hometown_state }}
+            {% endif %}
+          </p>
         </a>
       </div>
     </div>
