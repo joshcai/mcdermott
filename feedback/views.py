@@ -4,17 +4,28 @@ from django.http import Http404
 
 from core.util import normalize_name
 
+from rolepermissions.decorators import has_role_decorator
+
 from forms import ApplicantForm, FeedbackForm
 from models import Applicant, Feedback
 
 # Create your views here.
 @login_required
 def index(request):
-  applicants = Applicant.objects.all()
+  applicants = Applicant.objects.all().order_by('first_name')
   context = {
     'applicants': applicants
   }
   return render(request, 'feedback/index.html', context)
+
+@login_required
+@has_role_decorator('staff')
+def applicant_table(request):
+  applicants = Applicant.objects.all().order_by('first_name')
+  context = {
+    'applicants': applicants
+  }
+  return render(request, 'feedback/applicant_table.html', context)
 
 @login_required
 def applicant_profile(request, name):

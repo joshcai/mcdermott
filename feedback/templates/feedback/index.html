@@ -14,6 +14,7 @@ Feedback - Directory
 {% if user|has_role:'staff' %}
   <div class="col-md-12 margin-bot-md">
     <a href="{% url 'feedback:add_applicant' %}" class="btn btn-default">Add Applicant</a>
+    <a href="{% url 'feedback:applicant_table' %}" class="btn btn-default">Table</a>
   </div>
 {% endif %}
 <div class="col-md-12 text-center">

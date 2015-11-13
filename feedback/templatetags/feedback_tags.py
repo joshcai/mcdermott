@@ -1,5 +1,7 @@
 from django import template
 
+from feedback.models import Feedback
+
 register = template.Library()
 
 @register.filter
@@ -20,3 +22,7 @@ def interest_average(feedback):
 def feedback_count(feedback):
   non_empty = [f for f in feedback if (f.interest or f.rating or f.comments)]
   return '%d' % len(non_empty)
+
+@register.filter
+def all_feedback(applicant):
+  return Feedback.objects.filter(applicant=applicant)
