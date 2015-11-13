@@ -11,8 +11,11 @@ from localflavor.us.us_states import US_STATES
 
 from django.core.files import File
 from django.core.management.base import BaseCommand
-from feedback.models import Applicant
+from feedback.models import Applicant, Feedback
+from core.models import McUser
 
+def randomWords(num_words):
+  return ' '.join(randomString(random.randint(4, 10)) for _ in range(num_words)).capitalize()
 
 def randomString(length):
   return ''.join(random.choice(string.ascii_uppercase) for _ in range(length)).capitalize()
@@ -39,6 +42,12 @@ class Command(BaseCommand):
         dest='testing',
         default=False,
         help='Use some test accounts')
+
+    parser.add_argument('--feedback',
+        action='store_true',
+        dest='feedback',
+        default=False,
+        help='Seed some random feedback')
 
   def add_applicant(self, applicant):
     if Applicant.objects.filter(first_name=applicant['First'], last_name=applicant['Last']).exists():
@@ -88,3 +97,18 @@ class Command(BaseCommand):
         applicant.gender = random.choice(['Male', 'Female'])
         applicant.save()
         self.stdout.write('Created user %s' % applicant.get_full_name())
+    if options['feedback']:
+      scholars = McUser.objects.all()
+      applicants = Applicant.objects.all()
+      for scholar in scholars:
+        chance = random.random() / 3
+        for applicant in applicants:
+          if random.random() < chance:
+            try:
+              f = Feedback.objects.get(scholar=scholar, applicant=applicant)
+            except Feedback.DoesNotExist:
+              f = Feedback(scholar=scholar, applicant=applicant)
+            f.rating = random.choice([0, 1, 2, 3, 4, 5])
+            f.interest = random.choice([0, 1, 3, 4, 5])
+            f.comments = randomWords(random.randint(4, 15))
+            f.save()
