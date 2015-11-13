@@ -74,7 +74,7 @@ Feedback - {{ applicant.get_full_name }}
         <div class="col-md-12">
           <div class="form-group">
             <label for="id_rating" class="form-label">
-              Overall Impression: Invite to Finalists’ Weekend?
+              Is this person a Scholar?
             </label>
             {{ form.rating }}
             <span class="error">{{ form.rating.errors }}</span>
@@ -83,7 +83,7 @@ Feedback - {{ applicant.get_full_name }}
         <div class="col-md-12">
           <div class="form-group">
             <label for="id_interest" class="form-label">
-              Their interest in McDermott Scholars Program?
+              Does this person want to be a Scholar?
             </label>
             {{ form.interest|add_class:"form-control" }}
             <span class="error">{{ form.interest.errors }}</span>

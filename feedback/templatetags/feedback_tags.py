@@ -19,6 +19,4 @@ def interest_average(feedback):
 @register.filter
 def feedback_count(feedback):
   non_empty = [f for f in feedback if (f.interest or f.rating or f.comments)]
-  if not non_empty:
-    return 'N/A'
   return '%d' % len(non_empty)
