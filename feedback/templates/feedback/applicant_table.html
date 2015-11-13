@@ -8,11 +8,10 @@
 Feedback - Applicant Table
 {% endblock %}
 
-{% block include_prefix %}
-<link rel="stylesheet" href="//cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css">
-{% endblock %}
 {% block additional_include %}
-<script src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/dataTables.bootstrap.min.css">
+<script src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -21,7 +20,7 @@ Feedback - Applicant Table
 </div>
 <div class="col-md-10 col-md-offset-1 well">
   <div class="table-responsive">
-    <table class="table table-striped table-hover margin-top-lg" id="applicantTable">
+    <table class="table table-striped table-hover dt-responsive" width="100%" id="applicantTable">
       <thead>
         <tr>
           <th>Title</th>
@@ -70,6 +69,7 @@ $(document).ready(function(){
       "scrollY": "500px",
       "scrollCollapse": true,
       "paging": false,
+      "scrollX": true,
       {% if user|has_role:'staff' %}
       "columnDefs": [
         { "type": "num", targets: [6, 7, 8]  }
