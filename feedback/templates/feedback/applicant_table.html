@@ -40,11 +40,7 @@ Feedback - Applicant Table
         {% for applicant in applicants %}
           <tr>
             <td>
-              {% if applicant.gender == 'Male' %}
-                Mr.
-              {% elif applicant.gender == 'Female' %}
-                Ms.
-              {% endif %}
+              {{ applicant.gender }}
             </td>
             <td><a href="{% url 'feedback:applicant_profile' applicant.norm_name %}">{{ applicant.first_name }}</a></td>
             <td><a href="{% url 'feedback:applicant_profile' applicant.norm_name %}">{{ applicant.last_name }}</a></td>

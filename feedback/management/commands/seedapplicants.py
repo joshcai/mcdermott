@@ -60,7 +60,7 @@ class Command(BaseCommand):
     app.high_school = applicant['High School']
     app.hometown = applicant['City']
     app.hometown_state = applicant['State']
-    app.gender = 'Male' if applicant['Title'] == 'Mr.' else 'Female'
+    app.gender = applicant['Title']
     if applicant['Picture']:
       url = applicant['Picture']
       old_file_name = parse_qs(urlparse(url).query)['Filename']
@@ -94,7 +94,7 @@ class Command(BaseCommand):
         applicant.high_school = '%s High School ' % randomString(8)
         applicant.hometown = randomString(7)
         applicant.hometown_state = random.choice(US_STATES)[0]
-        applicant.gender = random.choice(['Male', 'Female'])
+        applicant.gender = random.choice(['Mr.', 'Ms.'])
         applicant.save()
         self.stdout.write('Created user %s' % applicant.get_full_name())
     if options['feedback']:

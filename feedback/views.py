@@ -98,15 +98,13 @@ def export(request):
   book = Workbook()
   sheet1 = book.add_sheet('Rating Averages')
   sheet2 = book.add_sheet('Ratings');
-  sheet1.write(0, 0, 'Applicant')
-  sheet1.write(0, 1, 'Rating Average')
-  sheet1.write(0, 2, 'Interest Average')
-  sheet1.write(0, 3, 'Feedback Count')
-  sheet2.write(0, 0, 'Applicant')
-  sheet2.write(0, 1, 'Commenter')
-  sheet2.write(0, 2, 'Rating')
-  sheet2.write(0, 3, 'Interest')
-  sheet2.write(0, 4, 'Comment')
+  sheet1_headings = ('Title', 'Last', 'First', 'High School', 'City', 'State',
+                     'Rating Average', 'Interest Average', 'Feedback Count')
+  for i, heading in enumerate(sheet1_headings):
+    sheet1.write(0, i, heading)
+  sheet2_headings = ('Last', 'First', 'Commenter', 'Rating', 'Interest', 'Comment')
+  for i, heading in enumerate(sheet2_headings):
+    sheet2.write(0, i, heading)
 
   #Keep track of the line in the second sheet.
   s2_line = 1
@@ -114,23 +112,34 @@ def export(request):
   for i, applicant in enumerate(applicants):
     #Get all the feedback on an applicant ordered by descending rating
     feedbacks = Feedback.objects.filter(applicant=applicant).order_by('-rating')
-
-    sheet1.write(i+1, 0, '%s, %s' % (applicant.last_name, applicant.first_name))
-    sheet1.write(i+1, 1, feedback_tags.rating_average(feedbacks, num=True))
-    sheet1.write(i+1, 2, feedback_tags.interest_average(feedbacks, num=True))
-    sheet1.write(i+1, 3, int(feedback_tags.feedback_count(feedbacks)))
+    sheet1_fields = (
+      applicant.gender,
+      applicant.last_name,
+      applicant.first_name,
+      applicant.high_school,
+      applicant.hometown,
+      applicant.hometown_state,
+      feedback_tags.rating_average(feedbacks, num=True),
+      feedback_tags.interest_average(feedbacks, num=True),
+      int(feedback_tags.feedback_count(feedbacks))
+      )
+    for j, field in enumerate(sheet1_fields):
+      sheet1.write(i+1, j, field)
 
     for feedback in feedbacks:
       commenter = feedback.scholar
       if feedback.rating or feedback.interest or feedback.comments:
-        sheet2.write(s2_line, 0, '%s, %s' % (applicant.last_name, applicant.first_name))
-        sheet2.write(s2_line, 1, commenter.get_full_name())
-        if feedback.rating:
-          sheet2.write(s2_line, 2, feedback.rating)
-        if feedback.interest:
-          sheet2.write(s2_line, 3, feedback.interest)
-        sheet2.write(s2_line, 4, feedback.comments)
-      s2_line += 1
+        sheet2_fields = (
+          applicant.last_name,
+          applicant.first_name,
+          '%s, %s' % (commenter.last_name, commenter.first_name),
+          feedback.rating if feedback.rating else '',
+          feedback.interest if feedback.interest else '',
+          feedback.comments
+          )
+        for j, field in enumerate(sheet2_fields):
+          sheet2.write(s2_line, j, field)
+        s2_line += 1
 
   with NamedTemporaryFile() as f:
     book.save(f)

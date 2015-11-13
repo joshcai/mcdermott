@@ -15,7 +15,7 @@ class Applicant(models.Model):
   hometown_state = models.CharField(blank=True, max_length=2, choices=US_STATES)
   high_school = models.CharField(max_length=200, blank=True)
 
-  GENDER_CHOICES = (('', ''), ('Male', 'Male'), ('Female', 'Female'))
+  GENDER_CHOICES = (('', ''), ('Mr.', 'Male'), ('Ms.', 'Female'))
   gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=True)
 
   pic = ImageField(upload_to='applicants', blank=True)
