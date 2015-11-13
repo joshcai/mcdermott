@@ -1,22 +1,30 @@
 from django import template
 
+import random
+
 from feedback.models import Feedback
 
 register = template.Library()
 
 @register.filter
-def rating_average(feedback):
+def rating_average(feedback, num=False):
   ratings = [f.rating for f in feedback if f.rating]
   if not ratings:
-    return 'N/A'
-  return '%.2f' % (sum(ratings) / float(len(ratings)))
+    return ''
+  avg = sum(ratings) / float(len(ratings))
+  if num:
+    return avg
+  return '%.2f' % avg
 
 @register.filter
-def interest_average(feedback):
+def interest_average(feedback, num=False):
   ratings = [f.interest for f in feedback if f.interest]
   if not ratings:
-    return 'N/A'
-  return '%.2f' % (sum(ratings) / float(len(ratings)))
+    return ''
+  avg = sum(ratings) / float(len(ratings))
+  if num:
+    return avg
+  return '%.2f' % avg
 
 @register.filter
 def feedback_count(feedback):
