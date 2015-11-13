@@ -34,3 +34,7 @@ def feedback_count(feedback):
 @register.filter
 def all_feedback(applicant):
   return Feedback.objects.filter(applicant=applicant)
+
+@register.inclusion_tag('macro/feedback_header.html')
+def feedback_header(active, user):
+  return {'active': active, 'user': user}

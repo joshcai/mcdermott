@@ -16,12 +16,9 @@ Feedback - Applicant Table
 {% endblock %}
 
 {% block content %}
-{% if user|has_role:'staff' %}
-  <div class="col-md-12 margin-bot-md">
-    <a href="{% url 'feedback:add_applicant' %}" class="btn btn-default">Add Applicant</a>
-    <a href="{% url 'feedback:index' %}" class="btn btn-default">Directory</a>
-  </div>
-{% endif %}
+<div class="col-md-12 text-center">
+{% feedback_header 'table' user %}
+</div>
 <div class="col-md-10 col-md-offset-1 well">
   <div class="table-responsive">
     <table class="table table-striped table-hover margin-top-lg" id="applicantTable">

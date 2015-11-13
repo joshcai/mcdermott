@@ -1,0 +1,18 @@
+{% load permission_tags %}
+
+<ul class="nav nav-pills directory-header text-center">
+  <li role="presentation" class="{% if active == 'directory' %}active{% endif %}">
+    <a {% if active != 'directory' %} href="{% url 'feedback:index' %}" {%endif %}>Directory</a>
+  </li>
+  <li role="presentation" class="{% if active == 'table' %}active{% endif %}">
+    <a {% if active != 'table' %} href="{% url 'feedback:applicant_table' %}" {%endif %}>Table</a>
+  </li>
+  {% if user|has_role:'staff' %}
+    <li role="presentation" class="{% if active == 'add' %}active{% endif %}">
+      <a {% if active != 'add' %} href="{% url 'feedback:add_applicant' %}" {%endif %}>Add Applicant</a>
+    </li>
+    <li role="presentation">
+      <a href="{% url 'feedback:export' %}" >Export to Excel</a>
+    </li>
+  {% endif %}
+</ul>
