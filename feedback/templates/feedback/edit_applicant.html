@@ -3,13 +3,13 @@
 {% load core_tags %}
 {% load widget_tweaks %}
 {% load permission_tags %}
+{% load feedback_tags %}
 
 {% block title %}
 Feedback - Edit {{ applicant.get_full_name }}
 {% endblock %}
 
 {% block inner_content %}
-
 <div class="row">
   {% if form.errors %}
     There were errors!

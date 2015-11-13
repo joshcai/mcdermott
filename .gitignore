@@ -8,3 +8,4 @@ run/
 /static/
 *.xlsx
 *.csv
+tmp/

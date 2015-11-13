@@ -19,6 +19,7 @@ class Applicant(models.Model):
   gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=True)
 
   pic = ImageField(upload_to='applicants', blank=True)
+  actual_pic = ImageField(upload_to='applicants_actual', blank=True)
 
   def get_full_name(self):
     return '%s %s' % (self.first_name, self.last_name)
@@ -33,22 +34,22 @@ class Feedback(models.Model):
   applicant = models.ForeignKey(Applicant)
 
   RATING_CHOICES = (
-      (5, '5: Strong Yes'),
-      (4, '4: Yes - little or no reservations'),
-      (3, '3: Yes - some reservations'),
-      (2, '2: No - significant reservations'),
-      (1, '1: Strong No'),
-      ('', 'None'),
+      (5, 'Strong Yes'),
+      (4, 'Yes - little or no reservations'),
+      (3, 'Yes - some reservations'),
+      (2, 'No - significant reservations'),
+      (1, 'Strong No'),
+      (0, 'Could not tell based on interaction'),
   )
-  rating = models.IntegerField(choices=RATING_CHOICES, null=True, blank=True)
+  rating = models.IntegerField(choices=RATING_CHOICES, null=True, blank=False, default=None)
 
   INTEREST_CHOICES = (
-      (4, '4: Very enthusiastic!'),
-      (3, '3: Interested'),
-      (2, '2: Not interested'),
-      (1, '1: Could not tell based on interaction'),
-      ('', 'None'),
+      (5, 'Absolutely'),
+      (4, 'Strongly interested - not ready to commit'),
+      (3, 'Maybe'),
+      (1, 'No'),
+      (0, 'Could not tell based on interaction'),
   )
-  interest = models.IntegerField(choices=INTEREST_CHOICES, null=True, blank=True)
+  interest = models.IntegerField(choices=INTEREST_CHOICES, null=True, blank=False, default=None)
 
   comments = models.TextField(blank=True)

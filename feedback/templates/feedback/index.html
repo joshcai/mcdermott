@@ -4,6 +4,7 @@
 {% load staticfiles %}
 {% load thumbnail %}
 {% load core_tags %}
+{% load feedback_tags %}
 
 
 {% block title %}
@@ -11,12 +12,8 @@ Feedback - Directory
 {% endblock %}
 
 {% block content %}
-{% if user|has_role:'staff' %}
-  <div class="col-md-12 margin-bot-md">
-    <a href="{% url 'feedback:add_applicant' %}" class="btn btn-default">Add Applicant</a>
-  </div>
-{% endif %}
 <div class="col-md-12 text-center">
+  {% feedback_header 'directory' user %}
 {% for applicant_group in applicants|group_by:3 %}
 <div class="row">
   {% for applicant in applicant_group %}
