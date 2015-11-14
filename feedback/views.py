@@ -6,13 +6,18 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 
 from core.util import normalize_name
+from core.models import McUser
 
-from rolepermissions.decorators import has_role, has_role_decorator, has_permission
+from rolepermissions.shortcuts import grant_permission, revoke_permission
+from rolepermissions.verifications import has_role, has_permission
+from rolepermissions.decorators import has_role_decorator
 from xlwt import Workbook
 
 from forms import ApplicantForm, FeedbackForm, StateForm
 from models import Applicant, Feedback, State
 from templatetags import feedback_tags
+
+from mcdermott.roles import ApplicantEditor
 
 def restrict_access(f):
   @wraps(f)
@@ -72,12 +77,14 @@ def applicant_profile(request, name):
       'feedback': all_feedback,
       'applicant': applicant,
       'form': form,
+      'state': get_state()
       }
   return render(request, 'feedback/applicant.html', context)
 
 @login_required
 def edit_applicant(request, name):
-  if not has_permission(request.user, 'edit_applicants'):
+  if not (has_permission(request.user, 'edit_applicants') or
+          has_role(request.user, ['staff', 'dev'])):
     raise Http404('Permission denied.')
   try:
     applicant = Applicant.objects.get(norm_name=normalize_name(name))
@@ -98,7 +105,8 @@ def edit_applicant(request, name):
 
 @login_required
 def add_applicant(request):
-  if not has_permission(request.user, 'edit_applicants'):
+  if not (has_permission(request.user, 'edit_applicants') or
+          has_role(request.user, ['staff', 'dev'])):
     raise Http404('Permission denied.')
   applicant = Applicant()
   if request.method == 'POST':
@@ -114,10 +122,27 @@ def add_applicant(request):
   return render(request, 'feedback/add_applicant.html', context)
 
 @login_required
-def permissions(request):
+def grant_permission(request, scholar_name):
   if not has_role(request.user, ['staff', 'dev']):
     raise Http404('Permission denied.')
-  pass
+  try:
+    mcuser = McUser.objects.get(norm_name=normalize_name(scholar_name))
+    ApplicantEditor.assign_role_to_user(mcuser.user)
+    grant_permission(mcuser.user, 'edit_applicants')
+    return redirect('feedback:index')
+  except McUser.DoesNotExist:
+    raise Http404('User does not exist')
+
+@login_required
+def revoke_permission(request, scholar_name):
+  if not has_role(request.user, ['staff', 'dev']):
+    raise Http404('Permission denied.')
+  try:
+    mcuser = McUser.objects.get(norm_name=normalize_name(scholar_name))
+  except McUser.DoesNotExist:
+    raise Http404('User does not exist')
+  revoke_permission(mcuser.user, 'edit_applicants')
+  return redirect('feedback:index')
 
 def get_state():
   try:

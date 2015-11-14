@@ -7,10 +7,12 @@
   <li role="presentation" class="{% if active == 'table' %}active{% endif %}">
     <a {% if active != 'table' %} href="{% url 'feedback:applicant_table' %}" {%endif %}>Table</a>
   </li>
-  {% if user|has_role:'staff' %}
+  {% if user|has_role:'staff' or user|can:'edit_applicants' %}
     <li role="presentation" class="{% if active == 'add' %}active{% endif %}">
       <a {% if active != 'add' %} href="{% url 'feedback:add_applicant' %}" {%endif %}>Add Applicant</a>
     </li>
+  {% endif %}
+  {% if user|has_role:'staff' %}
     <li role="presentation">
       <a href="{% url 'feedback:export' %}" >Export to Excel</a>
     </li>

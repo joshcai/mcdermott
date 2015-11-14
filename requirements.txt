@@ -1,8 +1,8 @@
-Django==1.8.2
+Django==1.8.6
 django-discover-runner==1.0
 django-floppyforms==1.4.1
 django-localflavor==1.1
-django-role-permissions==0.6.0
+django-role-permissions==0.6.2
 django-unslashed==0.3.0
 django-watson==1.1.8
 django-widget-tweaks==1.4.1
@@ -16,6 +16,6 @@ psycopg2==2.6.1
 python-memcached==1.54
 requests==2.8.0
 setproctitle==1.1.9
-six==1.9.0
+six==1.10.0
 sorl-thumbnail==12.3
 xlwt==1.0.0
