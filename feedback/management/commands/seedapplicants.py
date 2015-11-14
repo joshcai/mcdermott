@@ -13,6 +13,7 @@ from django.core.files import File
 from django.core.management.base import BaseCommand
 from feedback.models import Applicant, Feedback
 from core.models import McUser
+from core.util import normalize_name
 
 def randomWords(num_words):
   return ' '.join(randomString(random.randint(4, 10)) for _ in range(num_words)).capitalize()
@@ -49,6 +50,12 @@ class Command(BaseCommand):
         default=False,
         help='Seed some random feedback')
 
+    parser.add_argument('--pics',
+        action='store_true',
+        dest='pics',
+        default=False,
+        help='Seed some random feedback')
+
   def add_applicant(self, applicant):
     if Applicant.objects.filter(first_name=applicant['First'], last_name=applicant['Last']).exists():
       self.stdout.write('Account for user %s %s already exists' % (applicant['First'], applicant['Last']))
@@ -65,7 +72,7 @@ class Command(BaseCommand):
       url = applicant['Picture']
       old_file_name = parse_qs(urlparse(url).query)['Filename']
       extension = old_file_name[0].split('.')[-1]
-      file_name = '%s,%s.%s' % (applicant['First'], applicant['Last'], extension)
+      file_name = '%s,%s.%s' % (applicant['Last'], applicant['First'], extension)
       response = requests.get(url, stream=True)
       with open('tmp/%s' % file_name, 'wb') as out_file:
         shutil.copyfileobj(response.raw, out_file)
@@ -112,3 +119,19 @@ class Command(BaseCommand):
             f.interest = random.choice([0, 1, 3, 4, 5])
             f.comments = randomWords(random.randint(4, 15))
             f.save()
+    if options['pics']:
+      for f in os.listdir('tmp'):
+        f_split = f.split('.')[0].split(',')
+        scholar_name = normalize_name('%s%s' % (f_split[1], f_split[0]))
+        try:
+          app = Applicant.objects.get(norm_name=scholar_name)
+        except Applicant.DoesNotExist:
+          self.stdout.write('Could not find user %s for pic %s' % (scholar_name, f))
+          continue
+        extension = f.split('.')[-1]
+        file_name = '%s,%s-sp.%s' % (app.last_name, app.first_name, extension)
+        with open('tmp/%s' % f, 'rb') as img_file:
+          app.actual_pic.save(file_name, File(img_file), save=True)
+        app.save()
+        self.stdout.write('Saved pic %s for %s' % (f, scholar_name))
+

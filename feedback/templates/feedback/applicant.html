@@ -31,10 +31,10 @@ Feedback - {{ applicant.get_full_name }}
   <div class="col-md-6">
     <div class="text-center">
       {% thumbnail applicant.actual_pic "200x250" crop="center" as im %}
-        <img class="margin-bot-sm" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+        <img style="margin-bottom:5px;" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
       {% endthumbnail %}
       {% thumbnail applicant.pic "200x250" crop="center" as im %}
-        <img class="margin-bot-sm" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+        <img style="margin-bottom:5px;" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
       {% endthumbnail %}
       <br>
       <br>
