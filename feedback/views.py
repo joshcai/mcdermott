@@ -27,7 +27,10 @@ def index(request):
 
 @login_required
 def applicant_table(request):
-  applicants = Applicant.objects.all().order_by('first_name')
+  if has_role(request.user, 'staff'):
+    applicants = Applicant.objects.all().order_by('first_name')
+  else:
+    applicants = Applicant.objects.filter(attended=True).order_by('first_name')
   context = {
     'applicants': applicants
   }
