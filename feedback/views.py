@@ -1,3 +1,4 @@
+from functools import wraps
 from tempfile import NamedTemporaryFile
 
 from django.contrib.auth.decorators import login_required
@@ -6,37 +7,48 @@ from django.shortcuts import render, redirect
 
 from core.util import normalize_name
 
-from rolepermissions.decorators import has_role, has_role_decorator
+from rolepermissions.decorators import has_role, has_role_decorator, has_permission
 from xlwt import Workbook
 
-from forms import ApplicantForm, FeedbackForm
-from models import Applicant, Feedback
+from forms import ApplicantForm, FeedbackForm, StateForm
+from models import Applicant, Feedback, State
 from templatetags import feedback_tags
+
+def restrict_access(f):
+  @wraps(f)
+  def wrapper(request, *args, **kwargs):
+
+    if get_state().current == 1:
+      if not (has_role(request.user, 'staff') or has_permission(request.user, 'edit_applicants')):
+        raise Http404('App not available until later.')
+    return f(request, *args, **kwargs)
+  return wrapper
 
 # Create your views here.
 @login_required
+@restrict_access
 def index(request):
-  if has_role(request.user, 'staff'):
-    applicants = Applicant.objects.all().order_by('first_name')
-  else:
-    applicants = Applicant.objects.filter(attended=True).order_by('first_name')
+  applicants = Applicant.objects.all().order_by('first_name')
+  if not has_role(request.user, 'staff'):
+    applicants = applicants.filter(attended=True)
   context = {
     'applicants': applicants
   }
   return render(request, 'feedback/index.html', context)
 
 @login_required
+@restrict_access
 def applicant_table(request):
-  if has_role(request.user, 'staff'):
-    applicants = Applicant.objects.all().order_by('first_name')
-  else:
-    applicants = Applicant.objects.filter(attended=True).order_by('first_name')
+  applicants = Applicant.objects.all().order_by('first_name')
+  if not has_role(request.user, 'staff'):
+    applicants = applicants.filter(attended=True)
   context = {
     'applicants': applicants
   }
   return render(request, 'feedback/applicant_table.html', context)
 
 @login_required
+@restrict_access
 def applicant_profile(request, name):
   try:
     applicant = Applicant.objects.get(norm_name=normalize_name(name))
@@ -65,6 +77,8 @@ def applicant_profile(request, name):
 
 @login_required
 def edit_applicant(request, name):
+  if not has_permission(request.user, 'edit_applicants'):
+    raise Http404('Permission denied.')
   try:
     applicant = Applicant.objects.get(norm_name=normalize_name(name))
   except Applicant.DoesNotExist:
@@ -84,6 +98,8 @@ def edit_applicant(request, name):
 
 @login_required
 def add_applicant(request):
+  if not has_permission(request.user, 'edit_applicants'):
+    raise Http404('Permission denied.')
   applicant = Applicant()
   if request.method == 'POST':
     form = ApplicantForm(request.POST, request.FILES, instance=applicant)
@@ -96,6 +112,37 @@ def add_applicant(request):
       'form': form,
   }
   return render(request, 'feedback/add_applicant.html', context)
+
+@login_required
+def permissions(request):
+  if not has_role(request.user, ['staff', 'dev']):
+    raise Http404('Permission denied.')
+  pass
+
+def get_state():
+  try:
+    state = State.objects.get()
+  except State.DoestNotExist:
+    state = State()
+    state.save()
+  return state
+
+@login_required
+def app_state(request):
+  if not has_role(request.user, ['staff', 'dev']):
+    raise Http404('Permission denied.')
+  state = get_state()
+  if request.method == 'POST':
+    form = StateForm(request.POST, instance=state)
+    if (form.is_valid()):
+      form.save()
+      return redirect('feedback:index')
+  else:
+    form = StateForm(instance=state)
+  context = {
+      'form': form,
+      }
+  return render(request, 'feedback/edit_state.html', context)
 
 @login_required
 @has_role_decorator('staff')

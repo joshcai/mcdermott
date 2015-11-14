@@ -55,3 +55,11 @@ class Feedback(models.Model):
   interest = models.IntegerField(choices=INTEREST_CHOICES, null=True, blank=False, default=None)
 
   comments = models.TextField(blank=True)
+
+class State(models.Model):
+  STATE_CHOICES = (
+    (1, 'Restrict Access'),
+    (2, 'Open'),
+    (3, 'Prevent Feedback Update')
+  )
+  current = models.IntegerField(choices=STATE_CHOICES, null=False, blank=False, default=2)

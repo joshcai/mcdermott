@@ -4,6 +4,8 @@ from . import views
 
 urlpatterns = [
   url(r'^$', views.index, name='index'),
+  url(r'^permissions$', views.permissions, name='permissions'),
+  url(r'^app/state$', views.app_state, name='app_state'),
   url(r'^applicants/table$', views.applicant_table, name='applicant_table'),
   url(r'^applicant/add$', views.add_applicant, name='add_applicant'),
   url(r'^applicant/(\w+)$', views.applicant_profile, name='applicant_profile'),
