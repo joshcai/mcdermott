@@ -16,6 +16,7 @@ Feedback - Edit {{ applicant.get_full_name }}
   {% endif %}
   <form enctype="multipart/form-data" method="post" action="">
   {% csrf_token %}
+
     <div class="col-md-6 col-sm-6 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.first_name.name }}" class="form-label">
@@ -30,6 +31,7 @@ Feedback - Edit {{ applicant.get_full_name }}
         <label for="id_{{ form.last_name.name }}" class="form-label">
           Last name
         </label>
+        <span class="text-right pull-right">Attended: {{ form.attended }}</span>
         {{ form.last_name|add_class:"form-control" }}
         <span class="error">{{ form.last_name.errors }}</span>
       </div>
@@ -72,8 +74,14 @@ Feedback - Edit {{ applicant.get_full_name }}
     </div>
     <!--TODO: Replace this with something else later -->
     <div class="col-md-4 col-md-offset-4 col-sm-12 text-center margin-height-md">
+      <label>Registration Pic</label>
       {{ form.pic }}
       <span class="error">{{ form.pic.errors }}</span>
+    </div>
+    <div class="col-md-4 col-md-offset-4 col-sm-12 text-center margin-height-md">
+      <label>Sneak Peek Pic</label>
+      {{ form.actual_pic }}
+      <span class="error">{{ form.actual_pic.errors }}</span>
     </div>
     <div class="col-md-12 col-sm-12 text-center">
       <br>

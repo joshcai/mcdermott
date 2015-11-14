@@ -1,7 +1,7 @@
 import floppyforms as forms
 
 from core.models import McUser
-from models import Applicant, Feedback
+from models import Applicant, Feedback, State
 
 class ImageThumbnailInput(forms.ClearableFileInput):
   template_name = 'floppyforms/image_thumbnail.html'
@@ -20,9 +20,12 @@ class ApplicantForm(forms.ModelForm):
         'hometown_state',
         'high_school',
         'pic',
+        'actual_pic',
+        'attended',
     ]
     widgets = {
         'pic': ImageThumbnailInput,
+        'actual_pic': ImageThumbnailInput,
     }
 
 class FeedbackForm(forms.ModelForm):
@@ -37,4 +40,14 @@ class FeedbackForm(forms.ModelForm):
       'rating': RadioNoULInput,
       'interest': RadioNoULInput,
       'comments': forms.Textarea(attrs={'rows':4}),
+    }
+
+class StateForm(forms.ModelForm):
+  class Meta:
+    model = State
+    fields = [
+      'current'
+    ]
+    widgets = {
+      'current': RadioNoULInput
     }

@@ -20,7 +20,11 @@ Feedback - Directory
   <div class="col-md-4 col-sm-12">
     <div class="well scholar-card">
       <div class="pull-left">
-      {% if applicant.pic %}
+      {% if applicant.actual_pic %}
+        {% thumbnail applicant.actual_pic "100x100" crop="center" as im %}
+          <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+        {% endthumbnail %}
+      {% elif applicant.pic %}
         {% thumbnail applicant.pic "100x100" crop="center" as im %}
           <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
         {% endthumbnail %}
