@@ -62,6 +62,10 @@ Feedback - {{ applicant.get_full_name }}
               <td># of feedback:</td>
               <td>{{ feedback|feedback_count }}</td>
             </tr>
+            <tr>
+              <td>Attended:</td>
+              <td>{{ applicant.attended|convert_attended }}</td>
+            </tr>
           </tbody>
         </table>
       {% endif %}

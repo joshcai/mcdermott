@@ -20,6 +20,7 @@ class ApplicantForm(forms.ModelForm):
         'hometown_state',
         'high_school',
         'pic',
+        'attended',
     ]
     widgets = {
         'pic': ImageThumbnailInput,

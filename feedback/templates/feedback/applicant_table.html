@@ -33,6 +33,7 @@ Feedback - Applicant Table
             <th>Rating</th>
             <th>Interest</th>
             <th>#</th>
+            <th>Attended</th>
           {% endif %}
         </tr>
       </thead>
@@ -51,6 +52,7 @@ Feedback - Applicant Table
               <td>{{ applicant|all_feedback|rating_average }}</td>
               <td>{{ applicant|all_feedback|interest_average }}</td>
               <td>{{ applicant|all_feedback|feedback_count }}</td>
+              <td>{{ applicant.attended|convert_attended }}</td>
             {% endif %}
           </tr>
         {% endfor %}

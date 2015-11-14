@@ -38,3 +38,7 @@ def all_feedback(applicant):
 @register.inclusion_tag('macro/feedback_header.html')
 def feedback_header(active, user):
   return {'active': active, 'user': user}
+
+@register.filter
+def convert_attended(attended):
+  return 'Yes' if attended else 'No'

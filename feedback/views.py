@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 
 from core.util import normalize_name
 
-from rolepermissions.decorators import has_role_decorator
+from rolepermissions.decorators import has_role, has_role_decorator
 from xlwt import Workbook
 
 from forms import ApplicantForm, FeedbackForm
@@ -16,7 +16,10 @@ from templatetags import feedback_tags
 # Create your views here.
 @login_required
 def index(request):
-  applicants = Applicant.objects.all().order_by('first_name')
+  if has_role(request.user, 'staff'):
+    applicants = Applicant.objects.all().order_by('first_name')
+  else:
+    applicants = Applicant.objects.filter(attended=True).order_by('first_name')
   context = {
     'applicants': applicants
   }
@@ -99,7 +102,7 @@ def export(request):
   sheet1 = book.add_sheet('Rating Averages')
   sheet2 = book.add_sheet('Ratings');
   sheet1_headings = ('Title', 'Last', 'First', 'High School', 'City', 'State',
-                     'Rating Average', 'Interest Average', 'Feedback Count')
+                     'Attended', 'Rating Average', 'Interest Average', 'Feedback Count')
   for i, heading in enumerate(sheet1_headings):
     sheet1.write(0, i, heading)
   sheet2_headings = ('Last', 'First', 'Commenter', 'Rating', 'Interest', 'Comment')
@@ -119,6 +122,7 @@ def export(request):
       applicant.high_school,
       applicant.hometown,
       applicant.hometown_state,
+      applicant.attended,
       feedback_tags.rating_average(feedbacks, num=True),
       feedback_tags.interest_average(feedbacks, num=True),
       int(feedback_tags.feedback_count(feedbacks))
