@@ -20,10 +20,12 @@ class ApplicantForm(forms.ModelForm):
         'hometown_state',
         'high_school',
         'pic',
+        'actual_pic',
         'attended',
     ]
     widgets = {
         'pic': ImageThumbnailInput,
+        'actual_pic': ImageThumbnailInput,
     }
 
 class FeedbackForm(forms.ModelForm):
