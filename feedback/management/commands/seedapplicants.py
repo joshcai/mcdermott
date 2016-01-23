@@ -58,10 +58,10 @@ class Command(BaseCommand):
         default=False,
         help='Seed some random feedback')
 
-  def add_applicant(self, applicant):
-    if Applicant.objects.filter(first_name=applicant['First'], last_name=applicant['Last']).exists():
+  def add_applicant(self, applicant, event_name):
+    if Applicant.objects.filter(first_name=applicant['First'], last_name=applicant['Last'], event__name=event_name).exists():
       self.stdout.write('Account for user %s %s already exists' % (applicant['First'], applicant['Last']))
-      app = Applicant.objects.get(first_name=applicant['First'], last_name=applicant['Last'])
+      app = Applicant.objects.get(first_name=applicant['First'], last_name=applicant['Last'], event__name=event_name)
     else:
       app = Applicant()
     app.first_name = applicant['First']
@@ -70,6 +70,8 @@ class Command(BaseCommand):
     app.hometown = applicant['City']
     app.hometown_state = applicant['State']
     app.gender = applicant['Title']
+    event = Event.objects.get(name=event_name)
+    app.event = event
     if applicant['Picture']:
       url = applicant['Picture']
       old_file_name = parse_qs(urlparse(url).query)['Filename']
@@ -85,7 +87,7 @@ class Command(BaseCommand):
     return app
 
   def handle(self, *args, **options):
-    print options['event_name'][0]
+    event_name = options['event_name'][0]
     if options['flush']:
       self.stdout.write('Deleting all applicants...')
       Applicant.objects.all().delete()
@@ -93,13 +95,10 @@ class Command(BaseCommand):
     if options['applicants']:
       if not os.path.exists('tmp'):
         os.makedirs('tmp')
-      with open('applicants2.csv', 'rU') as csvfile:
+      with open('applicants.csv', 'rU') as csvfile:
         applicants = list(csv.reader(csvfile))
-        event = Event.objects.get(name=options['event_name'][0])
         for applicant in applicants[1:]:
-          app = self.add_applicant({key: value for (key, value) in zip(applicants[0], applicant)})
-          app.event = event
-          app.save()
+          self.add_applicant({key: value for (key, value) in zip(applicants[0], applicant)}, event_name)
     if options['testing']:
       for _ in xrange(10):
         applicant = Applicant()

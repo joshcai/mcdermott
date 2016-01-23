@@ -235,9 +235,10 @@ def export(request, event_name):
           sheet2.write(s2_line, j, field)
         s2_line += 1
 
+  event = Event.objects.get(name=event_name)
   with NamedTemporaryFile() as f:
     book.save(f)
     f.seek(0)
     response = HttpResponse(f, content_type='application/vnd.ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="sneak_peek_2015.xls"'
+    response['Content-Disposition'] = 'attachment; filename="%s.xls"' % event.full_name
     return response
