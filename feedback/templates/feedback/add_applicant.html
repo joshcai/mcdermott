@@ -5,7 +5,7 @@ Feedback - Add Applicant
 {% endblock %}
 
 {% block links %}
-<a href="{% url 'feedback:index' %}" class="btn btn-default">BACK</a>
+<a href="{% url 'feedback:index' event_name %}" class="btn btn-default">BACK</a>
 &nbsp;&nbsp;
 <input class="btn btn-default" type="submit" value="CREATE" />
 {% endblock %}

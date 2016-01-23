@@ -14,7 +14,7 @@ from rolepermissions.decorators import has_role_decorator
 from xlwt import Workbook
 
 from forms import ApplicantForm, FeedbackForm, StateForm
-from models import Applicant, Feedback, State
+from models import Applicant, Feedback, State, Event
 from templatetags import feedback_tags
 
 from mcdermott.roles import ApplicantEditor
@@ -32,31 +32,40 @@ def restrict_access(f):
 # Create your views here.
 @login_required
 @restrict_access
-def index(request):
-  applicants = Applicant.objects.all().order_by('first_name')
+def index_redirect(request):
+  latest_event = Event.objects.latest('id')
+  return redirect('feedback:index', latest_event.name)
+
+@login_required
+@restrict_access
+def index(request, event_name):
+  applicants = Applicant.objects.filter(event__name=event_name).order_by('first_name')
   if not has_role(request.user, 'staff'):
     applicants = applicants.filter(attended=True)
   context = {
-    'applicants': applicants
+    'applicants': applicants,
+    'event_name': event_name
   }
+  print event_name
   return render(request, 'feedback/index.html', context)
 
 @login_required
 @restrict_access
-def applicant_table(request):
-  applicants = Applicant.objects.all().order_by('first_name')
+def applicant_table(request, event_name):
+  applicants = Applicant.objects.filter(event__name=event_name).order_by('first_name')
   if not has_role(request.user, 'staff'):
     applicants = applicants.filter(attended=True)
   context = {
-    'applicants': applicants
+    'applicants': applicants,
+    'event_name': event_name
   }
   return render(request, 'feedback/applicant_table.html', context)
 
 @login_required
 @restrict_access
-def applicant_profile(request, name):
+def applicant_profile(request, event_name, name):
   try:
-    applicant = Applicant.objects.get(norm_name=normalize_name(name))
+    applicant = Applicant.objects.get(norm_name=normalize_name(name), event__name=event_name)
   except Applicant.DoesNotExist:
     raise Http404('Applicant does not exist.')
   try:
@@ -77,34 +86,36 @@ def applicant_profile(request, name):
       'feedback': all_feedback,
       'applicant': applicant,
       'form': form,
-      'state': get_state()
+      'state': get_state(),
+      'event_name': event_name
       }
   return render(request, 'feedback/applicant.html', context)
 
 @login_required
-def edit_applicant(request, name):
+def edit_applicant(request, event_name, name):
   if not (has_permission(request.user, 'edit_applicants') or
           has_role(request.user, ['staff', 'dev'])):
     raise Http404('Permission denied.')
   try:
-    applicant = Applicant.objects.get(norm_name=normalize_name(name))
+    applicant = Applicant.objects.get(norm_name=normalize_name(name), event__name=event_name)
   except Applicant.DoesNotExist:
     raise Http404('Applicant does not exist.')
   if request.method == 'POST':
     form = ApplicantForm(request.POST, request.FILES, instance=applicant)
     if (form.is_valid()):
       form.save()
-      return redirect('feedback:applicant_profile', applicant.norm_name)
+      return redirect('feedback:applicant_profile', event_name, applicant.norm_name)
   else:
     form = ApplicantForm(instance=applicant)
   context = {
       'applicant': applicant,
       'form': form,
+      'event_name': event_name
       }
   return render(request, 'feedback/edit_applicant.html', context)
 
 @login_required
-def add_applicant(request):
+def add_applicant(request, event_name):
   if not (has_permission(request.user, 'edit_applicants') or
           has_role(request.user, ['staff', 'dev'])):
     raise Http404('Permission denied.')
@@ -112,12 +123,16 @@ def add_applicant(request):
   if request.method == 'POST':
     form = ApplicantForm(request.POST, request.FILES, instance=applicant)
     if (form.is_valid()):
-      form.save()
-      return redirect('feedback:applicant_profile', applicant.norm_name)
+      app = form.save(commit=False)
+      event = Event.objects.get(name=event_name)
+      app.event = event
+      app.save()
+      return redirect('feedback:applicant_profile', event_name, applicant.norm_name)
   else:
     form = ApplicantForm(instance=applicant)
   context = {
       'form': form,
+      'event_name': event_name
   }
   return render(request, 'feedback/add_applicant.html', context)
 
@@ -171,8 +186,8 @@ def app_state(request):
 
 @login_required
 @has_role_decorator('staff')
-def export(request):
-  applicants = Applicant.objects.all().order_by('last_name')
+def export(request, event_name):
+  applicants = Applicant.objects.filter(event__name=event_name).order_by('last_name')
   book = Workbook()
   sheet1 = book.add_sheet('Rating Averages')
   sheet2 = book.add_sheet('Ratings');

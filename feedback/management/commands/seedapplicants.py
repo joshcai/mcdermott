@@ -11,7 +11,7 @@ from localflavor.us.us_states import US_STATES
 
 from django.core.files import File
 from django.core.management.base import BaseCommand
-from feedback.models import Applicant, Feedback
+from feedback.models import Applicant, Feedback, Event
 from core.models import McUser
 from core.util import normalize_name
 
@@ -25,6 +25,8 @@ class Command(BaseCommand):
   help = 'Seeds with some default applicants'
 
   def add_arguments(self, parser):
+
+    parser.add_argument('event_name', nargs=1, type=str)
 
     parser.add_argument('--flush',
         action='store_true',
@@ -80,8 +82,10 @@ class Command(BaseCommand):
         app.pic.save(file_name, File(img_file), save=True)
     app.save()
     self.stdout.write('Created user %s %s' % (app.first_name, app.last_name))
+    return app
 
   def handle(self, *args, **options):
+    print options['event_name'][0]
     if options['flush']:
       self.stdout.write('Deleting all applicants...')
       Applicant.objects.all().delete()
@@ -89,10 +93,13 @@ class Command(BaseCommand):
     if options['applicants']:
       if not os.path.exists('tmp'):
         os.makedirs('tmp')
-      with open('applicants.csv', 'rU') as csvfile:
+      with open('applicants2.csv', 'rU') as csvfile:
         applicants = list(csv.reader(csvfile))
+        event = Event.objects.get(name=options['event_name'][0])
         for applicant in applicants[1:]:
-          self.add_applicant({key: value for (key, value) in zip(applicants[0], applicant)})
+          app = self.add_applicant({key: value for (key, value) in zip(applicants[0], applicant)})
+          app.event = event
+          app.save()
     if options['testing']:
       for _ in xrange(10):
         applicant = Applicant()
