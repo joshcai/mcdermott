@@ -7,7 +7,7 @@
   <li role="presentation" class="{% if active == 'table' %}active{% endif %}">
     <a {% if active != 'table' %} href="{% url 'feedback:applicant_table' %}" {%endif %}>Table</a>
   </li>
-  {% if user|has_role:'staff' or user|can:'edit_applicants' %}
+  {% if user|has_role:'staff' or user|has_role:'dev' %}
     <li role="presentation" class="{% if active == 'add' %}active{% endif %}">
       <a {% if active != 'add' %} href="{% url 'feedback:add_applicant' %}" {%endif %}>Add Applicant</a>
     </li>

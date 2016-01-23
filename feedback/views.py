@@ -24,7 +24,7 @@ def restrict_access(f):
   def wrapper(request, *args, **kwargs):
 
     if get_state().current == 1:
-      if not (has_role(request.user, 'staff') or has_permission(request.user, 'edit_applicants')):
+      if not (has_role(request.user, ['staff', 'dev', 'selection']) or has_permission(request.user, 'edit_applicants')):
         raise Http404('App not available until later.')
     return f(request, *args, **kwargs)
   return wrapper
@@ -34,7 +34,7 @@ def restrict_access(f):
 @restrict_access
 def index(request):
   applicants = Applicant.objects.all().order_by('first_name')
-  if not has_role(request.user, 'staff'):
+  if not has_role(request.user, ['staff', 'selection']):
     applicants = applicants.filter(attended=True)
   context = {
     'applicants': applicants
@@ -45,7 +45,7 @@ def index(request):
 @restrict_access
 def applicant_table(request):
   applicants = Applicant.objects.all().order_by('first_name')
-  if not has_role(request.user, 'staff'):
+  if not has_role(request.user, ['staff', 'selection']):
     applicants = applicants.filter(attended=True)
   context = {
     'applicants': applicants
@@ -84,7 +84,7 @@ def applicant_profile(request, name):
 @login_required
 def edit_applicant(request, name):
   if not (has_permission(request.user, 'edit_applicants') or
-          has_role(request.user, ['staff', 'dev'])):
+          has_role(request.user, ['staff', 'dev', 'selection'])):
     raise Http404('Permission denied.')
   try:
     applicant = Applicant.objects.get(norm_name=normalize_name(name))
@@ -106,7 +106,7 @@ def edit_applicant(request, name):
 @login_required
 def add_applicant(request):
   if not (has_permission(request.user, 'edit_applicants') or
-          has_role(request.user, ['staff', 'dev'])):
+          has_role(request.user, ['staff', 'dev', 'selection'])):
     raise Http404('Permission denied.')
   applicant = Applicant()
   if request.method == 'POST':
@@ -123,7 +123,7 @@ def add_applicant(request):
 
 @login_required
 def grant_permission(request, scholar_name):
-  if not has_role(request.user, ['staff', 'dev']):
+  if not has_role(request.user, ['staff', 'dev', 'selection']):
     raise Http404('Permission denied.')
   try:
     mcuser = McUser.objects.get(norm_name=normalize_name(scholar_name))
@@ -147,7 +147,7 @@ def revoke_permission(request, scholar_name):
 def get_state():
   try:
     state = State.objects.get()
-  except State.DoestNotExist:
+  except State.DoesNotExist:
     state = State()
     state.save()
   return state
@@ -170,7 +170,7 @@ def app_state(request):
   return render(request, 'feedback/edit_state.html', context)
 
 @login_required
-@has_role_decorator('staff')
+@has_role_decorator(['staff', 'selection'])
 def export(request):
   applicants = Applicant.objects.all().order_by('last_name')
   book = Workbook()
