@@ -86,7 +86,7 @@ Feedback - Edit {{ applicant.get_full_name }}
     <div class="col-md-12 col-sm-12 text-center">
       <br>
       {% block links %}
-      <a href="{% url 'feedback:applicant_profile' applicant.norm_name %}" class="btn btn-default">BACK</a>
+      <a href="{% url 'feedback:applicant_profile' event_name applicant.norm_name %}" class="btn btn-default">BACK</a>
       &nbsp;&nbsp;
       <input class="btn btn-default" type="submit" value="SAVE" />
       {% endblock %}
