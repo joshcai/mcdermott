@@ -36,8 +36,8 @@ def all_feedback(applicant):
   return Feedback.objects.filter(applicant=applicant)
 
 @register.inclusion_tag('macro/feedback_header.html')
-def feedback_header(active, user):
-  return {'active': active, 'user': user}
+def feedback_header(active, user, event_name):
+  return {'active': active, 'user': user, 'event_name': event_name}
 
 @register.filter
 def convert_attended(attended):

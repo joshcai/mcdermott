@@ -5,6 +5,10 @@ from sorl.thumbnail import ImageField
 from core.models import McUser
 from core.util import normalize_name
 
+class Event(models.Model):
+  full_name = models.CharField(max_length=200, blank=True)
+  name = models.CharField(max_length=200, blank=True) # short name of event
+
 # Create your models here.
 class Applicant(models.Model):
   """Model for an applicant."""
@@ -14,6 +18,8 @@ class Applicant(models.Model):
   hometown = models.CharField(max_length=200, blank=True)
   hometown_state = models.CharField(blank=True, max_length=2, choices=US_STATES)
   high_school = models.CharField(max_length=200, blank=True)
+
+  event = models.ForeignKey(Event, null=True, blank=True, default=None)
 
   attended = models.BooleanField(blank=False, null=False, default=True)
 

@@ -13,7 +13,7 @@ Feedback - Directory
 
 {% block content %}
 <div class="col-md-12 text-center">
-  {% feedback_header 'directory' user %}
+  {% feedback_header 'directory' user event_name %}
 {% for applicant_group in applicants|group_by:3 %}
 <div class="row">
   {% for applicant in applicant_group %}
@@ -34,7 +34,7 @@ Feedback - Directory
       </div>
       <!-- applicant quick info -->
       <div class="text-right">
-        <a class="no-dec" href ="{% url 'feedback:applicant_profile' applicant.norm_name %}">
+        <a class="no-dec" href ="{% url 'feedback:applicant_profile' event_name applicant.norm_name %}">
           <h4>{{ applicant.get_full_name }}</h4>
           <p class="card-extra-info">
             {% if applicant.high_school %}
