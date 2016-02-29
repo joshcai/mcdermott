@@ -41,6 +41,12 @@ class Command(BaseCommand):
         default=False,
         help='Use some test accounts')
 
+    parser.add_argument('--alumni',
+        action='store_true',
+        dest='alumni',
+        default=False,
+        help='Create alumni accounts')
+
   def add_user(self, username, password, name, class_year, birthday='1/1/2000', superuser=False, email=None):
     if User.objects.filter(username=username).exists():
       user = User.objects.get(username=username)

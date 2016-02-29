@@ -8,6 +8,7 @@ from core.util import normalize_name
 class Event(models.Model):
   full_name = models.CharField(max_length=200, blank=True)
   name = models.CharField(max_length=200, blank=True) # short name of event
+  fw = models.BooleanField(blank=False, null=False, default=False)
 
 # Create your models here.
 class Applicant(models.Model):
@@ -35,6 +36,10 @@ class Applicant(models.Model):
   def save(self, *args, **kwargs):
     self.norm_name = normalize_name(self.get_full_name())
     super(Applicant, self).save(*args, **kwargs)
+
+class Assignment(models.Model):
+  scholar = models.ForeignKey(McUser)
+  applicant = models.ForeignKey(Applicant)
 
 class Feedback(models.Model):
   """Model for feedback from one scholar on an applicant."""

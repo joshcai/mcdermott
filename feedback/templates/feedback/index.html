@@ -18,7 +18,7 @@ Feedback - Directory
 <div class="row">
   {% for applicant in applicant_group %}
   <div class="col-md-4 col-sm-12">
-    <div class="well scholar-card">
+    <div class="well scholar-card {% if applicant in assignments %}assigned-scholar{% endif %}">
       <div class="pull-left">
       {% if applicant.actual_pic %}
         {% thumbnail applicant.actual_pic "100x100" crop="center" as im %}

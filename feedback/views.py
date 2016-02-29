@@ -14,7 +14,7 @@ from rolepermissions.decorators import has_role_decorator
 from xlwt import Workbook
 
 from forms import ApplicantForm, FeedbackForm, StateForm
-from models import Applicant, Feedback, State, Event
+from models import Applicant, Feedback, State, Event, Assignment
 from templatetags import feedback_tags
 
 from mcdermott.roles import ApplicantEditor
@@ -40,13 +40,14 @@ def index_redirect(request):
 @restrict_access
 def index(request, event_name):
   applicants = Applicant.objects.filter(event__name=event_name).order_by('first_name')
+  assignments = [x.applicant for x in Assignment.objects.filter(scholar=request.user.mcuser)]
   if not has_role(request.user, ['staff', 'selection']):
     applicants = applicants.filter(attended=True)
   context = {
+    'assignments': assignments,
     'applicants': applicants,
     'event_name': event_name
   }
-  print event_name
   return render(request, 'feedback/index.html', context)
 
 @login_required
