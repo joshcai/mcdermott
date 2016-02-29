@@ -46,7 +46,6 @@ def index(request, event_name):
     'applicants': applicants,
     'event_name': event_name
   }
-  print event_name
   return render(request, 'feedback/index.html', context)
 
 @login_required
