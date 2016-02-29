@@ -28,10 +28,10 @@ class Command(BaseCommand):
 
     parser.add_argument('event_name', nargs=1, type=str)
 
-    parser.add_argument('--applicants_file',
+    parser.add_argument('--applicants',
         nargs='?',
-        dest='applicants_file',
-        default='applicants.csv',
+        dest='applicants',
+        default='',
         help='Which applicants CSV file to use')
 
     parser.add_argument('--flush',
@@ -39,12 +39,6 @@ class Command(BaseCommand):
         dest='flush',
         default=False,
         help='Remove all applicants in the event')
-
-    parser.add_argument('--applicants',
-        action='store_true',
-        dest='applicants',
-        default=False,
-        help='Use CSV from applicants.csv')
 
     parser.add_argument('--testing',
         action='store_true',
@@ -97,14 +91,14 @@ class Command(BaseCommand):
     if options['flush']:
       self.stdout.write('Removing all applicants in event %s...' % event_name)
       self.stdout.write('%s users in the database' % Applicant.objects.all().count())
-      applicants = Applicant.objects.filter(event__full_name=event_name)
+      applicants = Applicant.objects.filter(event__name=event_name)
       self.stdout.write('%s users in the event %s' % (applicants.count(), event_name))
       applicants.delete()
       self.stdout.write('%s users left in the database' % Applicant.objects.all().count())
     if options['applicants']:
       if not os.path.exists('tmp'):
         os.makedirs('tmp')
-      with open(options['applicants_file'], 'rU') as csvfile:
+      with open(options['applicants'], 'rU') as csvfile:
         applicants = list(csv.reader(csvfile))
         event = Event.objects.get_or_create(name=options['event_name'][0])[0]
         for applicant in applicants[1:]:

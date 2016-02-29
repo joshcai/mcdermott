@@ -37,6 +37,10 @@ class Applicant(models.Model):
     self.norm_name = normalize_name(self.get_full_name())
     super(Applicant, self).save(*args, **kwargs)
 
+class Assignment(models.Model):
+  scholar = models.ForeignKey(McUser)
+  applicant = models.ForeignKey(Applicant)
+
 class Feedback(models.Model):
   """Model for feedback from one scholar on an applicant."""
   scholar = models.ForeignKey(McUser)
