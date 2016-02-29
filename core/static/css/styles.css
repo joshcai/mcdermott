@@ -97,6 +97,9 @@ a.no-dec {
   min-height: 140px;
 }
 
+.assigned-scholar {
+  background-color: #F3FCFF;
+}
 
 .alert {
   padding: 5px 13px;
