@@ -138,8 +138,8 @@ Feedback - {{ applicant.get_full_name }}
               {% for f in feedback %}
                 {% if f.rating or f.interest or f.comments %}
                     <tr>
-                      <td><a href="{% url 'profile' event_name f.scholar.norm_name %}">{{ f.scholar.first_name }}</a></td>
-                      <td><a href="{% url 'profile' event_name f.scholar.norm_name %}">{{ f.scholar.last_name }}</a></td>
+                      <td><a href="{% url 'profile' f.scholar.norm_name %}">{{ f.scholar.first_name }}</a></td>
+                      <td><a href="{% url 'profile' f.scholar.norm_name %}">{{ f.scholar.last_name }}</a></td>
                       <td>{% if f.rating %}{{ f.rating }}{% endif %}</td>
                       <td>{% if f.interest %}{{ f.interest }}{% endif %}</td>
                       <td>{{ f.comments }}</td>

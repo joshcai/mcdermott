@@ -130,7 +130,7 @@ class Command(BaseCommand):
         f_split = f.split('.')[0].split(',')
         scholar_name = normalize_name('%s%s' % (f_split[1], f_split[0]))
         try:
-          app = Applicant.objects.get(norm_name=scholar_name)
+          app = Applicant.objects.get(norm_name=scholar_name, event__name=event_name)
         except Applicant.DoesNotExist:
           self.stdout.write('Could not find user %s for pic %s' % (scholar_name, f))
           continue

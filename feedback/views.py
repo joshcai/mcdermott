@@ -78,7 +78,7 @@ def applicant_profile(request, event_name, name):
     form = FeedbackForm(request.POST, instance=feedback)
     if (form.is_valid()):
       form.save()
-      return redirect('feedback:index')
+      return redirect('feedback:index', event_name)
   else:
     form = FeedbackForm(instance=feedback)
   all_feedback = Feedback.objects.filter(applicant=applicant)
@@ -176,7 +176,7 @@ def app_state(request):
     form = StateForm(request.POST, instance=state)
     if (form.is_valid()):
       form.save()
-      return redirect('feedback:index')
+      return redirect('feedback:index_redirect')
   else:
     form = StateForm(instance=state)
   context = {

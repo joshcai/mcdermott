@@ -23,7 +23,7 @@ def displayphone(value):
 
 @register.filter
 def removespaces(value):
-  return value.replace(' ', '')
+  return value.replace(' ', '').replace('\'', '')
 
 @register.filter
 def fieldhidden(value, field):

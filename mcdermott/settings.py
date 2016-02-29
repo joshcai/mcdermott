@@ -192,4 +192,4 @@ SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 admin_email = config.ADMIN_EMAIL
 
-ADMINS = (('Josh', admin_email))
+ADMINS = [('Josh', admin_email)]
