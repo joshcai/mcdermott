@@ -28,11 +28,17 @@ class Command(BaseCommand):
 
     parser.add_argument('event_name', nargs=1, type=str)
 
+    parser.add_argument('--applicants_file',
+        nargs='?',
+        dest='applicants_file',
+        default='applicants.csv',
+        help='Which applicants CSV file to use')
+
     parser.add_argument('--flush',
         action='store_true',
         dest='flush',
         default=False,
-        help='Remove all applicants first')
+        help='Remove all applicants in the event')
 
     parser.add_argument('--applicants',
         action='store_true',
@@ -56,7 +62,7 @@ class Command(BaseCommand):
         action='store_true',
         dest='pics',
         default=False,
-        help='Seed some random feedback')
+        help='Match names to pictures')
 
   def add_applicant(self, applicant, event_name):
     if Applicant.objects.filter(first_name=applicant['First'], last_name=applicant['Last'], event__name=event_name).exists():
@@ -64,15 +70,15 @@ class Command(BaseCommand):
       app = Applicant.objects.get(first_name=applicant['First'], last_name=applicant['Last'], event__name=event_name)
     else:
       app = Applicant()
-    app.first_name = applicant['First']
-    app.last_name = applicant['Last']
-    app.high_school = applicant['High School']
-    app.hometown = applicant['City']
-    app.hometown_state = applicant['State']
-    app.gender = applicant['Title']
+    app.first_name = applicant.get('First', '')
+    app.last_name = applicant.get('Last', '')
+    app.high_school = applicant.get('High School', '')
+    app.hometown = applicant.get('City', '')
+    app.hometown_state = applicant.get('State', '')
+    app.gender = applicant.get('Title', '')
     event = Event.objects.get(name=event_name)
     app.event = event
-    if applicant['Picture']:
+    if applicant.get('Picture', ''):
       url = applicant['Picture']
       old_file_name = parse_qs(urlparse(url).query)['Filename']
       extension = old_file_name[0].split('.')[-1]
@@ -89,14 +95,18 @@ class Command(BaseCommand):
   def handle(self, *args, **options):
     event_name = options['event_name'][0]
     if options['flush']:
-      self.stdout.write('Deleting all applicants...')
-      Applicant.objects.all().delete()
+      self.stdout.write('Removing all applicants in event %s...' % event_name)
       self.stdout.write('%s users in the database' % Applicant.objects.all().count())
+      applicants = Applicant.objects.filter(event__full_name=event_name)
+      self.stdout.write('%s users in the event %s' % (applicants.count(), event_name))
+      applicants.delete()
+      self.stdout.write('%s users left in the database' % Applicant.objects.all().count())
     if options['applicants']:
       if not os.path.exists('tmp'):
         os.makedirs('tmp')
-      with open('applicants.csv', 'rU') as csvfile:
+      with open(options['applicants_file'], 'rU') as csvfile:
         applicants = list(csv.reader(csvfile))
+        event = Event.objects.get_or_create(name=options['event_name'][0])[0]
         for applicant in applicants[1:]:
           self.add_applicant({key: value for (key, value) in zip(applicants[0], applicant)}, event_name)
     if options['testing']:

@@ -8,6 +8,7 @@ from core.util import normalize_name
 class Event(models.Model):
   full_name = models.CharField(max_length=200, blank=True)
   name = models.CharField(max_length=200, blank=True) # short name of event
+  fw = models.BooleanField(blank=False, null=False, default=False)
 
 # Create your models here.
 class Applicant(models.Model):
