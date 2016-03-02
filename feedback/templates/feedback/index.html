@@ -11,52 +11,154 @@
 Feedback - Directory
 {% endblock %}
 
+{% block additional_include %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', '{{ ga_tracking_id }}', 'auto');
+  ga('send', 'pageview');
+
+</script>
+{% endblock %}
+
 {% block content %}
-<div class="col-md-12 text-center">
-  {% feedback_header 'directory' user event_name %}
-{% for applicant_group in applicants|group_by:3 %}
-<div class="row">
-  {% for applicant in applicant_group %}
-  <div class="col-md-4 col-sm-12">
-    <div class="well scholar-card {% if applicant in assignments %}assigned-scholar{% endif %}">
-      <div class="pull-left">
-      {% if applicant.actual_pic %}
-        {% thumbnail applicant.actual_pic "100x100" crop="center" as im %}
-          <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-        {% endthumbnail %}
-      {% elif applicant.pic %}
-        {% thumbnail applicant.pic "100x100" crop="center" as im %}
-          <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-        {% endthumbnail %}
-      {% else %}
-        <img src="{% static 'img/user.png' %}" height="100" width="100">
-      {% endif %}
-      </div>
-      <!-- applicant quick info -->
-      <div class="text-right">
-        <a class="no-dec" href ="{% url 'feedback:applicant_profile' event_name applicant.norm_name %}">
-          <h4>{{ applicant.get_full_name }}</h4>
-          <p class="card-extra-info">
-            {% if applicant.high_school %}
-              {{ applicant.high_school }}
-              {% if applicant.hometown or applicant.hometown_state %}
-                &bull;
-              {% endif %}
-            {% endif %}
-            {% if applicant.hometown %}
-            {{ applicant.hometown }}{% endif %}{% if applicant.hometown and applicant.hometown_state %},{% endif %}
-            {% if applicant.hometown_state %}
-            {{ applicant.hometown_state }}
-            {% endif %}
-          </p>
-        </a>
+<div id="applicants-list">
+  <div class="col-md-12 text-center">
+    <h3>{{ event.full_name }}</h3>
+    {% if user|has_role:'staff' or user|has_role:'selection' %}
+      {% feedback_header 'directory' user event_name %}
+      <br>
+    {% endif %}
+    <div class="row">
+      <div class="col-md-4 col-md-offset-4">
+        <input class="search form-control" placeholder="Search" />
       </div>
     </div>
+    <br>
+    <button class="btn btn-default sort" data-sort="name">
+      Sort by first name
+    </button>
+    <button class="btn btn-default sort" data-sort="last-name">
+      Sort by last name
+    </button>
+    <div class="radio">
+      <label>
+        <input type="radio" class="all-filter" name="filters" checked="checked">
+        All
+      </label>
+      {% if assignments %}
+        <label>
+          <input type="radio" class="assigned-filter" name="filters">
+          Assigned
+        </label>
+      {% endif %}
+      <label>
+        <input type="radio" class="male-filter" name="filters">
+        Male
+      </label>
+      <label>
+        <input type="radio" class="female-filter" name="filters">
+        Female
+      </label>
+    {% for i in "xxxx" %}
+      <label>
+      <input type="radio" class="group-filter" name="filters" data-group="{{ forloop.counter }}">
+        Group {{ forloop.counter }}
+      </label>
+    {% endfor %}
+    </div>
+    <br>
+  <div class="row list">
+    {% for applicant in applicants %}
+    <div class="col-md-4 col-sm-12">
+      <a class="no-dec" href ="{% url 'feedback:applicant_profile' event_name applicant.norm_name %}">
+        <div class="well scholar-card {% if applicant in assignments %}assigned-scholar{% endif %}">
+          <div class="pull-left">
+          {% if applicant.actual_pic %}
+            {% thumbnail applicant.actual_pic "100x125" crop="center" as im %}
+              <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+            {% endthumbnail %}
+          {% elif applicant.pic %}
+            {% thumbnail applicant.pic "100x125" crop="center" as im %}
+              <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+            {% endthumbnail %}
+          {% else %}
+            <img src="{% static 'img/user.png' %}" height="100" width="100">
+          {% endif %}
+          </div>
+          <!-- applicant quick info -->
+          <div class="text-right">
+              <h4>{{ applicant.first_name }} <span class="last-name">{{ applicant.last_name }}</span></h4>
+              <p class="card-extra-info">
+                {% if applicant.high_school %}
+                  <span class="high-school">{{ applicant.high_school }}</span>
+                  {% if applicant.hometown or applicant.hometown_state %}
+                    &bull;
+                  {% endif %}
+                {% endif %}
+                {% if applicant.hometown %}
+                <span class="hometown">{{ applicant.hometown }}</span>{% endif %}{% if applicant.hometown and applicant.hometown_state %},{% endif %}
+                {% if applicant.hometown_state %}
+                <span class="state">{{ applicant.hometown_state }}</span>
+                {% endif %}
+                {% if applicant.major %}
+                <br>
+                <span class="major">{{ applicant.major }}</span>
+                {% endif %}
+                {% if applicant.career %}
+                <br>
+                <span class="career">{{ applicant.career }}</span>
+                {% endif %}
+                <span class="state-long hidden">{{ applicant.hometown_state_long }}</span>
+                <span class="gender hidden">{{ applicant.gender }}</span>
+                <span class="group hidden">{{ applicant.group }}</span>
+                <span class="name hidden">{{ applicant.get_full_name }}</span>
+              </p>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% empty %}
+      <h3>No applicants found.</h3>
+    {% endfor %}
   </div>
-  {% endfor %}
+  </div>
 </div>
-{% empty %}
-  <h3>No applicants found.</h3>
-{% endfor %}
-</div>
+<script>
+var options = {
+  valueNames: [ 'last-name', 'name', 'hometown', 'state', 'state-long', 'high-school', 'major', 'career' ]
+};
+
+var userList = new List('applicants-list', options);
+
+$('.all-filter').on('click', function() {
+  userList.filter();
+});
+
+$('.assigned-filter').on('click', function() {
+  userList.filter(function(item) {
+    return $(item.elm).find('.scholar-card').hasClass('assigned-scholar');
+  });
+});
+$('.group-filter').on('click', function() {
+  var groupNumber = $(this).data('group');
+  userList.filter(function(item) {
+    return $(item.elm).find('.group').text() == groupNumber;
+  });
+});
+$('.male-filter').on('click', function() {
+  userList.filter(function(item) {
+    return $(item.elm).find('.gender').text() == 'Mr.';
+  });
+});
+$('.female-filter').on('click', function() {
+  userList.filter(function(item) {
+    return $(item.elm).find('.gender').text() == 'Ms.';
+  });
+});
+</script>
 {% endblock %}

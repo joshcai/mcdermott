@@ -59,8 +59,9 @@ class Command(BaseCommand):
         help='Match names to pictures')
 
   def add_applicant(self, applicant, event_name):
+    exists = False
     if Applicant.objects.filter(first_name=applicant['First'], last_name=applicant['Last'], event__name=event_name).exists():
-      self.stdout.write('Account for user %s %s already exists' % (applicant['First'], applicant['Last']))
+      exists = True
       app = Applicant.objects.get(first_name=applicant['First'], last_name=applicant['Last'], event__name=event_name)
     else:
       app = Applicant()
@@ -68,8 +69,12 @@ class Command(BaseCommand):
     app.last_name = applicant.get('Last', '')
     app.high_school = applicant.get('High School', '')
     app.hometown = applicant.get('City', '')
+    app.hometown_state_long = applicant.get('State Long', '')
     app.hometown_state = applicant.get('State', '')
     app.gender = applicant.get('Title', '')
+    app.career = applicant.get('Career', '')
+    app.major = ', '.join(applicant.get('Major', '').split(','))
+    app.group = applicant.get('Group', '')
     event = Event.objects.get(name=event_name)
     app.event = event
     if applicant.get('Picture', ''):
@@ -83,7 +88,10 @@ class Command(BaseCommand):
       with open('tmp/%s' % file_name, 'rb') as img_file:
         app.pic.save(file_name, File(img_file), save=True)
     app.save()
-    self.stdout.write('Created user %s %s' % (app.first_name, app.last_name))
+    if exists:
+      self.stdout.write('Account for user %s %s already exists' % (app.first_name, app.last_name))
+    else:
+      self.stdout.write('Created user %s %s' % (app.first_name, app.last_name))
     return app
 
   def handle(self, *args, **options):
