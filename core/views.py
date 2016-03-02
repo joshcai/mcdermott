@@ -17,6 +17,8 @@ from models import McUser, Degree, Experience, StudyAbroad
 from serializers import UserSerializer
 from util import normalize_name
 
+from mcdermott.config import GA_TRACKING_ID
+
 DegreeFormSet = modelformset_factory(Degree, form=DegreeForm, extra=1, can_delete=True)
 ExperienceFormSet = modelformset_factory(Experience, form=ExperienceForm, extra=1, can_delete=True)
 StudyAbroadFormSet = modelformset_factory(StudyAbroad, form=StudyAbroadForm, extra=1, can_delete=True)
@@ -26,7 +28,10 @@ def index(request):
   if request.user.is_authenticated() and not request.user.mcuser.activated:
     request.user.mcuser.activated = True
     request.user.mcuser.save()
-  return render(request, 'core/index.html')
+  context = {
+    'ga_tracking_id': GA_TRACKING_ID
+  }
+  return render(request, 'core/index.html', context)
 
 @login_required
 def edit_info(request, name):

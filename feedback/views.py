@@ -19,6 +19,8 @@ from templatetags import feedback_tags
 
 from mcdermott.roles import ApplicantEditor
 
+from mcdermott.config import GA_TRACKING_ID
+
 def restrict_access(f):
   @wraps(f)
   def wrapper(request, *args, **kwargs):
@@ -43,10 +45,14 @@ def index(request, event_name):
   assignments = [x.applicant for x in Assignment.objects.filter(scholar=request.user.mcuser)]
   if not has_role(request.user, ['staff', 'selection']):
     applicants = applicants.filter(attended=True)
+  applicants = sorted(applicants, key=lambda a: a.get_full_name())
+  event = Event.objects.get(name=event_name)
   context = {
     'assignments': assignments,
     'applicants': applicants,
-    'event_name': event_name
+    'event_name': event_name,
+    'event': event,
+    'ga_tracking_id': GA_TRACKING_ID
   }
   return render(request, 'feedback/index.html', context)
 

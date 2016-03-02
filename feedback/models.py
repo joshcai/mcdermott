@@ -17,8 +17,12 @@ class Applicant(models.Model):
   last_name = models.CharField(max_length=200, blank=True)
   norm_name = models.CharField(max_length=400, blank=True)
   hometown = models.CharField(max_length=200, blank=True)
+  hometown_state_long = models.CharField(max_length=200, blank=True)
   hometown_state = models.CharField(blank=True, max_length=2, choices=US_STATES)
   high_school = models.CharField(max_length=200, blank=True)
+  major = models.CharField(max_length=200, blank=True)
+  career = models.CharField(max_length=200, blank=True)
+  group = models.CharField(max_length=200, blank=True)
 
   event = models.ForeignKey(Event, null=True, blank=True, default=None)
 
@@ -38,6 +42,14 @@ class Applicant(models.Model):
     super(Applicant, self).save(*args, **kwargs)
 
 class Assignment(models.Model):
+  scholar = models.ForeignKey(McUser)
+  applicant = models.ForeignKey(Applicant)
+
+class Favorite(models.Model):
+  scholar = models.ForeignKey(McUser)
+  applicant = models.ForeignKey(Applicant)
+
+class Shortlist(models.Model):
   scholar = models.ForeignKey(McUser)
   applicant = models.ForeignKey(Applicant)
 
@@ -65,6 +77,7 @@ class Feedback(models.Model):
   )
   interest = models.IntegerField(choices=INTEREST_CHOICES, null=True, blank=False, default=None)
 
+  notes = models.TextField(blank=True)
   comments = models.TextField(blank=True)
 
 class State(models.Model):

@@ -22,6 +22,9 @@ class ApplicantForm(forms.ModelForm):
         'pic',
         'actual_pic',
         'attended',
+        'major',
+        'career',
+        'group',
     ]
     widgets = {
         'pic': ImageThumbnailInput,
@@ -35,11 +38,13 @@ class FeedbackForm(forms.ModelForm):
       'rating',
       'interest',
       'comments',
+      'notes',
     ]
     widgets = {
       'rating': RadioNoULInput,
       'interest': RadioNoULInput,
       'comments': forms.Textarea(attrs={'rows':4}),
+      'notes': forms.Textarea(attrs={'rows':4}),
     }
 
 class StateForm(forms.ModelForm):

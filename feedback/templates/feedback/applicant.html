@@ -29,49 +29,66 @@ Feedback - {{ applicant.get_full_name }}
     </h4>
   </div>
   <div class="col-md-6">
-    <div class="text-center">
-      {% thumbnail applicant.actual_pic "200x250" crop="center" as im %}
-        <img style="margin-bottom:5px;" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-      {% endthumbnail %}
-      {% thumbnail applicant.pic "200x250" crop="center" as im %}
-        <img style="margin-bottom:5px;" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-      {% endthumbnail %}
-      <br>
-      <br>
-      {% if applicant.high_school %}
-        <h5>{{ applicant.high_school }}</h5>
-      {% endif %}
-      {% if applicant.hometown or applicant.hometown_state %}
-        <h5>
-          {% if applicant.hometown %}
-          {{ applicant.hometown }}{% endif %}{% if applicant.hometown and applicant.hometown_state %},{% endif %}
-          {% if applicant.hometown_state %}
-          {{ applicant.hometown_state }}
-          {% endif %}
-        </h5>
-      {% endif %}
-      {% if user|has_role:'staff' %}
-        <table class="table table-striped table-hover margin-top-lg">
-          <tbody>
-            <tr>
-              <td>Rating average:</td>
-              <td>{{ feedback|rating_average }}</td>
-            </tr>
-            <tr>
-              <td>Interest average:</td>
-              <td>{{ feedback|interest_average }}</td>
-            </tr>
-            <tr>
-              <td># of feedback:</td>
-              <td>{{ feedback|feedback_count }}</td>
-            </tr>
-            <tr>
-              <td>Attended:</td>
-              <td>{{ applicant.attended|convert_attended }}</td>
-            </tr>
-          </tbody>
-        </table>
-      {% endif %}
+    <div class="row">
+      <div class="text-center">
+        {% thumbnail applicant.actual_pic "200x250" crop="center" as im %}
+          <img style="margin-bottom:5px;" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+        {% endthumbnail %}
+        {% thumbnail applicant.pic "200x250" crop="center" as im %}
+          <img style="margin-bottom:5px;" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+        {% endthumbnail %}
+        <br>
+        <br>
+        {% if applicant.high_school %}
+          <h5>{{ applicant.high_school }}</h5>
+        {% endif %}
+        {% if applicant.hometown or applicant.hometown_state %}
+          <h5>
+            {% if applicant.hometown %}
+            {{ applicant.hometown }}{% endif %}{% if applicant.hometown and applicant.hometown_state %},{% endif %}
+            {% if applicant.hometown_state %}
+            {{ applicant.hometown_state }}
+            {% endif %}
+          </h5>
+        {% endif %}
+        {% if applicant.major %}
+          <h6>Major: {{ applicant.major }}</h6>
+        {% endif %}
+        {% if applicant.career %}
+          <h6>Career: {{ applicant.career }}</h6>
+        {% endif %}
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="id_comments" class="form-label">
+                Notes (for personal use, will not be submitted):
+              </label>
+              {{ form.notes|add_class:"form-control" }}
+              <span class="error">{{ form.notes.errors }}</span>
+            </div>
+          </div>
+        {% if user|has_role:'staff' %}
+          <table class="table table-striped table-hover margin-top-lg">
+            <tbody>
+              <tr>
+                <td>Rating average:</td>
+                <td>{{ feedback|rating_average }}</td>
+              </tr>
+              <tr>
+                <td>Interest average:</td>
+                <td>{{ feedback|interest_average }}</td>
+              </tr>
+              <tr>
+                <td># of feedback:</td>
+                <td>{{ feedback|feedback_count }}</td>
+              </tr>
+              <tr>
+                <td>Attended:</td>
+                <td>{{ applicant.attended|convert_attended }}</td>
+              </tr>
+            </tbody>
+          </table>
+        {% endif %}
+      </div>
     </div>
   </div>
   <div class="col-md-6">
