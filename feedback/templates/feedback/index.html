@@ -74,6 +74,10 @@ Feedback - Directory
         </label>
       {% endif %}
       <label>
+        <input type="radio" class="shortlist-filter" name="filters">
+        My List
+      </label>
+      <label>
         <input type="radio" class="male-filter" name="filters">
         Male
       </label>
@@ -91,7 +95,7 @@ Feedback - Directory
     <br>
   <div class="row list">
     {% for applicant in applicants %}
-    <div class="col-md-4 col-sm-12">
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
       <div class="well scholar-card {% if applicant in assignments %}assigned-scholar{% endif %}">
         <a class="no-dec" href ="{% url 'feedback:applicant_profile' event_name applicant.norm_name %}">
           <div class="pull-left">
@@ -114,6 +118,7 @@ Feedback - Directory
               <a class="no-dec" href ="{% url 'feedback:applicant_profile' event_name applicant.norm_name %}">
               {{ applicant.first_name }} <span class="last-name">{{ applicant.last_name }}</span></a>
               <span class="glyphicon glyphicon-star favorite-star {% if applicant not in favorites %}un{% endif %}starred" aria-hidden="true" data-name="{{ applicant.norm_name }}"></span>
+              <span class="glyphicon shortlist-elm {% if applicant not in shortlist %}unlisted glyphicon-plus {% else %}glyphicon-ok listed{% endif %}" aria-hidden="true" data-name="{{ applicant.norm_name }}"></span>
             </h4>
             <p class="card-extra-info">
               {% if applicant.high_school %}
@@ -165,6 +170,11 @@ $('.assigned-filter').on('click', function() {
     return $(item.elm).find('.scholar-card').hasClass('assigned-scholar');
   });
 });
+$('.shortlist-filter').on('click', function() {
+  userList.filter(function(item) {
+    return $(item.elm).find('.shortlist-elm').hasClass('listed');
+  });
+});
 $('.group-filter').on('click', function() {
   var groupNumber = $(this).data('group');
   userList.filter(function(item) {
@@ -195,6 +205,22 @@ $(".favorite-star").click(function(e) {
     }
     else if(data.msg == 'starred') {
       fav_node.removeClass('unstarred').addClass('starred');
+    }
+  });
+  e.preventDefault();
+
+});
+
+$(".shortlist-elm").click(function(e) {
+  var shortlist_node = $(this);
+  var link = "{% url 'feedback:shortlist_applicant' event_name 'replace' %}";
+  link = link.replace('replace', $(this).data("name"));
+  $.post(link, function( data ) {
+    if(data.msg == 'unlisted') {
+      shortlist_node.removeClass('listed glyphicon-ok').addClass('unlisted glyphicon-plus');
+    }
+    else if(data.msg == 'listed') {
+      shortlist_node.removeClass('unlisted glyphicon-plus').addClass('listed glyphicon-ok');
     }
   });
   e.preventDefault();

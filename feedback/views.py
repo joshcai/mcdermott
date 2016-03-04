@@ -45,6 +45,7 @@ def index(request, event_name):
   applicants = Applicant.objects.filter(event__name=event_name).order_by('first_name')
   assignments = [x.applicant for x in Assignment.objects.filter(scholar=request.user.mcuser)]
   favorites = [x.applicant for x in Favorite.objects.filter(scholar=request.user.mcuser)]
+  shortlist = [x.applicant for x in Shortlist.objects.filter(scholar=request.user.mcuser)]
   if not has_role(request.user, ['staff', 'selection']):
     applicants = applicants.filter(attended=True)
   applicants = sorted(applicants, key=lambda a: a.get_full_name())
@@ -52,6 +53,7 @@ def index(request, event_name):
   context = {
     'assignments': assignments,
     'favorites': favorites,
+    'shortlist': shortlist,
     'applicants': applicants,
     'event_name': event_name,
     'event': event,
@@ -119,7 +121,7 @@ def shortlist_applicant(request, event_name, name):
       s = Shortlist.objects.get(applicant=applicant, scholar=request.user.mcuser)
       s.delete()
       return JsonResponse({'msg': 'unlisted'})
-    except Favorite.DoesNotExist:
+    except Shortlist.DoesNotExist:
       s = Shortlist(applicant=applicant, scholar=request.user.mcuser)
       s.save()
       return JsonResponse({'msg': 'listed'})

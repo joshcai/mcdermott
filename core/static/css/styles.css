@@ -388,23 +388,34 @@ a p.card-extra-info:hover {
   color: #E6E6E6;
 }
 
-a.starred:visited {
-  color: #F3D321;
-}
-
 .starred:hover {
   color: #E4C61D;
   cursor: pointer;
-}
-
-a.unstarred:visited {
-  color: #E6E6E6;
 }
 
 .unstarred:hover {
   color: #C1C1C1;
   cursor: pointer;
 }
+
+.listed {
+  color: #7CD60C;
+}
+
+.unlisted {
+  color: #E6E6E6;
+}
+
+.listed:hover {
+  color: #62A70C;
+  cursor: pointer;
+}
+
+.unlisted:hover {
+  color: #C1C1C1;
+  cursor: pointer;
+}
+
 .modal {
   position: fixed;
   top: 0;
