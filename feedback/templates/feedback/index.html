@@ -92,8 +92,8 @@ Feedback - Directory
   <div class="row list">
     {% for applicant in applicants %}
     <div class="col-md-4 col-sm-12">
-      <a class="no-dec" href ="{% url 'feedback:applicant_profile' event_name applicant.norm_name %}">
-        <div class="well scholar-card {% if applicant in assignments %}assigned-scholar{% endif %}">
+      <div class="well scholar-card {% if applicant in assignments %}assigned-scholar{% endif %}">
+        <a class="no-dec" href ="{% url 'feedback:applicant_profile' event_name applicant.norm_name %}">
           <div class="pull-left">
           {% if applicant.actual_pic %}
             {% thumbnail applicant.actual_pic "100x125" crop="center" as im %}
@@ -107,39 +107,41 @@ Feedback - Directory
             <img src="{% static 'img/user.png' %}" height="100" width="100">
           {% endif %}
           </div>
-          <!-- applicant quick info -->
-          <div class="text-right">
-              <h4>
-                {{ applicant.first_name }} <span class="last-name">{{ applicant.last_name }}</span>
-              </h4>
-              <p class="card-extra-info">
-                {% if applicant.high_school %}
-                  <span class="high-school">{{ applicant.high_school }}</span>
-                  {% if applicant.hometown or applicant.hometown_state %}
-                    &bull;
-                  {% endif %}
+        </a>
+        <!-- applicant quick info -->
+        <div class="text-right">
+            <h4>
+              <a class="no-dec" href ="{% url 'feedback:applicant_profile' event_name applicant.norm_name %}">
+              {{ applicant.first_name }} <span class="last-name">{{ applicant.last_name }}</span></a>
+              <span class="glyphicon glyphicon-star favorite-star {% if applicant not in favorites %}un{% endif %}starred" aria-hidden="true" data-name="{{ applicant.norm_name }}"></span>
+            </h4>
+            <p class="card-extra-info">
+              {% if applicant.high_school %}
+                <span class="high-school">{{ applicant.high_school }}</span>
+                {% if applicant.hometown or applicant.hometown_state %}
+                  &bull;
                 {% endif %}
-                {% if applicant.hometown %}
-                <span class="hometown">{{ applicant.hometown }}</span>{% endif %}{% if applicant.hometown and applicant.hometown_state %},{% endif %}
-                {% if applicant.hometown_state %}
-                <span class="state">{{ applicant.hometown_state }}</span>
-                {% endif %}
-                {% if applicant.major %}
-                <br>
-                <span class="major">{{ applicant.major }}</span>
-                {% endif %}
-                {% if applicant.career %}
-                <br>
-                <span class="career">{{ applicant.career }}</span>
-                {% endif %}
-                <span class="state-long hidden">{{ applicant.hometown_state_long }}</span>
-                <span class="gender hidden">{{ applicant.gender }}</span>
-                <span class="group hidden">{{ applicant.group }}</span>
-                <span class="name hidden">{{ applicant.get_full_name }}</span>
-              </p>
-          </div>
+              {% endif %}
+              {% if applicant.hometown %}
+              <span class="hometown">{{ applicant.hometown }}</span>{% endif %}{% if applicant.hometown and applicant.hometown_state %},{% endif %}
+              {% if applicant.hometown_state %}
+              <span class="state">{{ applicant.hometown_state }}</span>
+              {% endif %}
+              {% if applicant.major %}
+              <br>
+              <span class="major">{{ applicant.major }}</span>
+              {% endif %}
+              {% if applicant.career %}
+              <br>
+              <span class="career">{{ applicant.career }}</span>
+              {% endif %}
+              <span class="state-long hidden">{{ applicant.hometown_state_long }}</span>
+              <span class="gender hidden">{{ applicant.gender }}</span>
+              <span class="group hidden">{{ applicant.group }}</span>
+              <span class="name hidden">{{ applicant.get_full_name }}</span>
+            </p>
         </div>
-      </a>
+      </div>
     </div>
     {% empty %}
       <h3>No applicants found.</h3>
@@ -180,25 +182,24 @@ $('.female-filter').on('click', function() {
   });
 });
 
-$(".modal-transparent").on('show.bs.modal', function () {
-  setTimeout( function() {
-    $(".modal-backdrop").addClass("modal-backdrop-transparent");
-  }, 0);
-});
-$(".modal-transparent").on('hidden.bs.modal', function () {
-  $(".modal-backdrop").addClass("modal-backdrop-transparent");
-});
+$(".favorite-star").click(function(e) {
+  var fav_node = $(this);
+  var link = "{% url 'feedback:favorite_applicant' event_name 'replace' %}";
+  link = link.replace('replace', $(this).data("name"));
+  $.post(link, function( data ) {
+    if(data.msg == 'max stars given') {
+      alert('You can only have 3 favorites max.');
+    }
+    else if(data.msg == 'unstarred') {
+      fav_node.removeClass('starred').addClass('unstarred');
+    }
+    else if(data.msg == 'starred') {
+      fav_node.removeClass('unstarred').addClass('starred');
+    }
+  });
+  e.preventDefault();
 
-$(".modal-fullscreen").on('show.bs.modal', function () {
-  setTimeout( function() {
-    $(".modal-backdrop").addClass("modal-backdrop-fullscreen");
-  }, 0);
 });
-$(".modal-fullscreen").on('hidden.bs.modal', function () {
-  $(".modal-backdrop").addClass("modal-backdrop-fullscreen");
-});
-// $('#myModal').modal({show:true})
-
 
 </script>
 {% endblock %}

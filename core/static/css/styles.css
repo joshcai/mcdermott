@@ -392,16 +392,18 @@ a.starred:visited {
   color: #F3D321;
 }
 
-a.starred:hover {
+.starred:hover {
   color: #E4C61D;
+  cursor: pointer;
 }
 
 a.unstarred:visited {
   color: #E6E6E6;
 }
 
-a.unstarred:hover {
+.unstarred:hover {
   color: #C1C1C1;
+  cursor: pointer;
 }
 .modal {
   position: fixed;
