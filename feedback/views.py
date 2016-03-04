@@ -2,8 +2,9 @@ from functools import wraps
 from tempfile import NamedTemporaryFile
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, JsonResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 
 from core.util import normalize_name
 from core.models import McUser
@@ -14,7 +15,7 @@ from rolepermissions.decorators import has_role_decorator
 from xlwt import Workbook
 
 from forms import ApplicantForm, FeedbackForm, StateForm
-from models import Applicant, Feedback, State, Event, Assignment
+from models import Applicant, Feedback, State, Event, Assignment, Favorite
 from templatetags import feedback_tags
 
 from mcdermott.roles import ApplicantEditor
@@ -68,6 +69,9 @@ def applicant_table(request, event_name):
   }
   return render(request, 'feedback/applicant_table.html', context)
 
+def favorited(scholar, applicant):
+  return Favorite.objects.filter(applicant=applicant, scholar=scholar).exists()
+
 @login_required
 @restrict_access
 def applicant_profile(request, event_name, name):
@@ -89,14 +93,37 @@ def applicant_profile(request, event_name, name):
   else:
     form = FeedbackForm(instance=feedback)
   all_feedback = Feedback.objects.filter(applicant=applicant)
+
   context = {
       'feedback': all_feedback,
       'applicant': applicant,
       'form': form,
       'state': get_state(),
-      'event_name': event_name
+      'event_name': event_name,
+      'favorited': favorited(request.user.mcuser, applicant)
       }
   return render(request, 'feedback/applicant.html', context)
+
+@login_required
+@csrf_exempt
+def favorite_applicant(request, event_name, name):
+  try:
+    applicant = Applicant.objects.get(norm_name=normalize_name(name), event__name=event_name)
+  except Applicant.DoesNotExist:
+    raise Http404('Applicant does not exist.')
+  if request.method == 'POST':
+    try:
+      fav = Favorite.objects.get(applicant=applicant, scholar=request.user.mcuser)
+      fav.delete()
+      return JsonResponse({'msg': 'unstarred'})
+    except Favorite.DoesNotExist:
+      favs = Favorite.objects.filter(scholar=request.user.mcuser)
+      if favs.count() < 3:
+        fav = Favorite(applicant=applicant, scholar=request.user.mcuser)
+        fav.save()
+        return JsonResponse({'msg': 'starred'})
+      return JsonResponse({'msg': 'max stars given'})
+  return HttpResponse('Please POST')
 
 @login_required
 def edit_applicant(request, event_name, name):

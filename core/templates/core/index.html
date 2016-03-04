@@ -10,16 +10,18 @@ McDermott Network
 {% block searchbox %}{% endblock %}
 
 {% block additional_include %}
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+{% if user.is_authenticated %}
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', '{{ ga_tracking_id }}', 'auto');
-  ga('send', 'pageview');
+    ga('create', '{{ ga_tracking_id }}', 'auto');
+    ga('send', 'pageview');
 
-</script>
+  </script>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -34,6 +36,8 @@ McDermott Network
     <div class="col-md-4 col-md-offset-4">
       <input style="padding-left: 10px" class="form-control search-bar" type="text" name="q"
              id="searchbox-main" placeholder="Search..."/>
+      <br>
+      <a href="{% url 'feedback:index' 'fw2016' %}">Finalists' Weekend Feedback System</a>
     </div>
   </form>
   <script type="text/javascript">document.getElementById("searchbox-main").focus();</script>
