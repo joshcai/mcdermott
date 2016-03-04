@@ -38,7 +38,9 @@ Feedback - {{ applicant.get_full_name }}
           <img style="margin-bottom:5px;" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
         {% endthumbnail %}
         <br>
-        <br>
+        {% if applicant.group %}
+          <h6>Group {{ applicant.group }}</h6>
+        {% endif %}
         {% if applicant.high_school %}
           <h5>{{ applicant.high_school }}</h5>
         {% endif %}

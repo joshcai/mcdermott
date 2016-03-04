@@ -136,7 +136,7 @@ class Command(BaseCommand):
           self.add_staff_from_csv({key: value for (key, value) in zip(staff_members[0], staff)})
     if options['testing']:
       josh = self.add_user('joshcai', 'password', 'Josh Cai', 2012, email='jxc124730@utdallas.edu')
-      Admin.assign_role_to_user(josh)
+      Dev.assign_role_to_user(josh)
       staff = self.add_user('staff', 'password', 'Staff User', 2012)
       Staff.assign_role_to_user(staff)
       self.add_user('atvaccaro', 'password', 'Andrew Vaccaro', 2013, email='andrew.vaccaro@utdallas.edu')
