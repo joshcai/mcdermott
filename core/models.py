@@ -89,6 +89,9 @@ class McUser(models.Model):
   staff_title = models.CharField(max_length=200, blank=True)
   staff_order = models.IntegerField(default=0, null=True, blank=True)
 
+  # On Selection Committee
+  selection = models.BooleanField(default=False)
+
   def get_full_name(self):
     return '%s %s' % (self.first_name, self.last_name)
 

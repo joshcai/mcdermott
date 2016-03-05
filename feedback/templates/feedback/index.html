@@ -28,7 +28,7 @@ Feedback - Directory
 {% block content %}
 <div id="applicants-list">
   <div class="col-md-12 text-center">
-    <h3>{{ event.full_name }}</h3>
+    <h3 class="feedback-event-name">{{ event.full_name }}</h3>
     {% if user|has_role:'staff' or user|has_role:'selection' %}
       {% feedback_header 'directory' user event_name %}
       <br>
@@ -51,48 +51,61 @@ Feedback - Directory
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4 col-md-offset-4">
-        <input class="search form-control" placeholder="Search" />
+      <div class="col-md-3">
+        <input style="padding-left: 10px" class="search form-control search-bar" placeholder="Search" />
+      </div>
+      <div class="col-md-6">
+        <div class="radio">
+          <label class="radio-inline">
+            <input type="radio" class="all-filter" name="filters" checked="checked">
+            All
+          </label>
+          {% if assignments %}
+            <label class="radio-inline">
+              <input type="radio" class="assigned-filter" name="filters">
+              Assigned
+            </label>
+          {% endif %}
+          <label class="radio-inline">
+            <input type="radio" class="favorites-filter" name="filters">
+            Favorites
+            <a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Click the star to add a finalist to your favorites - these are used in evaluation (you can have a maximum of 5 favorites)"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a>
+          </label>
+          <label class="radio-inline">
+            <input type="radio" class="shortlist-filter" name="filters">
+            My List
+              <a data-toggle="tooltip" data-placement="bottom" data-html="true"
+              title="Click the + sign to add a finalist to your list - this is just for your convenience for keeping track of finalists (e.g. you could add everyone you have talked to to your list)"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a>
+          </label>
+          <label class="radio-inline">
+            <input type="radio" class="male-filter" name="filters">
+            Male
+          </label>
+          <label class="radio-inline">
+            <input type="radio" class="female-filter" name="filters">
+            Female
+          </label>
+        </div>
+        <div class="radio">
+        {% for i in "xxxx" %}
+          <label class="radio-inline">
+          <input type="radio" class="group-filter" name="filters" data-group="{{ forloop.counter }}">
+            Group {{ forloop.counter }}
+          </label>
+        {% endfor %}
+        </div>
+      </div>
+      <div class="col-md-3">
+        Sort:
+        <button class="btn btn-default btn-sm sort" data-sort="name">
+          First Name
+        </button>
+        <button class="btn btn-default btn-sm sort" data-sort="last-name">
+          Last Name
+        </button>
       </div>
     </div>
-    <br>
-    <button class="btn btn-default sort" data-sort="name">
-      Sort by first name
-    </button>
-    <button class="btn btn-default sort" data-sort="last-name">
-      Sort by last name
-    </button>
-    <div class="radio">
-      <label>
-        <input type="radio" class="all-filter" name="filters" checked="checked">
-        All
-      </label>
-      {% if assignments %}
-        <label>
-          <input type="radio" class="assigned-filter" name="filters">
-          Assigned
-        </label>
-      {% endif %}
-      <label>
-        <input type="radio" class="shortlist-filter" name="filters">
-        My List
-      </label>
-      <label>
-        <input type="radio" class="male-filter" name="filters">
-        Male
-      </label>
-      <label>
-        <input type="radio" class="female-filter" name="filters">
-        Female
-      </label>
-    {% for i in "xxxx" %}
-      <label>
-      <input type="radio" class="group-filter" name="filters" data-group="{{ forloop.counter }}">
-        Group {{ forloop.counter }}
-      </label>
-    {% endfor %}
-    </div>
-    <br>
+  <br>
   <div class="row list">
     {% for applicant in applicants %}
     <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
@@ -175,6 +188,11 @@ $('.shortlist-filter').on('click', function() {
     return $(item.elm).find('.shortlist-elm').hasClass('listed');
   });
 });
+$('.favorites-filter').on('click', function() {
+  userList.filter(function(item) {
+    return $(item.elm).find('.favorite-star').hasClass('starred');
+  });
+});
 $('.group-filter').on('click', function() {
   var groupNumber = $(this).data('group');
   userList.filter(function(item) {
@@ -226,6 +244,11 @@ $(".shortlist-elm").click(function(e) {
   e.preventDefault();
 
 });
+
+  $(function() {
+    $(".search-bar").focus();
+    $('[data-toggle="tooltip"]').tooltip();
+  });
 
 </script>
 {% endblock %}

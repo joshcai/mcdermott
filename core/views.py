@@ -17,7 +17,10 @@ from models import McUser, Degree, Experience, StudyAbroad
 from serializers import UserSerializer
 from util import normalize_name
 
-from mcdermott.config import GA_TRACKING_ID
+try:
+  from mcdermott.config import GA_TRACKING_ID
+except ImportError:
+  from mcdermott.example_config import GA_TRACKING_ID
 
 DegreeFormSet = modelformset_factory(Degree, form=DegreeForm, extra=1, can_delete=True)
 ExperienceFormSet = modelformset_factory(Experience, form=ExperienceForm, extra=1, can_delete=True)
@@ -144,6 +147,26 @@ def edit_account(request):
       }
   return render(request, 'core/edit_account.html', context)
 
+def sign_up(request):
+  user_info = McUser.objects.get(norm_name=normalize_name(name))
+  if not user_info.user.id == request.user.id and not has_permission(request.user, 'edit_all_info'):
+    return redirect('edit_abroad', request.user.mcuser.norm_name)
+  study_abroad = StudyAbroad.objects.filter(user_id=user_info.id)
+  if request.method == 'POST':
+    study_abroad_formset = StudyAbroadFormSet(request.POST, queryset=study_abroad, initial=[{'user': user_info.id}])
+    if (study_abroad_formset.is_valid()):
+      study_abroad_formset.save()
+      messages.add_message(
+        request, messages.SUCCESS,
+        'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[user_info.norm_name]))
+      return redirect('edit_abroad', user_info.norm_name)
+  else:
+    study_abroad_formset = StudyAbroadFormSet(queryset=study_abroad, initial=[{'user': user_info.id}])
+  context = {
+      'study_abroad_formset': study_abroad_formset,
+      'mcuser': user_info
+      }
+  return render(request, 'core/edit_abroad.html', context)
 
 @login_required
 def scholars(request):
