@@ -13,3 +13,5 @@ GITHUB_USERNAME = 'user'
 GITHUB_PASSWORD = 'password'
 
 GA_TRACKING_ID = 'Google Analytics Tracking ID'
+
+DEFAULT_PASSWORD = 'default password'

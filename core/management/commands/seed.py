@@ -7,7 +7,10 @@ import sys
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 
-from mcdermott.roles import Staff, Scholar, CurrentScholar, Dev
+import requests
+
+from mcdermott.config import DEFAULT_PASSWORD
+from mcdermott.roles import Staff, Scholar, CurrentScholar, Dev, Selection
 
 def randomString():
   return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
@@ -119,6 +122,32 @@ class Command(BaseCommand):
                       (user.mcuser.first_name, user.mcuser.last_name))
 
 
+  def add_alumni_from_csv(self, alumni):
+    username = self.getUsername(alumni['Email'])
+    if User.objects.filter(username=username).exists():
+      self.stdout.write('Account for user %s %s already exists' % (alumni['First'], alumni['Last']))
+      user = User.objects.get(username=username)
+    else:
+      user = User.objects.create_user(username, email=alumni['Email'].lower(), password=DEFAULT_PASSWORD)
+    if alumni['Year'] != 'None':
+      user.mcuser.class_year = int(alumni['Year'])
+    user.mcuser.first_name = alumni['First']
+    user.mcuser.last_name = alumni['Last']
+    user.mcuser.email = alumni['Email']
+    user.mcuser.save()
+    if alumni['Selection'] == 'True':
+      Selection.assign_role_to_user(user)
+    session = requests.session()
+    url = 'http://mcdermott.org/password_reset'
+    response = session.get(url)
+    csrftoken = session.cookies['csrftoken']
+    r = session.post(
+      url,
+      data={'email': user.email, 'csrfmiddlewaretoken': csrftoken},
+      headers=dict(Referer=url))
+    self.stdout.write('Created user %s %s' %
+                      (user.mcuser.first_name, user.mcuser.last_name))
+
   def handle(self, *args, **options):
     if options['flush']:
       self.stdout.write('Deleting all users...')
@@ -134,6 +163,11 @@ class Command(BaseCommand):
         staff_members = list(csv.reader(csvfile))
         for staff in staff_members[1:]:
           self.add_staff_from_csv({key: value for (key, value) in zip(staff_members[0], staff)})
+    if options['alumni']:
+      with open('alumni_fw.csv', 'rB') as csvfile:
+        alumni_members = list(csv.reader(csvfile))
+        for alumni in alumni_members[1:]:
+          self.add_alumni_from_csv({key: value for (key, value) in zip(alumni_members[0], alumni)})
     if options['testing']:
       josh = self.add_user('joshcai', 'password', 'Josh Cai', 2012, email='jxc124730@utdallas.edu')
       Dev.assign_role_to_user(josh)
