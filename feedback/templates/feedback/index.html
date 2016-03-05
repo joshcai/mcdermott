@@ -198,7 +198,7 @@ $(".favorite-star").click(function(e) {
   link = link.replace('replace', $(this).data("name"));
   $.post(link, function( data ) {
     if(data.msg == 'max stars given') {
-      alert('You can only have 3 favorites max.');
+      alert('You can only have 5 favorites max.');
     }
     else if(data.msg == 'unstarred') {
       fav_node.removeClass('starred').addClass('unstarred');
