@@ -73,15 +73,19 @@ Feedback - {{ applicant.get_full_name }}
             <tbody>
               <tr>
                 <td>Rating average:</td>
-                <td>{{ feedback|rating_average }}</td>
+                <td>{{ applicant|all_feedback|rating_average }}</td>
               </tr>
               <tr>
                 <td>Interest average:</td>
-                <td>{{ feedback|interest_average }}</td>
+                <td>{{ applicant|all_feedback|interest_average }}</td>
+              </tr>
+              <tr>
+                <td># of Favorites:</td>
+                <td>{{ applicant|favorite_filter|length }}</td>
               </tr>
               <tr>
                 <td># of feedback:</td>
-                <td>{{ feedback|feedback_count }}</td>
+                <td>{{ applicant|all_feedback|feedback_count }}</td>
               </tr>
               <tr>
                 <td>Attended:</td>

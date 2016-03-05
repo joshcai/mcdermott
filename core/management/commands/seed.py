@@ -9,7 +9,10 @@ from django.contrib.auth.models import User
 
 import requests
 
-from mcdermott.config import DEFAULT_PASSWORD
+try:
+  from mcdermott.config import DEFAULT_PASSWORD
+except ImportError:
+  from mcdermott.example_config import DEFAULT_PASSWORD
 from mcdermott.roles import Staff, Scholar, CurrentScholar, Dev, Selection
 
 def randomString():

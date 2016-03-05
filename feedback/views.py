@@ -16,7 +16,7 @@ from xlwt import Workbook
 
 from forms import ApplicantForm, FeedbackForm, StateForm
 from models import Applicant, Feedback, State, Event, Assignment, Favorite, Shortlist
-from templatetags import feedback_tags
+from templatetags.feedback_tags import *
 
 from mcdermott.roles import ApplicantEditor
 
@@ -72,6 +72,18 @@ def applicant_table(request, event_name):
     'event_name': event_name
   }
   return render(request, 'feedback/applicant_table.html', context)
+
+@login_required
+@restrict_access
+def applicant_table_ratings(request, event_name):
+  applicants = Applicant.objects.filter(event__name=event_name).order_by('first_name')
+  if not has_role(request.user, ['staff', 'selection']):
+    applicants = applicants.filter(attended=True)
+  context = {
+    'applicants': applicants,
+    'event_name': event_name
+  }
+  return render(request, 'feedback/applicant_table_ratings.html', context)
 
 def favorited(scholar, applicant):
   return Favorite.objects.filter(applicant=applicant, scholar=scholar).exists()
@@ -270,14 +282,87 @@ def export(request, event_name):
       applicant.hometown,
       applicant.hometown_state,
       applicant.attended,
-      feedback_tags.rating_average(feedbacks, num=True),
-      feedback_tags.interest_average(feedbacks, num=True),
-      int(feedback_tags.feedback_count(feedbacks))
+      rating_average(feedbacks, num=True),
+      interest_average(feedbacks, num=True),
+      int(feedback_count(feedbacks))
       )
     for j, field in enumerate(sheet1_fields):
       sheet1.write(i+1, j, field)
 
     for feedback in feedbacks:
+      commenter = feedback.scholar
+      if feedback.rating or feedback.interest or feedback.comments:
+        sheet2_fields = (
+          applicant.last_name,
+          applicant.first_name,
+          '%s, %s' % (commenter.last_name, commenter.first_name),
+          feedback.rating if feedback.rating else '',
+          feedback.interest if feedback.interest else '',
+          feedback.comments
+          )
+        for j, field in enumerate(sheet2_fields):
+          sheet2.write(s2_line, j, field)
+        s2_line += 1
+
+  event = Event.objects.get(name=event_name)
+  with NamedTemporaryFile() as f:
+    book.save(f)
+    f.seek(0)
+    response = HttpResponse(f, content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="%s.xls"' % event.full_name
+    return response
+
+@login_required
+@has_role_decorator(['staff', 'selection'])
+def export_fw(request, event_name):
+  applicants = Applicant.objects.filter(event__name=event_name).order_by('last_name')
+  book = Workbook()
+  sheet1 = book.add_sheet('Rating Averages')
+  sheet2 = book.add_sheet('Ratings');
+  sheet1_headings = ('Title', 'Last', 'First', 'High School', 'City', 'State', 'Attended',
+                     'Rating - Alumni', 'Interest - Alumni', 'Favorite - Alumni',
+                     'Rating - Senior', 'Interest - Senior', 'Favorite - Senior',
+                     'Rating - Other', 'Interest - Other', 'Favorite - Other',
+                     'Rating Average', 'Interest Average', 'Favorite Count', 'Feedback Count')
+  for i, heading in enumerate(sheet1_headings):
+    sheet1.write(0, i, heading)
+  sheet2_headings = ('Last', 'First', 'Commenter', 'Rating', 'Interest', 'Comment')
+  for i, heading in enumerate(sheet2_headings):
+    sheet2.write(0, i, heading)
+
+  #Keep track of the line in the second sheet.
+  s2_line = 1
+
+  for i, applicant in enumerate(applicants):
+    #Get all the feedback on an applicant ordered by descending rating
+    feedbacks_with_selection = Feedback.objects.filter(applicant=applicant).order_by('-rating')
+    feedbacks = [f for f in feedbacks_with_selection if not f.scholar.selection]
+    sheet1_fields = (
+      applicant.gender,
+      applicant.last_name,
+      applicant.first_name,
+      applicant.high_school,
+      applicant.hometown,
+      applicant.hometown_state,
+      applicant.attended,
+      rating_average(alumni_filter(feedbacks), num=True),
+      interest_average(alumni_filter(feedbacks), num=True),
+      len(alumni_filter(favorite_filter(applicant))),
+      rating_average(senior_filter(feedbacks), num=True),
+      interest_average(senior_filter(feedbacks), num=True),
+      len(senior_filter(favorite_filter(applicant))),
+      rating_average(other_filter(feedbacks), num=True),
+      interest_average(other_filter(feedbacks), num=True),
+      len(other_filter(favorite_filter(applicant))),
+      rating_average(feedbacks, num=True),
+      interest_average(feedbacks, num=True),
+      len(favorite_filter(applicant)),
+      int(feedback_count(feedbacks))
+      )
+    for j, field in enumerate(sheet1_fields):
+      sheet1.write(i+1, j, field)
+
+    for feedback in feedbacks_with_selection:
       commenter = feedback.scholar
       if feedback.rating or feedback.interest or feedback.comments:
         sheet2_fields = (

@@ -2,7 +2,7 @@ from django import template
 
 import random
 
-from feedback.models import Feedback
+from feedback.models import Feedback, Favorite
 
 register = template.Library()
 
@@ -29,11 +29,29 @@ def interest_average(feedback, num=False):
 @register.filter
 def feedback_count(feedback):
   non_empty = [f for f in feedback if (f.interest or f.rating or f.comments)]
-  return '%d' % len(non_empty)
+  return str(len(non_empty))
 
 @register.filter
 def all_feedback(applicant):
-  return Feedback.objects.filter(applicant=applicant)
+  feedback = Feedback.objects.filter(applicant=applicant)
+  return [f for f in feedback if not f.scholar.selection]
+
+@register.filter
+def alumni_filter(feedback):
+  return [f for f in feedback if (f.scholar.class_year < 2012 or f.scholar.class_year is None)]
+
+@register.filter
+def senior_filter(feedback):
+  return [f for f in feedback if f.scholar.class_year == 2012]
+
+@register.filter
+def other_filter(feedback):
+  return [f for f in feedback if f.scholar.class_year > 2012]
+
+@register.filter
+def favorite_filter(applicant):
+  favs = Favorite.objects.filter(applicant=applicant)
+  return [f for f in favs if not f.scholar.selection]
 
 @register.inclusion_tag('macro/feedback_header.html')
 def feedback_header(active, user, event_name):
