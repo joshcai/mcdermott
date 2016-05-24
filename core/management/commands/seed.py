@@ -7,7 +7,7 @@ import sys
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 
-from core.models import Degree, Experience
+from core.models import Degree, Experience, McUser
 
 import requests
 
@@ -165,16 +165,16 @@ class Command(BaseCommand):
     if User.objects.filter(username=username).exists():
       self.stdout.write('Account for user %s %s already exists' % (alumni['First'], alumni['Last']))
       user = User.objects.get(username=username)
-    elif McUser.objects.filter(first_name=alumni['First'], last_name=alumni['Last']).exists()
+    elif McUser.objects.filter(first_name=alumni['First'], last_name=alumni['Last']).exists():
       self.stdout.write('Account for user %s %s already exists' % (alumni['First'], alumni['Last']))
       user = McUser.objects.get(first_name=alumni['First'], last_name=alumni['Last']).user
-    elif McUser.objects.filter(first_name=alumni['First'], last_name=combined).exists()
+    elif McUser.objects.filter(first_name=alumni['First'], last_name=combined).exists():
       self.stdout.write('Account for user %s %s already exists' % (alumni['First'], combined))
       user = McUser.objects.get(first_name=alumni['First'], last_name=combined).user
     else:
       user = User.objects.create_user(username, email=alumni['Email'].lower(), password=DEFAULT_PASSWORD)
-    if alumni['Year'] != 'None':
-      user.mcuser.class_year = int(alumni['Year'])
+    if alumni['Class'] != 'None':
+      user.mcuser.class_year = int(alumni['Class'])
     user.mcuser.first_name = alumni['First']
     if alumni['Married Name']:
       user.mcuser.last_name = alumni['Married Name']
@@ -201,7 +201,7 @@ class Command(BaseCommand):
     user.mcuser.children = alumni['Children']
     user.mcuser.personal_news = alumni['Personal News']
     m = user.mcuser
-    if m.degree_set.count() == 0:
+    if m.degrees.count() == 0:
       if alumni['Graduate School #1']:
         d = Degree(
             user=m,
@@ -226,6 +226,38 @@ class Command(BaseCommand):
             major1=alumni['Field #3']
           )
         d.save()
+    if m.experiences.count() == 0:
+      if alumni['Previous Employment']:
+        exps = alumni['Previous Employment'].split(';')
+        for exp in exps:
+          loc_split = exp.split('(')
+          if len(loc_split) == 2:
+            e = Experience(
+                user=m,
+                organization=loc_split[0],
+                location=loc_split[1].strip(' ').strip(')')
+              )
+          else:
+            e = Experience(
+                user=m,
+                organization=exp
+              )
+          e.save()
+      if alumni['Current Employment']:
+        exp = alumni['Current Employment']
+        loc_split = exp.split('(')
+        if len(loc_split) == 2:
+          e = Experience(
+              user=m,
+              organization=loc_split[0],
+              location=loc_split[1].strip(' ').strip(')')
+            )
+        else:
+          e = Experience(
+              user=m,
+              organization=exp
+            )
+    user.mcuser.hidden_fields = ['phone_number', 'email']
     user.mcuser.save()
 
     self.stdout.write('Created user %s %s' %
