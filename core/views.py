@@ -170,19 +170,16 @@ def sign_up(request):
 
 @login_required
 def scholars(request):
-  scholars = McUser.objects.all().order_by('first_name')
-  context = {
-    'scholars': scholars,
-    'active': 'all'
-    }
-  return render(request, 'core/scholars.html', context)
+  if request.user.mcuser.class_year:
+    return redirect('/scholars/class/%s' % request.user.mcuser.class_year)
+  return redirect('/staff')
 
 @login_required
 def staff(request):
   scholars = McUser.objects.all().filter(user__groups__name='staff').order_by('staff_order')
   context = {
     'scholars': scholars,
-    'active': 'staff'
+    'active': 'staff',
     }
   return render(request, 'core/staff.html', context)
 
@@ -191,7 +188,7 @@ def scholars_by_class(request, class_year):
   scholars = McUser.objects.all().filter(class_year=int(class_year)).order_by('first_name')
   context = {
     'scholars': scholars,
-    'active': str(class_year)
+    'active': str(class_year),
     }
   return render(request, 'core/scholars.html', context)
 

@@ -7,6 +7,8 @@ import sys
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 
+from core.models import Degree, Experience
+
 import requests
 
 try:
@@ -52,6 +54,12 @@ class Command(BaseCommand):
         dest='alumni',
         default=False,
         help='Create alumni accounts')
+
+    parser.add_argument('--alumnifull',
+        action='store_true',
+        dest='alumnifull',
+        default=False,
+        help='Create rest of alumni accounts')
 
   def add_user(self, username, password, name, class_year, birthday='1/1/2000', superuser=False, email=None):
     if User.objects.filter(username=username).exists():
@@ -151,6 +159,79 @@ class Command(BaseCommand):
     self.stdout.write('Created user %s %s' %
                       (user.mcuser.first_name, user.mcuser.last_name))
 
+  def add_alumni_full_from_csv(self, alumni):
+    username = self.getUsername(alumni['Email'])
+    combined = '%s %s' % (alumni['Last'], alumni['Married Name'])
+    if User.objects.filter(username=username).exists():
+      self.stdout.write('Account for user %s %s already exists' % (alumni['First'], alumni['Last']))
+      user = User.objects.get(username=username)
+    elif McUser.objects.filter(first_name=alumni['First'], last_name=alumni['Last']).exists()
+      self.stdout.write('Account for user %s %s already exists' % (alumni['First'], alumni['Last']))
+      user = McUser.objects.get(first_name=alumni['First'], last_name=alumni['Last']).user
+    elif McUser.objects.filter(first_name=alumni['First'], last_name=combined).exists()
+      self.stdout.write('Account for user %s %s already exists' % (alumni['First'], combined))
+      user = McUser.objects.get(first_name=alumni['First'], last_name=combined).user
+    else:
+      user = User.objects.create_user(username, email=alumni['Email'].lower(), password=DEFAULT_PASSWORD)
+    if alumni['Year'] != 'None':
+      user.mcuser.class_year = int(alumni['Year'])
+    user.mcuser.first_name = alumni['First']
+    if alumni['Married Name']:
+      user.mcuser.last_name = alumni['Married Name']
+      user.mcuser.maiden_name = alumni['Last']
+    else:
+      user.mcuser.last_name = alumni['Last']
+    user.mcuser.email = alumni['Email']
+    user.mcuser.marriage = alumni['marriage']
+    user.mcuser.right_after = alumni['right_after']
+    user.mcuser.ultimate = alumni['ultimate']
+    user.mcuser.updated_alumni_info = alumni['updated alumni info']
+    user.mcuser.updated_alumni_ppt = alumni['updated alumni ppt']
+    user.mcuser.mailing_address = alumni['Address']
+    user.mcuser.mailing_city = alumni['City']
+    user.mcuser.mailing_state = alumni['State']
+    user.mcuser.mailing_zip = alumni['Zip']
+    user.mcuser.mailing_country = alumni['Country']
+    user.mcuser.address_type = alumni['address type']
+    user.mcuser.phone_number = alumni['Phone']
+    user.mcuser.website = alumni['Website']
+    user.mcuser.in_dfw = alumni['Currently in DFW']
+    user.mcuser.current_city = alumni['Current City']
+    user.mcuser.significant_other = alumni['Significant other']
+    user.mcuser.children = alumni['Children']
+    user.mcuser.personal_news = alumni['Personal News']
+    m = user.mcuser
+    if m.degree_set.count() == 0:
+      if alumni['Graduate School #1']:
+        d = Degree(
+            user=m,
+            school=alumni['Graduate School #1'],
+            degree_type=alumni['Degree #1'],
+            major1=alumni['Field #1']
+          )
+        d.save()
+      if alumni['Graduate School #2']:
+        d = Degree(
+            user=m,
+            school=alumni['Graduate School #2'],
+            degree_type=alumni['Degree #2'],
+            major1=alumni['Field #2']
+          )
+        d.save()
+      if alumni['Graduate School #3']:
+        d = Degree(
+            user=m,
+            school=alumni['Graduate School #3'],
+            degree_type=alumni['Degree #3'],
+            major1=alumni['Field #3']
+          )
+        d.save()
+    user.mcuser.save()
+
+    self.stdout.write('Created user %s %s' %
+                      (user.mcuser.first_name, user.mcuser.last_name))
+
+
   def handle(self, *args, **options):
     if options['flush']:
       self.stdout.write('Deleting all users...')
@@ -171,6 +252,11 @@ class Command(BaseCommand):
         alumni_members = list(csv.reader(csvfile))
         for alumni in alumni_members[1:]:
           self.add_alumni_from_csv({key: value for (key, value) in zip(alumni_members[0], alumni)})
+    if options['alumnifull']:
+      with open('alumni_full.csv', 'rB') as csvfile:
+        alumni_members = list(csv.reader(csvfile))
+        for alumni in alumni_members[1:]:
+          self.add_alumni_full_from_csv({key: value for (key, value) in zip(alumni_members[0], alumni)})
     if options['testing']:
       josh = self.add_user('joshcai', 'password', 'Josh Cai', 2012, email='jxc124730@utdallas.edu')
       Dev.assign_role_to_user(josh)

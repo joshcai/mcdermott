@@ -35,6 +35,8 @@ class McUser(models.Model):
   first_name = models.CharField(max_length=200, blank=True)
   middle_name = models.CharField(max_length=200, blank=True)
   last_name = models.CharField(max_length=200, blank=True)
+  maiden_name = models.CharField(max_length=200, blank=True)
+  title = models.CharField(max_length=200, blank=True)
   # Real first name
   real_name = models.CharField(max_length=200, blank=True)
 
@@ -89,6 +91,23 @@ class McUser(models.Model):
   staff_title = models.CharField(max_length=200, blank=True)
   staff_order = models.IntegerField(default=0, null=True, blank=True)
 
+  # Visible to staff only
+  marriage = models.CharField(max_length=200, blank=True)
+  right_after = models.CharField(max_length=200, blank=True)
+  ultimate = models.CharField(max_length=200, blank=True)
+  updated_alumni_info = models.CharField(max_length=200, blank=True)
+  updated_alumni_ppt = models.CharField(max_length=200, blank=True)
+  mailing_address = models.CharField(max_length=200, blank=True)
+  mailing_city = models.CharField(max_length=200, blank=True)
+  mailing_state = models.CharField(max_length=200, blank=True)
+  mailing_zip = models.CharField(max_length=200, blank=True)
+  mailing_country = models.CharField(max_length=200, blank=True)
+  mailing_address_type = models.CharField(max_length=200, blank=True)
+  in_dfw = models.CharField(max_length=200, blank=True)
+  current_city = models.CharField(max_length=200, blank=True)
+  significant_other = models.CharField(max_length=200, blank=True)
+  children = models.CharField(max_length=200, blank=True)
+  personal_news = models.CharField(max_length=200, blank=True)
   # On Selection Committee
   selection = models.BooleanField(default=False)
 
