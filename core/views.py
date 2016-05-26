@@ -12,8 +12,8 @@ import watson
 
 import requests
 
-from forms import McUserForm, DegreeForm, ExperienceForm, StudyAbroadForm, UserForm
-from models import McUser, Degree, Experience, StudyAbroad
+from forms import McUserForm, DegreeForm, ExperienceForm, StudyAbroadForm, UserForm, HonorForm
+from models import McUser, Degree, Experience, StudyAbroad, Honor
 from serializers import UserSerializer
 from util import normalize_name
 
@@ -25,6 +25,7 @@ except ImportError:
 DegreeFormSet = modelformset_factory(Degree, form=DegreeForm, extra=1, can_delete=True)
 ExperienceFormSet = modelformset_factory(Experience, form=ExperienceForm, extra=1, can_delete=True)
 StudyAbroadFormSet = modelformset_factory(StudyAbroad, form=StudyAbroadForm, extra=1, can_delete=True)
+HonorFormSet = modelformset_factory(Honor, form=HonorForm, extra=1, can_delete=True)
 
 # Create your views here.
 def index(request):
@@ -129,6 +130,28 @@ def edit_abroad(request, name):
       }
   return render(request, 'core/edit_abroad.html', context)
 
+@login_required
+def edit_honor(request, name):
+  user_info = McUser.objects.get(norm_name=normalize_name(name))
+  if not user_info.user.id == request.user.id and not has_permission(request.user, 'edit_all_info'):
+    return redirect('edit_honor', request.user.mcuser.norm_name)
+  honor = Honor.objects.filter(user_id=user_info.id)
+  if request.method == 'POST':
+    honor_formset = HonorFormSet(request.POST, queryset=honor, initial=[{'user': user_info.id}])
+    if (honor_formset.is_valid()):
+      honor_formset.save()
+      messages.add_message(
+        request, messages.SUCCESS,
+        'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[user_info.norm_name]))
+      return redirect('edit_honor', user_info.norm_name)
+  else:
+    honor_formset = HonorFormSet(queryset=honor, initial=[{'user': user_info.id}])
+  context = {
+      'honor_formset': honor_formset,
+      'mcuser': user_info
+      }
+  return render(request, 'core/edit_honor.html', context)
+  
 @login_required
 def edit_account(request):
   user = request.user

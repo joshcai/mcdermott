@@ -152,10 +152,10 @@ class Command(BaseCommand):
     url = 'http://mcdermott.org/password_reset'
     response = session.get(url)
     csrftoken = session.cookies['csrftoken']
-    r = session.post(
-      url,
-      data={'email': user.email, 'csrfmiddlewaretoken': csrftoken},
-      headers=dict(Referer=url))
+    # r = session.post(
+    #  url,
+    #  data={'email': user.email, 'csrfmiddlewaretoken': csrftoken},
+    #  headers=dict(Referer=url))
     self.stdout.write('Created user %s %s' %
                       (user.mcuser.first_name, user.mcuser.last_name))
 
@@ -192,6 +192,7 @@ class Command(BaseCommand):
     user.mcuser.mailing_state = alumni['State']
     user.mcuser.mailing_zip = alumni['Zip']
     user.mcuser.mailing_country = alumni['Country']
+    user.mcuser.mailing_address_type = alumni['address type']
     user.mcuser.address_type = alumni['address type']
     user.mcuser.phone_number = alumni['Phone']
     user.mcuser.website = alumni['Website']
@@ -257,7 +258,8 @@ class Command(BaseCommand):
               user=m,
               organization=exp
             )
-    user.mcuser.hidden_fields = ['phone_number', 'email']
+          e.save()
+    user.mcuser.hidden_fields = ['phone_number', 'email', 'address']
     user.mcuser.save()
 
     self.stdout.write('Created user %s %s' %

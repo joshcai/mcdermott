@@ -1,0 +1,91 @@
+{% extends "large_container.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %}
+Edit Honors
+{% endblock %}
+
+{% block inner_content %}
+
+<div class="row">
+  <ul class="nav nav-tabs nav-justified">
+    <li role="presentation"><a href="{% url 'edit_info' mcuser.norm_name %}">Profile</a></li>
+    <li role="presentation"><a href="{% url 'edit_edu' mcuser.norm_name %}">Education</a></li>
+    <li role="presentation"><a href="{% url 'edit_exp' mcuser.norm_name %}">Experience</a></li>
+    <li role="presentation"><a href="{% url 'edit_abroad' mcuser.norm_name %}">Study Abroad</a></li>
+    <li role="presentation" class="active"><a>Honors</a></li>
+  </ul>
+  <br>
+  <div class="col-md-12" id="messageContainer">
+    {% if messages %}
+      {% for message in messages %}
+        <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst|safe }}</div>
+      {% endfor %}
+    {% endif %}
+  </div>
+  <div class="col-md-12 margin-bot-md text-center">
+    Honors are displayed in reverse chronological order on your profile, i.e. the first honor/award you enter should be the oldest one.
+  </div>
+  <form method="post" action="{% url 'edit_honor' mcuser.norm_name %}" class="form-horizontal" id="formHonor">
+    {% csrf_token %}
+
+    {{ honor_formset.management_form }}
+
+    {% for honor_form in honor_formset %}
+      {% if honor_form.errors %}
+        There were errors!
+          {% for field in honor_form %}
+            {% for error in field.errors %}
+              <p> {{ error }} {{ field.label_tag }} </p>
+            {% endfor %}
+          {% endfor %}
+      {% endif %}
+      {% if forloop.last and not forloop.first %}
+        <div class="col-md-12 form-add-extra">
+          <h4>Add another honor/award:</h4>
+        </div>
+      {% endif %}
+      {{ honor_form.id }}
+      {{ honor_form.user }}
+      <div class="col-md-8">
+        <div class="form-group margin-sm">
+          <label for="id_other_locations" class="form-label">
+            Title
+          </label>
+          {{ honor_form.title|add_class:"form-control" }}
+          <span class="error">{{ honor_form.title.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group margin-sm">
+          <label for="id_start_time" class="form-label">
+            Received Date
+          </label>
+          {{ honor_form.received_time|add_class:"form-control" }}
+          <span class="error">{{ honor_form.received_time.errors }}</span>
+        </div>
+      </div>
+    {% endfor %}
+    <br>
+    <div class="col-md-12 text-center">
+      <input class="btn btn-default" type="submit" value="SAVE" />
+    </div>
+    <br>
+  </form>
+</div>
+
+<script>
+  var inputChanged = false;
+  $(document).ready(function() {
+    $('#formHonor input').on('input', function() {
+      if(!inputChanged) {
+        $('#messageContainer').empty();
+        $('#messageContainer').append('<div class="alert alert-warning" role="alert">Don\'t forget to save your changes!</div>');
+        inputChanged = true;
+      }
+    });
+    $('.datepicker').datepicker();
+  });
+</script>
+{% endblock %}

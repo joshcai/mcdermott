@@ -157,10 +157,16 @@ class StudyAbroad(models.Model):
   start_time = models.DateField(null=True, blank=True)
   end_time = models.DateField(null=True, blank=True)
 
+class Honor(models.Model):
+  user = models.ForeignKey(McUser, related_name='honors')
+  title = models.CharField(max_length=200, blank=True)
+  received_time = models.DateField(null=True, blank=True)
+  
 watson.register(McUser, fields=('first_name', 'last_name', 'gender', 'class_year', 'hometown', 'hometown_state', 'high_school',
-                                'norm_name', 'staff_title'))
+                                'norm_name', 'staff_title', 'maiden_name'))
 watson.register(Degree)
 watson.register(Experience)
 watson.register(StudyAbroad)
+watson.register(Honor)
 # at bottom for circular dependency
 import signals

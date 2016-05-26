@@ -16,6 +16,7 @@ Edit Info
     <li role="presentation"><a href="{% url 'edit_edu' mcuser.norm_name %}">Education</a></li>
     <li role="presentation"><a href="{% url 'edit_exp' mcuser.norm_name %}">Experience</a></li>
     <li role="presentation"><a href="{% url 'edit_abroad' mcuser.norm_name %}">Study Abroad</a></li>
+    <li role="presentation"><a href="{% url 'edit_honor' mcuser.norm_name %}">Honors</a></li>
   </ul>
   <br>
   <div class="col-md-12" id="messageContainer">
@@ -117,6 +118,52 @@ Edit Info
         <span class="error">{{ form.hometown_state.errors }}</span>
       </div>
     </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.mailing_address.name }}" class="form-label address-label">
+          Address
+          <input type="checkbox" id="checkbox_address" name="checkbox_address" value="true" class="visibility-checkbox"{% if mcuser|fieldhidden:'address' %} checked {% endif %}>
+        </label>
+        {{ form.mailing_address|add_class:"form-control" }}
+        <span class="error">{{ form.mailing_address.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.mailing_city.name }}" class="form-label address-label">
+          Address City
+        </label>
+        {{ form.mailing_city|add_class:"form-control" }}
+        <span class="error">{{ form.mailing_city.errors }}</span>
+      </div>
+    </div>
+      <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.mailing_state.name }}" class="form-label address-label">
+          Address State
+        </label>
+        {{ form.mailing_state|add_class:"form-control" }}
+        <span class="error">{{ form.mailing_state.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.mailing_zip.name }}" class="form-label address-label">
+          Address Zip Code
+        </label>
+        {{ form.mailing_zip|add_class:"form-control" }}
+        <span class="error">{{ form.mailing_zip.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.mailing_country.name }}" class="form-label address-label">
+          Address Country (if not USA)
+        </label>
+        {{ form.mailing_country|add_class:"form-control" }}
+        <span class="error">{{ form.mailing_country.errors }}</span>
+      </div>
+    </div>
     <div class="col-md-3 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.dorm_type.name }}" class="form-label">
@@ -209,11 +256,17 @@ Edit Info
     $('.visibility-checkbox:checked').each(function() {
       var element = $(this).attr('id').replace('checkbox', 'id');
       var label = $('label[for=' + element + ']');
+      if($(this).attr('id') == 'checkbox_address') {
+        label = $('.address-label')
+      }
       label.addClass('staff-only');
     });
     $('.visibility-checkbox').change(function() {
       var element = $(this).attr('id').replace('checkbox', 'id');
       var label = $('label[for=' + element + ']');
+      if($(this).attr('id') == 'checkbox_address') {
+        label = $('.address-label')
+      }
       if($(this).is(':checked')) {
         label.addClass('staff-only');
       }

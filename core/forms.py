@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 import floppyforms as forms
 from functools import partial
 
-from models import McUser, Degree, Experience, StudyAbroad
+from models import McUser, Degree, Experience, StudyAbroad, Honor
 
 DateInput = partial(forms.TextInput, {'class': 'datepicker'})
 
@@ -34,7 +34,14 @@ class McUserForm(forms.ModelForm):
         'facebook',
         'email',
         'dorm_type',
-        'dorm_number'
+        'dorm_number',
+        'mailing_address',
+        'mailing_city',
+        'mailing_state',
+        'mailing_zip',
+        'mailing_country',
+        'in_dfw',
+        'current_city',
     ]
     widgets = {
         'id': forms.HiddenInput(),
@@ -106,6 +113,18 @@ class StudyAbroadForm(forms.ModelForm):
       'end_time': DateInput(),
     }
 
+class HonorForm(forms.ModelForm):
+  class Meta:
+    model = Honor
+    fields = [
+      'user',
+      'title',
+      'received_time'
+    ]
+    widgets = {
+      'user': forms.HiddenInput(),
+      'received_time': DateInput(),
+    }
 class UserForm(forms.ModelForm):
   class Meta:
     model = User
