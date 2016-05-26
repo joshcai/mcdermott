@@ -185,7 +185,7 @@ class Command(BaseCommand):
     user.mcuser.marriage = alumni['marriage']
     user.mcuser.right_after = alumni['right_after']
     user.mcuser.ultimate = alumni['ultimate']
-    user.mcuser.updated_alumni_info = alumni['updated alumni info']
+    user.mcuser.updated_alumni_info = alumni['updated alumni info'].split(' ')[0]
     user.mcuser.updated_alumni_ppt = alumni['updated alumni ppt']
     user.mcuser.mailing_address = alumni['Address']
     user.mcuser.mailing_city = alumni['City']

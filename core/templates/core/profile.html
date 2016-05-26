@@ -323,6 +323,12 @@
   </div>
 {% endif %}
 
+{% if profile.updated_alumni_info %}
+  <div class="text-center">
+    <p>Last updated: {{ profile.updated_alumni_info }} </p>
+  </div>
+{% endif %}
+
 {% if is_self or user|has_role:'staff' %}
   <div class="text-center">
     <p><span class="staff-only">Orange fields</span> can only be seen by staff.</p>

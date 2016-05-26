@@ -10,6 +10,7 @@ from rolepermissions.verifications import has_role, has_permission
 from rolepermissions.decorators import has_role_decorator
 import watson
 
+import time
 import requests
 
 from forms import McUserForm, DegreeForm, ExperienceForm, StudyAbroadForm, UserForm, HonorForm
@@ -36,6 +37,12 @@ def index(request):
     'ga_tracking_id': GA_TRACKING_ID
   }
   return render(request, 'core/index.html', context)
+  
+def update_last_updated(user):
+  # updates the updated_alumni_info field with current date
+  date_str = time.strftime('%m/%d/%Y')
+  user.updated_alumni_info = date_str
+  user.save()
 
 @login_required
 def edit_info(request, name):
@@ -52,6 +59,7 @@ def edit_info(request, name):
       messages.add_message(
         request, messages.SUCCESS,
         'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[mcuser.norm_name]))
+      update_last_updated(user_info)
       return redirect('edit_info', user_info.norm_name)
   else:
     form = McUserForm(instance=user_info, prefix='base')
@@ -77,6 +85,7 @@ def edit_edu(request, name):
       messages.add_message(
         request, messages.SUCCESS,
         'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[user_info.norm_name]))
+      update_last_updated(user_info)
       return redirect('edit_edu', user_info.norm_name)
   else:
     degrees_formset = DegreeFormSet(queryset=degrees, initial=[{'user': user_info.id}])
@@ -99,6 +108,7 @@ def edit_exp(request, name):
       messages.add_message(
         request, messages.SUCCESS,
         'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[user_info.norm_name]))
+      update_last_updated(user_info)
       return redirect('edit_exp', user_info.norm_name)
   else:
     experiences_formset = ExperienceFormSet(queryset=experiences, initial=[{'user': user_info.id}])
@@ -121,6 +131,7 @@ def edit_abroad(request, name):
       messages.add_message(
         request, messages.SUCCESS,
         'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[user_info.norm_name]))
+      update_last_updated(user_info)
       return redirect('edit_abroad', user_info.norm_name)
   else:
     study_abroad_formset = StudyAbroadFormSet(queryset=study_abroad, initial=[{'user': user_info.id}])
@@ -143,6 +154,7 @@ def edit_honor(request, name):
       messages.add_message(
         request, messages.SUCCESS,
         'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[user_info.norm_name]))
+      update_last_updated(user_info)
       return redirect('edit_honor', user_info.norm_name)
   else:
     honor_formset = HonorFormSet(queryset=honor, initial=[{'user': user_info.id}])
