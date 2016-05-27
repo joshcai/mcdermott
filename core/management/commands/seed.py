@@ -182,7 +182,8 @@ class Command(BaseCommand):
     else:
       user.mcuser.last_name = alumni['Last']
     user.mcuser.email = alumni['Email']
-    user.mcuser.marriage = alumni['marriage']
+    user.mcuser.married = True if alumni['marriage'] else False
+    user.mcuser.num_degrees = int(alumni['num grad degrees']) if alumni['num grad degrees'] else 0
     user.mcuser.right_after = alumni['right_after']
     user.mcuser.ultimate = alumni['ultimate']
     user.mcuser.updated_alumni_info = alumni['updated alumni info'].split(' ')[0]

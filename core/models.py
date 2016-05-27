@@ -42,7 +42,7 @@ class McUser(models.Model):
 
   # Gender
   GENDER_CHOICES = (('', ''), ('Male', 'Male'), ('Female', 'Female'))
-  gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False)
+  gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=True)
 
   # Birthday
   birthday = models.DateField(null=True, blank=True)
@@ -92,7 +92,7 @@ class McUser(models.Model):
   staff_order = models.IntegerField(default=0, null=True, blank=True)
 
   # Visible to staff only
-  marriage = models.CharField(max_length=200, blank=True)
+  married = models.BooleanField(default=False)
   right_after = models.CharField(max_length=200, blank=True)
   ultimate = models.CharField(max_length=200, blank=True)
   updated_alumni_info = models.CharField(max_length=200, blank=True)
@@ -108,11 +108,21 @@ class McUser(models.Model):
   significant_other = models.CharField(max_length=200, blank=True)
   children = models.CharField(max_length=200, blank=True)
   personal_news = models.CharField(max_length=200, blank=True)
+  num_degrees = models.IntegerField(default=0, null=True, blank=True)
   # On Selection Committee
   selection = models.BooleanField(default=False)
 
   def get_full_name(self):
     return '%s %s' % (self.first_name, self.last_name)
+    
+  def get_full_name_for_link(self):
+    return ''.join([c for c in self.get_full_name() if c.isalpha()])
+    
+  def get_full_name_with_maiden(self):
+    name = '%s %s' % (self.first_name, self.last_name)
+    if self.maiden_name:
+      name = '%s (%s)' % (name, self.maiden_name)
+    return name
 
   def save(self, *args, **kwargs):
     self.norm_name = normalize_name(self.get_full_name())

@@ -40,13 +40,35 @@ class McUserForm(forms.ModelForm):
         'mailing_state',
         'mailing_zip',
         'mailing_country',
+        'mailing_address_type',
+        'married',
         'in_dfw',
         'current_city',
+        'right_after',
+        'ultimate',
+        'significant_other',
+        'children',
+        'personal_news',
+        'num_degrees'
     ]
     widgets = {
         'id': forms.HiddenInput(),
         'pic': ImageThumbnailInput,
         'birthday': DateInput(),
+        'mailing_address_type': forms.Select(
+            choices=(('', ''),
+                     ('parent', 'parent address'),
+                     ('alum', 'current alum address'))),
+        'right_after': forms.Select(
+            choices=(('', ''),
+                     ('grad', 'grad'),
+                     ('employment', 'employment'),
+                     ('prof', 'prof'))),
+        'ultimate': forms.Select(
+            choices=(('', ''),
+                     ('grad', 'grad'),
+                     ('prof', 'prof'))),
+        'personal_news': forms.Textarea(attrs={'rows':4, 'cols':15}),
     }
 
 class UploadFileForm(forms.Form):
@@ -68,6 +90,11 @@ class DegreeForm(forms.ModelForm):
     ]
     widgets = {
       'user': forms.HiddenInput(),
+      'major1': forms.TextInput(),
+      'major2': forms.TextInput(),
+      'minor1': forms.TextInput(),
+      'minor2': forms.TextInput(),
+      'start_time': DateInput(),
       'start_time': DateInput(),
       'end_time': DateInput(),
     }

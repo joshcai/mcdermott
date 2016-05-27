@@ -1,0 +1,16 @@
+{% extends "large_container.html" %}
+
+{% block title %}
+McDermott Marriages
+{% endblock %}
+
+{% block inner_content %}
+
+<!-- Name and contact info-->
+<div>
+  <h4>Number of McDermott marriages: {{ marriage_count }}</h4>
+  {% for scholar in scholars %}
+    <h5><a href="/{{ scholar.get_full_name_for_link }}">{{ scholar.get_full_name_with_maiden }}</a></h5>
+  {% endfor %}
+</div>
+{% endblock %}

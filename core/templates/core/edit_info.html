@@ -118,7 +118,7 @@ Edit Info
         <span class="error">{{ form.hometown_state.errors }}</span>
       </div>
     </div>
-    <div class="col-md-6 col-sm-6">
+    <div class="col-md-3 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.mailing_address.name }}" class="form-label address-label">
           Address
@@ -162,6 +162,15 @@ Edit Info
         </label>
         {{ form.mailing_country|add_class:"form-control" }}
         <span class="error">{{ form.mailing_country.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.mailing_address_type.name }}" class="form-label staff-only">
+          Address Type
+        </label>
+        {{ form.mailing_address_type|add_class:"form-control" }}
+        <span class="error">{{ form.mailing_address_type.errors }}</span>
       </div>
     </div>
     <div class="col-md-3 col-sm-6">
@@ -235,6 +244,77 @@ Edit Info
       {{ form.pic }}
       <span class="error">{{ form.pic.errors }}</span>
     </div>
+    {% if user|has_role:'staff' %}
+      <div class="col-md-12 col-sm-12">
+        <h4>Staff edit only:</h4>
+        <hr>
+        <div class="row">
+          <div class="col-md-6 col-sm-6">
+            <div class="form-group margin-sm">
+              <label for="id_{{ form.right_after.name }}" class="form-label">
+                Right after McDermott:
+              </label>
+              {{ form.right_after|add_class:"form-control" }}
+              <span class="error">{{ form.right_after.errors }}</span>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6">
+            <div class="form-group margin-sm">
+              <label for="id_{{ form.ultimate.name }}" class="form-label">
+                Ultimately grad/prof:
+              </label>
+              {{ form.ultimate|add_class:"form-control" }}
+              <span class="error">{{ form.ultimate.errors }}</span>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <div class="form-group margin-sm">
+              <label for="id_{{ form.significant_other.name }}" class="form-label">
+                Significant other:
+              </label>
+              {{ form.significant_other|add_class:"form-control" }}
+              <span class="error">{{ form.significant_other.errors }}</span>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <div class="form-group margin-sm">
+              <label for="id_{{ form.children.name }}" class="form-label">
+                Child(ren):
+              </label>
+              {{ form.children|add_class:"form-control" }}
+              <span class="error">{{ form.children.errors }}</span>
+            </div>
+          </div>
+          <div class="col-md-12 col-sm-12">
+            <div class="form-group margin-sm">
+              <label for="id_{{ form.personal_news.name }}" class="form-label">
+                Personal news:
+              </label>
+              {{ form.personal_news|add_class:"form-control" }}
+              <span class="error">{{ form.personal_news.errors }}</span>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <div class="form-group margin-sm">
+              <label for="id_{{ form.num_degrees.name }}" class="form-label">
+               # of Grad Degrees (completed+in-progress):
+              </label>
+              {{ form.num_degrees|add_class:"form-control" }}
+              <span class="error">{{ form.num_degrees.errors }}</span>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <div class="form-group margin-sm">
+              <label for="id_{{ form.married.name }}" class="form-label">
+                Married to another McDermott
+              </label>
+              {{ form.married }}
+              <span class="error">{{ form.married.errors }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
     <div class="col-md-12 col-sm-12 text-center">
       <br>
       <input class="btn btn-default" type="submit" value="SAVE" />

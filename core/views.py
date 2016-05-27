@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.db.models import Sum
 from django.forms.models import modelformset_factory
 from django.http import Http404
 from django.shortcuts import render, redirect
@@ -229,6 +230,31 @@ def scholars_by_class(request, class_year):
 
 def resolveurl(request, url):
   return redirect('/%s' % url)
+
+@login_required
+def married(request):
+  scholars = McUser.objects.filter(married=True).order_by('last_name')
+  context = {
+    'scholars': scholars,
+    'marriage_count': len(scholars) / 2
+    }
+  return render(request, 'core/married.html', context)
+  
+@login_required
+def stats(request):
+  married_scholars = McUser.objects.filter(married=True)
+  all_scholars = McUser.objects.exclude(class_year__isnull=True)
+  alumni = McUser.objects.filter(class_year__lte=2012)
+  current = McUser.objects.filter(class_year__gt=2012)
+  num_degrees = all_scholars.aggregate(Sum('num_degrees'))
+  context = {
+    'marriage_count': len(married_scholars) / 2,
+    'all_scholars_count': len(all_scholars),
+    'num_degrees': num_degrees['num_degrees__sum'],
+    'alumni_count': len(alumni),
+    'current_count': len(current)
+    }
+  return render(request, 'core/stats.html', context)
 
 @login_required
 def own_profile(request):

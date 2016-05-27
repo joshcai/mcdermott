@@ -13,10 +13,7 @@
 <!-- Name and contact info-->
 <div>
   <div class="profile-name">
-    <h3>{{ profile.get_full_name }}
-    {% if profile.maiden_name %}({{ profile.maiden_name }}){% endif %}
-
-  </h3>
+    <h3>{{ profile.get_full_name_with_maiden }}</h3>
   {% if profile.user|has_role:'staff' %}
     {% if profile.staff_title %}
       <h5 style="margin-top:-8px; margin-bottom: 25px">{{ profile.staff_title }}</h5>
@@ -132,12 +129,11 @@
       {% endif %}
     {% endif %}
     {% if user|has_role:'staff' %}
-      {% if profile.marriage %}
+      {% if profile.married %}
         <p>
           <span class="profile-contact-field staff-only">
-            Marriage:
+            Married to another McDermott, see <a href="{% url 'married' %}">McDermott marriages</a>.
           </span>
-          {{ profile.marriage }}
         </p>
       {% endif %}
       {% if profile.right_after %}
@@ -196,6 +192,12 @@
           {{ profile.personal_news }}
         </p>
       {% endif %}
+      <p>
+        <span class="profile-contact-field staff-only">
+          # of Grad Degrees (completed+in-progress):
+        </span>
+        {{ profile.num_degrees }}
+      </p>
     {% endif %}
   </div>
 </div>
