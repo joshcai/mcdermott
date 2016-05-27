@@ -107,7 +107,7 @@ class McUser(models.Model):
   current_city = models.CharField(max_length=200, blank=True)
   significant_other = models.CharField(max_length=200, blank=True)
   children = models.CharField(max_length=200, blank=True)
-  personal_news = models.CharField(max_length=200, blank=True)
+  personal_news = models.CharField(max_length=2000, blank=True)
   num_degrees = models.IntegerField(default=0, null=True, blank=True)
   # On Selection Committee
   selection = models.BooleanField(default=False)

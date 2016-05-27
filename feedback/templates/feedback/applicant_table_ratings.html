@@ -36,12 +36,15 @@ Feedback - Applicant Table
             <th>R-A</th>
             <th>I-A</th>
             <th>F-A</th>
+            <th>#-A</th>
             <th>R-S</th>
             <th>I-S</th>
             <th>F-S</th>
+            <th>#-S</th>
             <th>R-O</th>
             <th>I-O</th>
             <th>F-O</th>
+            <th>#-O</th>
             <th>R-T</th>
             <th>I-T</th>
             <th>F-T</th>
@@ -61,12 +64,15 @@ Feedback - Applicant Table
               <td>{{ applicant|all_feedback|alumni_filter|rating_average }}</td>
               <td>{{ applicant|all_feedback|alumni_filter|interest_average }}</td>
               <td>{{ applicant|favorite_filter|alumni_filter|length }}</td>
+              <td>{{ applicant|all_feedback|alumni_filter|feedback_count }}</td>
               <td>{{ applicant|all_feedback|senior_filter|rating_average }}</td>
               <td>{{ applicant|all_feedback|senior_filter|interest_average }}</td>
               <td>{{ applicant|favorite_filter|senior_filter|length }}</td>
+              <td>{{ applicant|all_feedback|senior_filter|feedback_count }}</td>
               <td>{{ applicant|all_feedback|other_filter|rating_average }}</td>
               <td>{{ applicant|all_feedback|other_filter|interest_average }}</td>
               <td>{{ applicant|favorite_filter|other_filter|length }}</td>
+              <td>{{ applicant|all_feedback|other_filter|feedback_count }}</td>
               <td>{{ applicant|all_feedback|rating_average }}</td>
               <td>{{ applicant|all_feedback|interest_average }}</td>
               <td>{{ applicant|favorite_filter|length }}</td>
