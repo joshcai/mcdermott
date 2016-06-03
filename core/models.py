@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth.models import User
 from django.db import models
 import watson
@@ -123,6 +125,14 @@ class McUser(models.Model):
     if self.maiden_name:
       name = '%s (%s)' % (name, self.maiden_name)
     return name
+  
+  def is_alumni(self):
+    if not self.class_year:
+      return False
+    now = datetime.now()
+    if now.month > 5 or (now.month == 5 and now.day >= 15):
+      return self.class_year <= now.year - 4
+    return self.class_year < now.year - 4
 
   def save(self, *args, **kwargs):
     self.norm_name = normalize_name(self.get_full_name())

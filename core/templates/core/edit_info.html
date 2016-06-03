@@ -239,6 +239,35 @@ Edit Info
         <span class="error">{{ form.linkedin.errors }}</span>
       </div>
     </div>
+    {% if mcuser.is_alumni %}
+      <div class="col-md-6 col-sm-12">
+        <div class="form-group margin-sm">
+          <label for="id_{{ form.significant_other.name }}" class="form-label staff-only">
+            Significant other:
+          </label>
+          {{ form.significant_other|add_class:"form-control" }}
+          <span class="error">{{ form.significant_other.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <div class="form-group margin-sm">
+          <label for="id_{{ form.children.name }}" class="form-label staff-only">
+            Child(ren):
+          </label>
+          {{ form.children|add_class:"form-control" }}
+          <span class="error">{{ form.children.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-12 col-sm-12">
+        <div class="form-group margin-sm">
+          <label for="id_{{ form.personal_news.name }}" class="form-label staff-only">
+            Personal news:
+          </label>
+          {{ form.personal_news|add_class:"form-control" }}
+          <span class="error">{{ form.personal_news.errors }}</span>
+        </div>
+      </div>
+    {% endif %}
     <!--TODO: Replace this with something else later -->
     <div class="col-md-4 col-md-offset-4 col-sm-12 text-center margin-height-md">
       {{ form.pic }}
@@ -267,33 +296,7 @@ Edit Info
               <span class="error">{{ form.ultimate.errors }}</span>
             </div>
           </div>
-          <div class="col-md-6 col-sm-12">
-            <div class="form-group margin-sm">
-              <label for="id_{{ form.significant_other.name }}" class="form-label">
-                Significant other:
-              </label>
-              {{ form.significant_other|add_class:"form-control" }}
-              <span class="error">{{ form.significant_other.errors }}</span>
-            </div>
-          </div>
-          <div class="col-md-6 col-sm-12">
-            <div class="form-group margin-sm">
-              <label for="id_{{ form.children.name }}" class="form-label">
-                Child(ren):
-              </label>
-              {{ form.children|add_class:"form-control" }}
-              <span class="error">{{ form.children.errors }}</span>
-            </div>
-          </div>
-          <div class="col-md-12 col-sm-12">
-            <div class="form-group margin-sm">
-              <label for="id_{{ form.personal_news.name }}" class="form-label">
-                Personal news:
-              </label>
-              {{ form.personal_news|add_class:"form-control" }}
-              <span class="error">{{ form.personal_news.errors }}</span>
-            </div>
-          </div>
+
           <div class="col-md-6 col-sm-12">
             <div class="form-group margin-sm">
               <label for="id_{{ form.num_degrees.name }}" class="form-label">

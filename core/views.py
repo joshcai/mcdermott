@@ -244,8 +244,8 @@ def married(request):
 def stats(request):
   married_scholars = McUser.objects.filter(married=True)
   all_scholars = McUser.objects.exclude(class_year__isnull=True)
-  alumni = McUser.objects.filter(class_year__lte=2012)
-  current = McUser.objects.filter(class_year__gt=2012)
+  alumni = [scholar for scholar in all_scholars if scholar.is_alumni()]
+  current = [scholar for scholar in all_scholars if not scholar.is_alumni()]
   num_degrees = all_scholars.aggregate(Sum('num_degrees'))
   context = {
     'marriage_count': len(married_scholars) / 2,
