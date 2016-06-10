@@ -279,6 +279,9 @@ def search(request):
   context = {
     'scholars': scholars
     }
+  # go straight to scholar if only one result
+  if len(scholars) == 1:
+    return redirect('profile', scholars[0].norm_name)
   return render(request, 'core/scholars.html', context)
 
 @login_required

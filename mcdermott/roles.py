@@ -21,7 +21,8 @@ class Alumni(AbstractUserRole):
 
 class Dev(AbstractUserRole):
   available_permissions = {
-    'create_users': True
+    'create_users': True,
+    'edit_all_info': True
   }
 
 class ApplicantEditor(AbstractUserRole):

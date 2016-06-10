@@ -17,6 +17,7 @@ class McUserForm(forms.ModelForm):
         'first_name',
         'real_name',
         'last_name',
+        'maiden_name',
         'birthday',
         'gender',
         'class_year',

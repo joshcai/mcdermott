@@ -144,10 +144,10 @@ class Degree(models.Model):
   degree_type = models.CharField(max_length=200, blank=True)
   start_time = models.DateField(null=True, blank=True)
   end_time = models.DateField(null=True, blank=True)
-  major1 = models.CharField(max_length=200, choices=MAJOR_CHOICES, blank=True)
-  major2 = models.CharField(max_length=200, choices=MAJOR_CHOICES, blank=True)
-  minor1 = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
-  minor2 = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
+  major1 = models.CharField(max_length=200, blank=True)
+  major2 = models.CharField(max_length=200, blank=True)
+  minor1 = models.CharField(max_length=200, blank=True)
+  minor2 = models.CharField(max_length=200, blank=True)
 
 EXP_CHOICES = (('', ''), ('Research', 'Research'), ('Internship', 'Internship'),
                ('Volunteer', 'Volunteer'), ('Clubs / Leadership', 'Clubs / Leadership'),

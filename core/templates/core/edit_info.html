@@ -54,13 +54,22 @@ Edit Info
         <span class="error">{{ form.first_name.errors }}</span>
       </div>
     </div>
-    <div class="col-md-6 col-sm-6">
+    <div class="col-md-3 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.last_name.name }}" class="form-label">
           Last name
         </label>
         {{ form.last_name|add_class:"form-control" }}
         <span class="error">{{ form.last_name.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.maiden_name.name }}" class="form-label">
+          Maiden name
+        </label>
+        {{ form.maiden_name|add_class:"form-control" }}
+        <span class="error">{{ form.maiden_name.errors }}</span>
       </div>
     </div>
     <div class="col-md-6 col-sm-6">
