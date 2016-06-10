@@ -61,6 +61,12 @@ class Command(BaseCommand):
         default=False,
         help='Create rest of alumni accounts')
 
+    parser.add_argument('--degrees',
+        action='store_true',
+        dest='degrees',
+        default=False,
+        help='Seed degrees from UTD')
+        
   def add_user(self, username, password, name, class_year, birthday='1/1/2000', superuser=False, email=None):
     if User.objects.filter(username=username).exists():
       user = User.objects.get(username=username)
@@ -266,6 +272,34 @@ class Command(BaseCommand):
     self.stdout.write('Created user %s %s' %
                       (user.mcuser.first_name, user.mcuser.last_name))
 
+  def add_degree(self, alumni):
+    full_name = alumni['NAME']
+    last, first = full_name.split(',')
+    last = last.strip()
+    first = first.strip().split(' ')[0].strip()
+    
+    if McUser.objects.filter(first_name=first, last_name=last).exists():
+      self.stdout.write('Account for user %s %s found' % (first, last))
+      m = McUser.objects.get(first_name=first, last_name=last)
+    elif McUser.objects.filter(first_name__startswith=first, maiden_name=last).exists():
+      self.stdout.write('Account for user %s %s found' % (first, last))
+      m = McUser.objects.get(first_name__startswith=first, maiden_name=last)
+    else:
+      self.stdout.write('!!! Account for user %s %s not found !!!' % (first, last))
+      return
+    d = Degree(
+        user=m,
+        school='University of Texas at Dallas',
+        degree_type=alumni['DEGREE'],
+        major1=alumni['MAJOR1'].strip(),
+        major2=alumni['MAJOR2'].strip(),
+        minor1=alumni['MINOR1'].strip(),
+        minor2=alumni['MINOR2'].strip(),
+      )
+    d.save()
+
+    self.stdout.write('Added degree')
+
 
   def handle(self, *args, **options):
     if options['flush']:
@@ -292,6 +326,11 @@ class Command(BaseCommand):
         alumni_members = list(csv.reader(csvfile))
         for alumni in alumni_members[1:]:
           self.add_alumni_full_from_csv({key: value for (key, value) in zip(alumni_members[0], alumni)})
+    if options['degrees']:
+      with open('degrees.csv', 'rB') as csvfile:
+        alumni_members = list(csv.reader(csvfile))
+        for alumni in alumni_members[1:]:
+          self.add_degree({key: value for (key, value) in zip(alumni_members[0], alumni)})
     if options['testing']:
       josh = self.add_user('joshcai', 'password', 'Josh Cai', 2012, email='jxc124730@utdallas.edu')
       Dev.assign_role_to_user(josh)
