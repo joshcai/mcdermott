@@ -14,7 +14,7 @@ import watson
 import time
 import requests
 
-from forms import McUserForm, DegreeForm, ExperienceForm, StudyAbroadForm, UserForm, HonorForm
+from forms import McUserForm, McUserStaffForm, DegreeForm, ExperienceForm, StudyAbroadForm, UserForm, HonorForm
 from models import McUser, Degree, Experience, StudyAbroad, Honor
 from serializers import UserSerializer
 from util import normalize_name
@@ -51,7 +51,10 @@ def edit_info(request, name):
   if not user_info.user.id == request.user.id and not has_permission(request.user, 'edit_all_info'):
     return redirect('edit_info', request.user.mcuser.norm_name)
   if request.method == 'POST':
-    form = McUserForm(request.POST, request.FILES, instance=user_info, prefix='base')
+    if has_role(request.user, 'staff'):
+      form = McUserStaffForm(request.POST, request.FILES, instance=user_info, prefix='base')
+    else:
+      form = McUserForm(request.POST, request.FILES, instance=user_info, prefix='base')
     if (form.is_valid()):
       mcuser = form.save(commit=False)
       hidden_fields = [key.replace('checkbox_', '') for key in request.POST if key.startswith('checkbox_')]
@@ -63,7 +66,10 @@ def edit_info(request, name):
       update_last_updated(user_info)
       return redirect('edit_info', user_info.norm_name)
   else:
-    form = McUserForm(instance=user_info, prefix='base')
+    if has_role(request.user, 'staff'):
+      form = McUserStaffForm(instance=user_info, prefix='base')
+    else:
+      form = McUserForm(instance=user_info, prefix='base')
   context = {
       'form': form,
       'mcuser': user_info

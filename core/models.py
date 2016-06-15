@@ -183,7 +183,7 @@ class Honor(models.Model):
   received_time = models.DateField(null=True, blank=True)
   
 watson.register(McUser, fields=('first_name', 'last_name', 'gender', 'class_year', 'hometown', 'hometown_state', 'high_school',
-                                'norm_name', 'staff_title', 'maiden_name'))
+                                'norm_name', 'staff_title', 'maiden_name', 'current_city'))
 watson.register(Degree)
 watson.register(Experience)
 watson.register(StudyAbroad)

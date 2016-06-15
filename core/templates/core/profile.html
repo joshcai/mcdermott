@@ -128,7 +128,23 @@
         </p>
       {% endif %}
     {% endif %}
+    {% if profile.current_city %}
+      <p>
+        <span class="profile-contact-field">
+          Current city/area:
+        </span>
+        {{ profile.current_city }}
+      </p>
+    {% endif %}
     {% if user|has_role:'staff' %}
+      {% if profile.in_dfw %}
+        <p>
+          <span class="profile-contact-field staff-only">
+            Currently in DFW Area?:
+          </span>
+          {{ profile.in_dfw }}
+        </p>
+      {% endif %}
       {% if profile.married %}
         <p>
           <span class="profile-contact-field staff-only">
@@ -152,22 +168,7 @@
           {{ profile.ultimate }}
         </p>
       {% endif %}
-      {% if profile.in_dfw %}
-        <p>
-          <span class="profile-contact-field staff-only">
-            Currently in DFW Area?:
-          </span>
-          {{ profile.in_dfw }}
-        </p>
-      {% endif %}
-      {% if profile.current_city %}
-        <p>
-          <span class="profile-contact-field staff-only">
-            Current city/area:
-          </span>
-          {{ profile.current_city }}
-        </p>
-      {% endif %}
+
       {% if profile.significant_other %}
         <p>
           <span class="profile-contact-field staff-only">

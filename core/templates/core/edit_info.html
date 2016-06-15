@@ -127,6 +127,24 @@ Edit Info
         <span class="error">{{ form.hometown_state.errors }}</span>
       </div>
     </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.in_dfw.name }}" class="form-label staff-only">
+          Currently in DFW?
+        </label>
+        {{ form.in_dfw|add_class:"form-control" }}
+        <span class="error">{{ form.in_dfw.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.current_city.name }}" class="form-label">
+          Current City (e.g. Richardson, TX)
+        </label>
+        {{ form.current_city|add_class:"form-control" }}
+        <span class="error">{{ form.current_city.errors }}</span>
+      </div>
+    </div>
     <div class="col-md-3 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.mailing_address.name }}" class="form-label address-label">

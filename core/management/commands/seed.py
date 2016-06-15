@@ -60,6 +60,12 @@ class Command(BaseCommand):
         dest='alumnifull',
         default=False,
         help='Create rest of alumni accounts')
+        
+    parser.add_argument('--alumnifullfix',
+        action='store_true',
+        dest='alumnifullfix',
+        default=False,
+        help='Fix alumni accounts')
 
     parser.add_argument('--degrees',
         action='store_true',
@@ -271,6 +277,35 @@ class Command(BaseCommand):
 
     self.stdout.write('Created user %s %s' %
                       (user.mcuser.first_name, user.mcuser.last_name))
+                      
+  def add_alumni_full_from_csv_fix(self, alumni):
+    username = self.getUsername(alumni['Email'])
+    combined = '%s %s' % (alumni['Last'], alumni['Married Name'])
+    if User.objects.filter(username=username).exists():
+      user = User.objects.get(username=username)
+    elif McUser.objects.filter(first_name=alumni['First'], last_name=alumni['Last']).exists():
+      user = McUser.objects.get(first_name=alumni['First'], last_name=alumni['Last']).user
+    elif McUser.objects.filter(first_name=alumni['First'], last_name=combined).exists():
+      user = McUser.objects.get(first_name=alumni['First'], last_name=combined).user
+    else:
+      self.stdout.write('!!! Account for user %s %s not found !!!' % (alumni['First'], alumni['Last']))
+    user.mcuser.married = True if alumni['marriage'] else False
+    if not user.mcuser.num_degrees:
+      user.mcuser.num_degrees = int(alumni['num grad degrees']) if alumni['num grad degrees'] else 0
+    if not user.mcuser.right_after:
+      user.mcuser.right_after = alumni['right_after']
+    if not user.mcuser.ultimate:
+      user.mcuser.ultimate = alumni['ultimate']
+    if not user.mcuser.in_dfw:
+      user.mcuser.in_dfw = alumni['Currently in DFW'].title()
+    else:
+      user.mcuser.in_dfw = user.mcuser.in_dfw.title()
+    if not user.mcuser.current_city:
+      user.mcuser.current_city = alumni['Current City']
+    user.mcuser.save()
+
+    self.stdout.write('Updated user %s %s' %
+                      (user.mcuser.first_name, user.mcuser.last_name))
 
   def add_degree(self, alumni):
     full_name = alumni['NAME']
@@ -322,6 +357,11 @@ class Command(BaseCommand):
         for alumni in alumni_members[1:]:
           self.add_alumni_from_csv({key: value for (key, value) in zip(alumni_members[0], alumni)})
     if options['alumnifull']:
+      with open('alumni_full.csv', 'rB') as csvfile:
+        alumni_members = list(csv.reader(csvfile))
+        for alumni in alumni_members[1:]:
+          self.add_alumni_full_from_csv({key: value for (key, value) in zip(alumni_members[0], alumni)})
+    if options['alumnifullfix']:
       with open('alumni_full.csv', 'rB') as csvfile:
         alumni_members = list(csv.reader(csvfile))
         for alumni in alumni_members[1:]:

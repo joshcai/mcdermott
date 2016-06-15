@@ -21,7 +21,59 @@ class McUserForm(forms.ModelForm):
         'birthday',
         'gender',
         'class_year',
-        'utd_id',
+        'hometown',
+        'hometown_state',
+        'high_school',
+        'phone_number',
+        'id',
+        'pic',
+        'staff_title',
+        'staff_phone',
+        'linkedin',
+        'website',
+        'facebook',
+        'email',
+        'dorm_type',
+        'dorm_number',
+        'mailing_address',
+        'mailing_city',
+        'mailing_state',
+        'mailing_zip',
+        'mailing_country',
+        'mailing_address_type',
+        'in_dfw',
+        'current_city',
+        'significant_other',
+        'children',
+        'personal_news',
+    ]
+    widgets = {
+        'id': forms.HiddenInput(),
+        'pic': ImageThumbnailInput,
+        'birthday': DateInput(),
+        'mailing_address_type': forms.Select(
+            choices=(('', ''),
+                     ('parent', 'parent address'),
+                     ('alum', 'current alum address'))),
+        'in_dfw': forms.Select(
+            choices=(('', ''),
+                     ('Yes', 'Yes'),
+                     ('No', 'No'))),
+        'personal_news': forms.Textarea(attrs={'rows':4, 'cols':15}),
+    }
+
+
+class McUserStaffForm(forms.ModelForm):
+  class Meta:
+    model = McUser
+    fields = [
+        'first_name',
+        'real_name',
+        'last_name',
+        'maiden_name',
+        'birthday',
+        'gender',
+        'class_year',
         'hometown',
         'hometown_state',
         'high_school',
@@ -65,6 +117,10 @@ class McUserForm(forms.ModelForm):
                      ('grad', 'grad'),
                      ('employment', 'employment'),
                      ('prof', 'prof'))),
+        'in_dfw': forms.Select(
+            choices=(('', ''),
+                     ('Yes', 'Yes'),
+                     ('No', 'No'))),
         'ultimate': forms.Select(
             choices=(('', ''),
                      ('grad', 'grad'),
