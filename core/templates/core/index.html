@@ -42,6 +42,12 @@ McDermott Network
       {% if user|has_role:'staff' %}
       <br>
       <a href="{% url 'stats' %}">Stats</a>
+      <br>
+      <a href="{% url 'export_scholars' 'all' %}">Export All Scholars</a>
+      <br>
+      <a href="{% url 'export_scholars' 'current' %}">Export Current Scholars</a>
+      <br>
+      <a href="{% url 'export_scholars' 'alumni' %}">Export Alumni</a>
       {% endif %}
     </div>
   </form>

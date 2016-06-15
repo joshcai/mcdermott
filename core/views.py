@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db.models import Sum
 from django.forms.models import modelformset_factory
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from rolepermissions.verifications import has_role, has_permission
@@ -13,6 +13,8 @@ import watson
 
 import time
 import requests
+from tempfile import NamedTemporaryFile
+from xlwt import Workbook
 
 from forms import McUserForm, McUserStaffForm, DegreeForm, ExperienceForm, StudyAbroadForm, UserForm, HonorForm
 from models import McUser, Degree, Experience, StudyAbroad, Honor
@@ -347,6 +349,73 @@ def activate_users(request):
     'activated': McUser.objects.filter(activated=True).count(),
   }
   return render(request, 'core/activate_users.html', context)
+
+def get_field(degree):
+  if not degree.major2 and not degree.minor1 and not degree.minor2:
+    return degree.major1
+  majors = []
+  if degree.major1:
+    majors.append(degree.major1)
+  if degree.major2:
+    majors.append(degree.major2)
+  minors = []
+  if degree.minor1:
+    minors.append(degree.minor1)
+  if degree.minor2:
+    minors.append(degree.minor2)
+  if not minors:
+    return ', '.join(majors)
+  majors = 'Major: %s' % ', '.join(majors)
+  minors = 'Minor: %s' % ', '.join(minors)
+  return '%s; %s' % (majors, minors)
+  
+@has_role_decorator(['staff', 'dev'])
+def export_scholars(request, kind):
+  all_scholars = McUser.objects.exclude(class_year__isnull=True).order_by('last_name')
+  if kind == 'alumni':
+    scholars = [scholar for scholar in all_scholars if scholar.is_alumni()]
+  elif kind == 'current':
+    scholars = [scholar for scholar in all_scholars if not scholar.is_alumni()]
+  elif kind == 'all':
+    scholars = all_scholars
+  else:
+    raise Http404('Page does not exist.')
+  max_degrees = 0
+  for scholar in scholars:
+    if scholar.degrees.count() > max_degrees:
+      max_degrees = scholar.degrees.count()
+  book = Workbook()
+  sheet1 = book.add_sheet('Scholars (%s)' % kind)
+  sheet1_headings = ['Class', 'First', 'Last', 'Married Name', 'McD Marriage', 'Right after McD', 'Ultimately grad/prof?',
+                     '# Grad degrees (completed+in-progress)']
+  for i in xrange(max_degrees):
+    sheet1_headings.extend(['School #%d' % (i+1), 'Field #%d' % (i+1), 'Degree #%d' % (i+1)])
+  for i, heading in enumerate(sheet1_headings):
+    sheet1.write(0, i, heading)
+  
+  for i, scholar in enumerate(scholars):
+    sheet1_fields = [
+      scholar.class_year,
+      scholar.first_name,
+      scholar.maiden_name if scholar.maiden_name else scholar.last_name,
+      scholar.last_name if scholar.maiden_name else '',
+      0.5 if scholar.married else None,
+      scholar.right_after,
+      scholar.ultimate,
+      scholar.num_degrees,
+      ]
+    for degree in scholar.degrees.all():
+      sheet1_fields.extend([degree.school, get_field(degree), degree.degree_type])
+    for j, field in enumerate(sheet1_fields):
+      sheet1.write(i+1, j, field)
+      
+  with NamedTemporaryFile() as f:
+    book.save(f)
+    f.seek(0)
+    response = HttpResponse(f, content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="scholars-%s.xls"' % kind
+    return response
+
 
 @login_required
 def documents(request):
