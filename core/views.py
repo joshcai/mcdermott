@@ -390,6 +390,9 @@ def export_scholars(request, kind):
                      '# Grad degrees (completed+in-progress)']
   for i in xrange(max_degrees):
     sheet1_headings.extend(['School #%d' % (i+1), 'Field #%d' % (i+1), 'Degree #%d' % (i+1)])
+  sheet1_headings.extend(['Employment', 'Last updated', 'Address', 'City', 'State', 'Zip', 'Country', 'Parent or alum address',
+                          'Email', 'Phone', 'Website', 'Currently in DFW Area?', 'Current City', 'Significant Other',
+                          'Child(ren)', 'Personal news to share with the staff'])
   for i, heading in enumerate(sheet1_headings):
     sheet1.write(0, i, heading)
   
@@ -406,6 +409,32 @@ def export_scholars(request, kind):
       ]
     for degree in scholar.degrees.all():
       sheet1_fields.extend([degree.school, get_field(degree), degree.degree_type])
+    # extend for scholars who don't have max num of degrees
+    sheet1_fields.extend([''] * 3 * (max_degrees - scholar.degrees.count()))
+    exps = []
+    for exp in scholar.experiences.all():
+      e = exp.organization
+      if exp.location:
+        e += ' (%s)' % exp.location
+      exps.append(e)
+    sheet1_fields.append('; '.join(exps))
+    sheet1_fields.extend([
+      scholar.updated_alumni_info,
+      scholar.mailing_address,
+      scholar.mailing_city,
+      scholar.mailing_state,
+      scholar.mailing_zip,
+      scholar.mailing_country,
+      scholar.mailing_address_type,
+      scholar.email,
+      scholar.phone_number,
+      scholar.website,
+      scholar.in_dfw,
+      scholar.current_city,
+      scholar.significant_other,
+      scholar.children,
+      scholar.personal_news
+    ])
     for j, field in enumerate(sheet1_fields):
       sheet1.write(i+1, j, field)
       
