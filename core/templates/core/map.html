@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% load widget_tweaks %}
+{% load staticfiles %}
+{% load permission_tags %}
+
+{% block titleend %}
+Map
+{% endblock %}
+
+{% block content %}
+
+<div class="col-md-12 text-center" style="height:500px">
+  <div style="height:100%;width:100%" id="map"></div>
+</div>
+<script>
+  var map;
+  function escapeHtml(unsafe) {
+    return unsafe
+     .replace(/&/g, "&amp;")
+     .replace(/</g, "&lt;")
+     .replace(/>/g, "&gt;")
+     .replace(/"/g, "&quot;")
+     .replace(/'/g, "&#039;");
+  }
+  function makeContentString(place, scholars) {
+    var contentString = `<div><h4>${escapeHtml(place)}</h4>`;
+    for(var i=0; i < scholars.length; i++) {
+      var scholar = scholars[i];
+      contentString += `<a href="/${scholar.replace(/[^a-zA-z]/g, '')}">${escapeHtml(scholar)}</a>`;
+      if(i < scholars.length - 1) {
+        contentString += ', ';
+      }
+    }
+    contentString += '</div>';
+    return contentString;
+  }
+  function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 39, lng: -98},
+      zoom: 4
+    });
+    var geocoder = new google.maps.Geocoder();
+    $.get('/locations', function(cities) {
+      for(var city in cities) {
+        if (!cities.hasOwnProperty(city)) {
+            continue;
+        }
+        geocodeAddress(geocoder, city, map, cities[city]['scholars'], cities[city]['location']);
+      }
+    });
+  }
+  function geocodeAddress(geocoder, address, resultsMap, scholars, location) {
+    console.log(location);
+    var marker = new google.maps.Marker({
+      map: resultsMap,
+      position: {lat: location[0], lng: location[1]},
+      title: address
+    });
+    var infoWindow = new google.maps.InfoWindow({
+      content: makeContentString(address, scholars)
+    });
+    marker.addListener('click', function() {
+      infoWindow.open(resultsMap, marker);
+    });
+  }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3&key={{google_api_key}}&callback=initMap" async defer></script>
+
+{% endblock %}
