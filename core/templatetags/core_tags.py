@@ -43,4 +43,4 @@ def pwrap(value):
 
 @register.inclusion_tag('macro/directory_header.html')
 def directory_header(active):
-  return {'active': active, 'class_years': [str(x) for x in range(2001, 2016)]}
+  return {'active': active, 'class_years': [str(x) for x in range(2001, 2017)]}

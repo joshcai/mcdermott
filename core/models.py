@@ -54,7 +54,7 @@ class McUser(models.Model):
       ('', ''),
       (2000, '2000'), (2001, '2001'), (2002, '2002'), (2003, '2003'), (2004, '2004'), (2005, '2005'),
       (2006, '2006'), (2007, '2007'), (2008, '2008'), (2009, '2009'), (2010, '2010'), (2011, '2011'),
-      (2012, '2012'), (2013, '2013'), (2014, '2014'), (2015, '2015')
+      (2012, '2012'), (2013, '2013'), (2014, '2014'), (2015, '2015'), (2016, '2016')
   )
 
   class_year = models.IntegerField(choices=YEARS, null=True, blank=True)
@@ -117,6 +117,14 @@ class McUser(models.Model):
   def get_full_name(self):
     return '%s %s' % (self.first_name, self.last_name)
     
+  def get_full_name_last_first(self):
+    return '%s %s' % (self.last_name, self.first_name)
+    
+  def get_full_name_with_year(self):
+    if not self.class_year:
+     return self.get_full_name()
+    return '%s %s \'%.2d' % (self.first_name, self.last_name, self.class_year - 2000)
+    
   def get_full_name_for_link(self):
     return ''.join([c for c in self.get_full_name() if c.isalpha()])
     
@@ -137,6 +145,24 @@ class McUser(models.Model):
   def save(self, *args, **kwargs):
     self.norm_name = normalize_name(self.get_full_name())
     super(McUser, self).save(*args, **kwargs)
+  
+  def __lt__(self, other):
+    # implement sorting function
+    
+    # staff should be ahead of scholars
+    if not self.class_year and other.class_year:
+      return True
+    if self.class_year and not other.class_year:
+      return False
+      
+    # then order by class year
+    if self.class_year < other.class_year:
+      return True
+    if self.class_year > other.class_year:
+      return False
+      
+    # then order by name (last, first)
+    return self.get_full_name_last_first() < other.get_full_name_last_first()
 
 class Degree(models.Model):
   user = models.ForeignKey(McUser, related_name='degrees')
@@ -181,6 +207,12 @@ class Honor(models.Model):
   user = models.ForeignKey(McUser, related_name='honors')
   title = models.CharField(max_length=200, blank=True)
   received_time = models.DateField(null=True, blank=True)
+
+class City(models.Model):
+  real_name = models.CharField(max_length=200, blank=True)
+  norm_name = models.CharField(max_length=200, blank=True)
+  lat = models.FloatField(blank=True, null=True)
+  lng = models.FloatField(blank=True, null=True)
   
 watson.register(McUser, fields=('first_name', 'last_name', 'gender', 'class_year', 'hometown', 'hometown_state', 'high_school',
                                 'norm_name', 'staff_title', 'maiden_name', 'current_city'))

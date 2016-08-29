@@ -4,27 +4,29 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db.models import Sum
 from django.forms.models import modelformset_factory
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from rolepermissions.verifications import has_role, has_permission
 from rolepermissions.decorators import has_role_decorator
 import watson
+import geocoder
 
+from collections import defaultdict
 import time
 import requests
 from tempfile import NamedTemporaryFile
 from xlwt import Workbook
 
 from forms import McUserForm, McUserStaffForm, DegreeForm, ExperienceForm, StudyAbroadForm, UserForm, HonorForm
-from models import McUser, Degree, Experience, StudyAbroad, Honor
+from models import McUser, Degree, Experience, StudyAbroad, Honor, City
 from serializers import UserSerializer
 from util import normalize_name
 
 try:
-  from mcdermott.config import GA_TRACKING_ID
+  from mcdermott.config import GA_TRACKING_ID, GOOGLE_API_KEY
 except ImportError:
-  from mcdermott.example_config import GA_TRACKING_ID
+  from mcdermott.example_config import GA_TRACKING_ID, GOOGLE_API_KEY
 
 DegreeFormSet = modelformset_factory(Degree, form=DegreeForm, extra=1, can_delete=True)
 ExperienceFormSet = modelformset_factory(Experience, form=ExperienceForm, extra=1, can_delete=True)
@@ -291,7 +293,51 @@ def search(request):
   if len(scholars) == 1:
     return redirect('profile', scholars[0].norm_name)
   return render(request, 'core/scholars.html', context)
+  
+def normalize_location(place):
+  split = place.split(' ')
+  return ' '.join([x.lower() for x in split if x.isalnum()])
+  
+def get_location_geocoded(city_norm, city_real):
+  geo_real = '' # send this to geocoder if one of the special cases
+  if city_norm == 'bay area':
+    geo_real = 'San Franciso'
+  elif city_norm == 'nola':
+    geo_real = 'New Orleans'
+  elif city_norm == 'socal':
+    geo_real = 'Anaheim'
+  city, created = City.objects.get_or_create(norm_name=city_norm)
+  if not created:
+    return (city.lat, city.lng)
+  city.real_name = city_real
+  g = geocoder.arcgis(geo_real or city_real)
+  city.lat, city.lng = g.latlng
+  city.save()
+  return (city.lat, city.lng)
 
+@login_required
+def get_scholar_locations(request):
+  all_scholars = McUser.objects.exclude(class_year__isnull=True)
+  loc_users = {}
+  loc_to_full_name = {}
+  
+  for user in sorted(all_scholars):
+    if not user.current_city:
+      continue
+    location = normalize_location(user.current_city)
+    if location not in loc_to_full_name:
+      loc_to_full_name[location] = user.current_city
+      loc_users[user.current_city] = {}
+      loc_users[user.current_city]['location'] = get_location_geocoded(location, user.current_city)
+      loc_users[user.current_city]['scholars'] = []
+    # This makes sure only one real city name gets used as key.
+    loc_users[loc_to_full_name[location]]['scholars'].append(user.get_full_name_with_year())
+    
+  return JsonResponse(loc_users, safe=False)
+    
+def scholar_map(request):
+  return render(request, 'core/map.html', {'google_api_key': GOOGLE_API_KEY})
+  
 @login_required
 def profile(request, name):
   name = normalize_name(name)
@@ -390,6 +436,9 @@ def export_scholars(request, kind):
                      '# Grad degrees (completed+in-progress)']
   for i in xrange(max_degrees):
     sheet1_headings.extend(['School #%d' % (i+1), 'Field #%d' % (i+1), 'Degree #%d' % (i+1)])
+  sheet1_headings.extend(['Employment', 'Last updated', 'Address', 'City', 'State', 'Zip', 'Country', 'Parent or alum address',
+                          'Email', 'Phone', 'Website', 'Currently in DFW Area?', 'Current City', 'Significant Other',
+                          'Child(ren)', 'Personal news to share with the staff'])
   for i, heading in enumerate(sheet1_headings):
     sheet1.write(0, i, heading)
   
@@ -406,6 +455,32 @@ def export_scholars(request, kind):
       ]
     for degree in scholar.degrees.all():
       sheet1_fields.extend([degree.school, get_field(degree), degree.degree_type])
+    # extend for scholars who don't have max num of degrees
+    sheet1_fields.extend([''] * 3 * (max_degrees - scholar.degrees.count()))
+    exps = []
+    for exp in scholar.experiences.all():
+      e = exp.organization
+      if exp.location:
+        e += ' (%s)' % exp.location
+      exps.append(e)
+    sheet1_fields.append('; '.join(exps))
+    sheet1_fields.extend([
+      scholar.updated_alumni_info,
+      scholar.mailing_address,
+      scholar.mailing_city,
+      scholar.mailing_state,
+      scholar.mailing_zip,
+      scholar.mailing_country,
+      scholar.mailing_address_type,
+      scholar.email,
+      scholar.phone_number,
+      scholar.website,
+      scholar.in_dfw,
+      scholar.current_city,
+      scholar.significant_other,
+      scholar.children,
+      scholar.personal_news
+    ])
     for j, field in enumerate(sheet1_fields):
       sheet1.write(i+1, j, field)
       
