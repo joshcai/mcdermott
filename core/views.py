@@ -299,15 +299,23 @@ def normalize_location(place):
   return ' '.join([x.lower() for x in split if x.isalnum()])
   
 def get_location_geocoded(city_norm, city_real):
+  geo_real = '' # send this to geocoder if one of the special cases
+  if city_norm == 'bay area':
+    geo_real = 'San Franciso'
+  elif city_norm == 'nola':
+    geo_real = 'New Orleans'
+  elif city_norm == 'socal':
+    geo_real = 'Anaheim'
   city, created = City.objects.get_or_create(norm_name=city_norm)
   if not created:
     return (city.lat, city.lng)
   city.real_name = city_real
-  g = geocoder.arcgis(city_real)
+  g = geocoder.arcgis(geo_real or city_real)
   city.lat, city.lng = g.latlng
   city.save()
   return (city.lat, city.lng)
-  
+
+@login_required
 def get_scholar_locations(request):
   all_scholars = McUser.objects.exclude(class_year__isnull=True)
   loc_users = {}

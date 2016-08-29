@@ -100,24 +100,24 @@ class Command(BaseCommand):
 
   def add_from_csv(self, scholar):
     if not scholar['UTD email']:
-      self.stdout.write('No email found for %s' % (scholar['V3']))
+      self.stdout.write('No email found for %s' % (scholar['Pref First']))
       return
     username = self.getUsername(scholar['UTD email'])
     if User.objects.filter(username=username).exists():
-      self.stdout.write('Account for user %s already exists' % scholar['V3'])
+      self.stdout.write('Account for user %s already exists' % scholar['Pref First'])
       user = User.objects.get(username=username)
     else:
-      user = User.objects.create_user(username, email=scholar['UTD email'].lower(), password=randomString())
-    user.mcuser.real_name = scholar['First']
+      user = User.objects.create_user(username, email=scholar['UTD email'].lower(), password=DEFAULT_PASSWORD)
+    user.mcuser.real_name = scholar.get('First', '')
     user.mcuser.first_name = scholar['Pref First']
-    user.mcuser.middle_name = scholar['Middle']
+    user.mcuser.middle_name = scholar.get('Middle', '')
     user.mcuser.last_name = scholar['Last']
     user.mcuser.gender = ('Male' if scholar['Title'] == 'Mr.' else 'Female')
     user.mcuser.class_year = scholar['Class']
-    if scholar['DOB']:
-      user.mcuser.birthday = self.convertDate(scholar['DOB'])
-    user.mcuser.email = scholar['UTD email']
-    user.mcuser.phone_number = scholar['Cell']
+    if scholar.get('DOB', ''):
+      user.mcuser.birthday = self.convertDate(scholar.get('DOB', ''))
+    user.mcuser.email = scholar.get('UTD email', '')
+    user.mcuser.phone_number = scholar.get('Cell', '')
     user.mcuser.save()
     CurrentScholar.assign_role_to_user(user)
     Scholar.assign_role_to_user(user)
@@ -342,7 +342,7 @@ class Command(BaseCommand):
       User.objects.all().delete()
       self.stdout.write('%s users in the database' % User.objects.all().count())
     if options['scholars']:
-      with open('scholars.csv', 'rU') as csvfile:
+      with open('freshmen.csv', 'rU') as csvfile:
         scholars = list(csv.reader(csvfile))
         for scholar in scholars[1:]:
           self.add_from_csv({key: value for (key, value) in zip(scholars[0], scholar)})
