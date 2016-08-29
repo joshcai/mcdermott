@@ -365,7 +365,7 @@ class Command(BaseCommand):
       with open('alumni_full.csv', 'rB') as csvfile:
         alumni_members = list(csv.reader(csvfile))
         for alumni in alumni_members[1:]:
-          self.add_alumni_full_from_csv({key: value for (key, value) in zip(alumni_members[0], alumni)})
+          self.add_alumni_full_from_csv_fix({key: value for (key, value) in zip(alumni_members[0], alumni)})
     if options['degrees']:
       with open('degrees.csv', 'rB') as csvfile:
         alumni_members = list(csv.reader(csvfile))
