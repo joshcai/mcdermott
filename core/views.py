@@ -176,21 +176,34 @@ def edit_honor(request, name):
   return render(request, 'core/edit_honor.html', context)
   
 @login_required
-def edit_account(request):
-  user = request.user
+def edit_account(request, name=None):
+  if name and not has_role(request.user, ['staff', 'dev']):
+    return redirect('/edit_account')
+
+  potential_success_message = 'Changes saved!'
+  if request.path == '/add_user':
+    potential_success_message = 'New user created!'
+    user = User()
+  elif name:
+    user = McUser.objects.get(norm_name=normalize_name(name))
+  else:
+    user = request.user
+
   if request.method == 'POST':
-    user_form = UserForm(request.POST, instance=user)
-    if (user_form.is_valid()):
+    user_form = UserForm(request.POST, instance=user, user=user)
+    if user_form.is_valid():
       user_form.save()
       messages.add_message(
         request, messages.SUCCESS,
-        'Changes saved!')
-      return redirect('edit_account')
+        potential_success_message)
+      return render(request, 'core/edit_account.html', {})
+    else:
+      user_form = UserForm(instance=user, user=user)
   else:
-    user_form = UserForm(instance=user)
+    user_form = UserForm(instance=user, user=user)
   context = {
-      'form': user_form
-      }
+    'form': user_form
+  }
   return render(request, 'core/edit_account.html', context)
 
 def sign_up(request):

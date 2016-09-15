@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 import floppyforms as forms
 from functools import partial
 
+from django.core.exceptions import ValidationError
 from models import McUser, Degree, Experience, StudyAbroad, Honor
 
 DateInput = partial(forms.TextInput, {'class': 'datepicker'})
@@ -209,10 +210,31 @@ class HonorForm(forms.ModelForm):
       'user': forms.HiddenInput(),
       'received_time': DateInput(),
     }
+
+
 class UserForm(forms.ModelForm):
+  new_password = forms.CharField(widget=forms.PasswordInput())
+  new_password_confirm = forms.CharField(widget=forms.PasswordInput())
+
   class Meta:
     model = User
     fields = [
       'username',
       'email',
     ]
+
+  def __init__(self, *args, **kwargs):
+    self.user = kwargs.pop('user', None)
+    super(UserForm, self).__init__(*args, **kwargs)
+
+  def clean(self):
+    cleaned_data = super(UserForm, self).clean()
+    new_password = cleaned_data.get('new_password')
+    new_password_confirm = cleaned_data.get('new_password_confirm')
+
+    if new_password != new_password_confirm:
+      raise ValidationError('Password fields did not match.')
+
+  def save(self, commit=True):
+    self.user.set_password(self.cleaned_data['new_password'])
+    return super(UserForm, self).save(commit=commit)
