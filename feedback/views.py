@@ -20,7 +20,10 @@ from templatetags.feedback_tags import *
 
 from mcdermott.roles import ApplicantEditor
 
-from mcdermott.config import GA_TRACKING_ID
+try:
+  from mcdermott.config import GA_TRACKING_ID
+except ImportError:
+  from mcdermott.example_config import GA_TRACKING_ID
 
 def restrict_access(f):
   @wraps(f)
