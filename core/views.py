@@ -185,7 +185,7 @@ def edit_account(request, name=None):
     potential_success_message = 'New user created!'
     user = User()
   elif name:
-    user = McUser.objects.get(norm_name=normalize_name(name))
+    user = McUser.objects.get(norm_name=normalize_name(name)).user
   else:
     user = request.user
 
