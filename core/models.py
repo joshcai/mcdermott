@@ -17,10 +17,7 @@ MINOR_CHOICES = sorted(MINOR_CHOICES, key=lambda major:major[0]) #Remove when sc
 
 class McUser(models.Model):
   """Fields from default User model:
-    title
     username
-    first_name
-    last_name
     email
     password
     groups
@@ -39,7 +36,6 @@ class McUser(models.Model):
   middle_name = models.CharField(max_length=200, blank=True)
   last_name = models.CharField(max_length=200, blank=True)
   maiden_name = models.CharField(max_length=200, blank=True)
-  #title = models.CharField(max_length=200, blank=True)
 
   #title for names
   TITLE_CHOICES = (('',''), ('Mr.', 'Mr.'), ('Mrs.', 'Mrs.'), ('Ms.', 'Ms.'), ('Dr.', 'Dr.'))
