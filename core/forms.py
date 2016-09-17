@@ -15,6 +15,7 @@ class McUserForm(forms.ModelForm):
   class Meta:
     model = McUser
     fields = [
+        'title',
         'first_name',
         'real_name',
         'last_name',
@@ -68,6 +69,7 @@ class McUserStaffForm(forms.ModelForm):
   class Meta:
     model = McUser
     fields = [
+        'title',
         'first_name',
         'real_name',
         'last_name',
