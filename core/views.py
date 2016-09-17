@@ -21,7 +21,7 @@ from xlwt import Workbook
 from forms import McUserForm, McUserStaffForm, DegreeForm, ExperienceForm, StudyAbroadForm, UserForm, HonorForm
 from models import McUser, Degree, Experience, StudyAbroad, Honor, City
 from serializers import UserSerializer
-from util import normalize_name
+from util import normalize_name, log_slack
 
 try:
   from mcdermott.config import GA_TRACKING_ID, GOOGLE_API_KEY
@@ -36,6 +36,7 @@ HonorFormSet = modelformset_factory(Honor, form=HonorForm, extra=1, can_delete=T
 # Create your views here.
 def index(request):
   if request.user.is_authenticated() and not request.user.mcuser.activated:
+    log_slack('User `%s` activated' %request.user.username)
     request.user.mcuser.activated = True
     request.user.mcuser.save()
   context = {

@@ -19,6 +19,7 @@ python-memcached==1.54
 ratelim==0.1.6
 requests==2.8.0
 setproctitle==1.1.9
+slackclient==1.0.1
 six==1.10.0
 sorl-thumbnail==12.3
 xlwt==1.0.0
