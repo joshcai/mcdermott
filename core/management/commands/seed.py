@@ -379,5 +379,6 @@ class Command(BaseCommand):
       self.add_user('atvaccaro', 'password', 'Andrew Vaccaro', 2013, email='andrew.vaccaro@utdallas.edu')
       self.add_user('hajieren', 'password', 'Hans Ajieren', 2014)
       self.add_user('dhruvn', 'password', 'Dhruv Narayanan', 2014)
+      self.add_user('testn', 'pwd', 'Test Narayanan', 2014)
       self.add_user('admin', 'password', 'Admin User', 2000, superuser=True,
                     email='admin@test.com')
