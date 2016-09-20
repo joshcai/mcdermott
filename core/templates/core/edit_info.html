@@ -388,4 +388,20 @@ Edit Info
     $('.datepicker').datepicker();
   });
 </script>
+<script>
+$(function() {
+  var locations = [];
+  $.get('/locations', function(cities) {
+    for(var city in cities) {
+      if (cities.hasOwnProperty(city)) {
+        locations.push(city);
+      }
+    }
+  });
+  console.log(locations);
+  $("#id_base-current_city").autocomplete({
+    source: locations
+  });
+});
+</script>
 {% endblock %}
