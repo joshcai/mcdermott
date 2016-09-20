@@ -446,7 +446,7 @@ def export_scholars(request, kind):
       max_degrees = scholar.degrees.count()
   book = Workbook()
   sheet1 = book.add_sheet('Scholars (%s)' % kind)
-  sheet1_headings = ['Class', 'First', 'Last', 'Married Name', 'McD Marriage', 'Right after McD', 'Ultimately grad/prof?',
+  sheet1_headings = ['Class', 'Title', 'First', 'Last', 'Married Name', 'McD Marriage', 'Right after McD', 'Ultimately grad/prof?',
                      '# Grad degrees (completed+in-progress)']
   for i in xrange(max_degrees):
     sheet1_headings.extend(['School #%d' % (i+1), 'Field #%d' % (i+1), 'Degree #%d' % (i+1)])
@@ -459,6 +459,7 @@ def export_scholars(request, kind):
   for i, scholar in enumerate(scholars):
     sheet1_fields = [
       scholar.class_year,
+      scholar.title,
       scholar.first_name,
       scholar.maiden_name if scholar.maiden_name else scholar.last_name,
       scholar.last_name if scholar.maiden_name else '',

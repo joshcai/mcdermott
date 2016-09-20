@@ -18,8 +18,6 @@ MINOR_CHOICES = sorted(MINOR_CHOICES, key=lambda major:major[0]) #Remove when sc
 class McUser(models.Model):
   """Fields from default User model:
     username
-    first_name
-    last_name
     email
     password
     groups
@@ -38,7 +36,10 @@ class McUser(models.Model):
   middle_name = models.CharField(max_length=200, blank=True)
   last_name = models.CharField(max_length=200, blank=True)
   maiden_name = models.CharField(max_length=200, blank=True)
-  title = models.CharField(max_length=200, blank=True)
+
+  #title for names
+  TITLE_CHOICES = (('',''), ('Mr.', 'Mr.'), ('Mrs.', 'Mrs.'), ('Ms.', 'Ms.'), ('Dr.', 'Dr.'))
+  title = models.CharField(max_length=4, choices=TITLE_CHOICES, blank=True)
   # Real first name
   real_name = models.CharField(max_length=200, blank=True)
 
@@ -129,7 +130,7 @@ class McUser(models.Model):
     return ''.join([c for c in self.get_full_name() if c.isalpha()])
     
   def get_full_name_with_maiden(self):
-    name = '%s %s' % (self.first_name, self.last_name)
+    name = '%s %s %s' % (self.title, self.first_name, self.last_name)
     if self.maiden_name:
       name = '%s (%s)' % (name, self.maiden_name)
     return name

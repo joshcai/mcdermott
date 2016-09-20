@@ -45,7 +45,16 @@ Edit Info
     {% endfor %}
 
     <!-- Manual HTML for McUser form -->
-    <div class="col-md-6 col-sm-6 col-sm-6">
+    <div class = "col-md-1 col-sm-1 col-sm-1">
+      <div class="form-group margin-sm">
+        <label for = "id_{{ form.title.name }}" class="form-label">
+          Title
+        </label>
+        {{ form.title|add_class:"form-control" }}
+        <span class = "error">{{ form.title.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-5 col-sm-5 col-sm-5">
       <div class="form-group margin-sm">
         <label for="id_{{ form.first_name.name }}" class="form-label">
           First name
