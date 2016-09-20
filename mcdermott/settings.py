@@ -44,13 +44,13 @@ db_password = config.DB_PASSWORD
 # Application definition
 
 INSTALLED_APPS = (
-  'login',
   'django.contrib.admin',
   'django.contrib.auth',
   'django.contrib.contenttypes',
   'django.contrib.sessions',
   'django.contrib.messages',
   'django.contrib.staticfiles',
+  'login',
   'localflavor',
   'floppyforms',
   'rest_framework',

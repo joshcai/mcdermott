@@ -2,6 +2,7 @@
 
 {% load widget_tweaks %}
 {% load staticfiles %}
+{% load permission_tags %}
 
 {% block titleend %}
 McDermott Network
@@ -38,6 +39,16 @@ McDermott Network
              id="searchbox-main" placeholder="Search..."/>
       <br>
       <a href="{% url 'feedback:index' 'fw2016' %}">Finalists' Weekend Feedback System</a>
+      {% if user|has_role:'staff' %}
+      <br>
+      <a href="{% url 'stats' %}">Stats</a>
+      <br>
+      <a href="{% url 'export_scholars' 'all' %}">Export All Scholars</a>
+      <br>
+      <a href="{% url 'export_scholars' 'current' %}">Export Current Scholars</a>
+      <br>
+      <a href="{% url 'export_scholars' 'alumni' %}">Export Alumni</a>
+      {% endif %}
     </div>
   </form>
   <script type="text/javascript">document.getElementById("searchbox-main").focus();</script>

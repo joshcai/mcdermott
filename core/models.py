@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth.models import User
 from django.db import models
 import watson
@@ -35,12 +37,14 @@ class McUser(models.Model):
   first_name = models.CharField(max_length=200, blank=True)
   middle_name = models.CharField(max_length=200, blank=True)
   last_name = models.CharField(max_length=200, blank=True)
+  maiden_name = models.CharField(max_length=200, blank=True)
+  title = models.CharField(max_length=200, blank=True)
   # Real first name
   real_name = models.CharField(max_length=200, blank=True)
 
   # Gender
   GENDER_CHOICES = (('', ''), ('Male', 'Male'), ('Female', 'Female'))
-  gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=False)
+  gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=True)
 
   # Birthday
   birthday = models.DateField(null=True, blank=True)
@@ -50,7 +54,7 @@ class McUser(models.Model):
       ('', ''),
       (2000, '2000'), (2001, '2001'), (2002, '2002'), (2003, '2003'), (2004, '2004'), (2005, '2005'),
       (2006, '2006'), (2007, '2007'), (2008, '2008'), (2009, '2009'), (2010, '2010'), (2011, '2011'),
-      (2012, '2012'), (2013, '2013'), (2014, '2014'), (2015, '2015')
+      (2012, '2012'), (2013, '2013'), (2014, '2014'), (2015, '2015'), (2016, '2016')
   )
 
   class_year = models.IntegerField(choices=YEARS, null=True, blank=True)
@@ -89,15 +93,76 @@ class McUser(models.Model):
   staff_title = models.CharField(max_length=200, blank=True)
   staff_order = models.IntegerField(default=0, null=True, blank=True)
 
+  # Visible to staff only
+  married = models.BooleanField(default=False)
+  right_after = models.CharField(max_length=200, blank=True)
+  ultimate = models.CharField(max_length=200, blank=True)
+  updated_alumni_info = models.CharField(max_length=200, blank=True)
+  updated_alumni_ppt = models.CharField(max_length=200, blank=True)
+  mailing_address = models.CharField(max_length=200, blank=True)
+  mailing_city = models.CharField(max_length=200, blank=True)
+  mailing_state = models.CharField(max_length=200, blank=True)
+  mailing_zip = models.CharField(max_length=200, blank=True)
+  mailing_country = models.CharField(max_length=200, blank=True)
+  mailing_address_type = models.CharField(max_length=200, blank=True)
+  in_dfw = models.CharField(max_length=200, blank=True)
+  current_city = models.CharField(max_length=200, blank=True)
+  significant_other = models.CharField(max_length=200, blank=True)
+  children = models.CharField(max_length=200, blank=True)
+  personal_news = models.CharField(max_length=2000, blank=True)
+  num_degrees = models.IntegerField(default=0, null=True, blank=True)
   # On Selection Committee
   selection = models.BooleanField(default=False)
 
   def get_full_name(self):
     return '%s %s' % (self.first_name, self.last_name)
+    
+  def get_full_name_last_first(self):
+    return '%s %s' % (self.last_name, self.first_name)
+    
+  def get_full_name_with_year(self):
+    if not self.class_year:
+     return self.get_full_name()
+    return '%s %s \'%.2d' % (self.first_name, self.last_name, self.class_year - 2000)
+    
+  def get_full_name_for_link(self):
+    return ''.join([c for c in self.get_full_name() if c.isalpha()])
+    
+  def get_full_name_with_maiden(self):
+    name = '%s %s' % (self.first_name, self.last_name)
+    if self.maiden_name:
+      name = '%s (%s)' % (name, self.maiden_name)
+    return name
+  
+  def is_alumni(self):
+    if not self.class_year:
+      return False
+    now = datetime.now()
+    if now.month > 5 or (now.month == 5 and now.day >= 15):
+      return self.class_year <= now.year - 4
+    return self.class_year < now.year - 4
 
   def save(self, *args, **kwargs):
     self.norm_name = normalize_name(self.get_full_name())
     super(McUser, self).save(*args, **kwargs)
+  
+  def __lt__(self, other):
+    # implement sorting function
+    
+    # staff should be ahead of scholars
+    if not self.class_year and other.class_year:
+      return True
+    if self.class_year and not other.class_year:
+      return False
+      
+    # then order by class year
+    if self.class_year < other.class_year:
+      return True
+    if self.class_year > other.class_year:
+      return False
+      
+    # then order by name (last, first)
+    return self.get_full_name_last_first() < other.get_full_name_last_first()
 
 class Degree(models.Model):
   user = models.ForeignKey(McUser, related_name='degrees')
@@ -105,10 +170,10 @@ class Degree(models.Model):
   degree_type = models.CharField(max_length=200, blank=True)
   start_time = models.DateField(null=True, blank=True)
   end_time = models.DateField(null=True, blank=True)
-  major1 = models.CharField(max_length=200, choices=MAJOR_CHOICES, blank=True)
-  major2 = models.CharField(max_length=200, choices=MAJOR_CHOICES, blank=True)
-  minor1 = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
-  minor2 = models.CharField(max_length=200, choices=MINOR_CHOICES, blank=True)
+  major1 = models.CharField(max_length=200, blank=True)
+  major2 = models.CharField(max_length=200, blank=True)
+  minor1 = models.CharField(max_length=200, blank=True)
+  minor2 = models.CharField(max_length=200, blank=True)
 
 EXP_CHOICES = (('', ''), ('Research', 'Research'), ('Internship', 'Internship'),
                ('Volunteer', 'Volunteer'), ('Clubs / Leadership', 'Clubs / Leadership'),
@@ -138,10 +203,22 @@ class StudyAbroad(models.Model):
   start_time = models.DateField(null=True, blank=True)
   end_time = models.DateField(null=True, blank=True)
 
+class Honor(models.Model):
+  user = models.ForeignKey(McUser, related_name='honors')
+  title = models.CharField(max_length=200, blank=True)
+  received_time = models.DateField(null=True, blank=True)
+
+class City(models.Model):
+  real_name = models.CharField(max_length=200, blank=True)
+  norm_name = models.CharField(max_length=200, blank=True)
+  lat = models.FloatField(blank=True, null=True)
+  lng = models.FloatField(blank=True, null=True)
+  
 watson.register(McUser, fields=('first_name', 'last_name', 'gender', 'class_year', 'hometown', 'hometown_state', 'high_school',
-                                'norm_name', 'staff_title'))
+                                'norm_name', 'staff_title', 'maiden_name', 'current_city'))
 watson.register(Degree)
 watson.register(Experience)
 watson.register(StudyAbroad)
+watson.register(Honor)
 # at bottom for circular dependency
 import signals

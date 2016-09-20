@@ -20,7 +20,10 @@ from templatetags.feedback_tags import *
 
 from mcdermott.roles import ApplicantEditor
 
-from mcdermott.config import GA_TRACKING_ID
+try:
+  from mcdermott.config import GA_TRACKING_ID
+except ImportError:
+  from mcdermott.example_config import GA_TRACKING_ID
 
 def restrict_access(f):
   @wraps(f)
@@ -320,9 +323,9 @@ def export_fw(request, event_name):
   sheet1 = book.add_sheet('Rating Averages')
   sheet2 = book.add_sheet('Ratings');
   sheet1_headings = ('Title', 'Last', 'First', 'High School', 'City', 'State', 'Attended',
-                     'Rating - Alumni', 'Interest - Alumni', 'Favorite - Alumni',
-                     'Rating - Senior', 'Interest - Senior', 'Favorite - Senior',
-                     'Rating - Other', 'Interest - Other', 'Favorite - Other',
+                     'Rating - Alumni', 'Interest - Alumni', 'Favorite - Alumni', 'Feedback # - Alumni',
+                     'Rating - Senior', 'Interest - Senior', 'Favorite - Senior', 'Feedback # - Senior',
+                     'Rating - Other', 'Interest - Other', 'Favorite - Other', 'Feedback # - Other',
                      'Rating Average', 'Interest Average', 'Favorite Count', 'Feedback Count')
   for i, heading in enumerate(sheet1_headings):
     sheet1.write(0, i, heading)
@@ -348,12 +351,15 @@ def export_fw(request, event_name):
       rating_average(alumni_filter(feedbacks), num=True),
       interest_average(alumni_filter(feedbacks), num=True),
       len(alumni_filter(favorite_filter(applicant))),
+      int(feedback_count(alumni_filter(feedbacks))),
       rating_average(senior_filter(feedbacks), num=True),
       interest_average(senior_filter(feedbacks), num=True),
       len(senior_filter(favorite_filter(applicant))),
+      int(feedback_count(senior_filter(feedbacks))),
       rating_average(other_filter(feedbacks), num=True),
       interest_average(other_filter(feedbacks), num=True),
       len(other_filter(favorite_filter(applicant))),
+      int(feedback_count(other_filter(feedbacks))),
       rating_average(feedbacks, num=True),
       interest_average(feedbacks, num=True),
       len(favorite_filter(applicant)),

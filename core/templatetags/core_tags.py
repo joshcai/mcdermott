@@ -22,10 +22,6 @@ def displayphone(value):
   return '(%s) %s-%s' % (norm_value[:3], norm_value[3:6], norm_value[6:])
 
 @register.filter
-def removespaces(value):
-  return value.replace(' ', '').replace('\'', '')
-
-@register.filter
 def fieldhidden(value, field):
   # value is a McUser object
   return field in value.hidden_fields
@@ -43,4 +39,4 @@ def pwrap(value):
 
 @register.inclusion_tag('macro/directory_header.html')
 def directory_header(active):
-  return {'active': active}
+  return {'active': active, 'class_years': [str(x) for x in range(2001, 2017)]}

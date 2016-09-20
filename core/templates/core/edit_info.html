@@ -16,6 +16,7 @@ Edit Info
     <li role="presentation"><a href="{% url 'edit_edu' mcuser.norm_name %}">Education</a></li>
     <li role="presentation"><a href="{% url 'edit_exp' mcuser.norm_name %}">Experience</a></li>
     <li role="presentation"><a href="{% url 'edit_abroad' mcuser.norm_name %}">Study Abroad</a></li>
+    <li role="presentation"><a href="{% url 'edit_honor' mcuser.norm_name %}">Honors</a></li>
   </ul>
   <br>
   <div class="col-md-12" id="messageContainer">
@@ -53,13 +54,22 @@ Edit Info
         <span class="error">{{ form.first_name.errors }}</span>
       </div>
     </div>
-    <div class="col-md-6 col-sm-6">
+    <div class="col-md-3 col-sm-6">
       <div class="form-group margin-sm">
         <label for="id_{{ form.last_name.name }}" class="form-label">
           Last name
         </label>
         {{ form.last_name|add_class:"form-control" }}
         <span class="error">{{ form.last_name.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.maiden_name.name }}" class="form-label">
+          Maiden name
+        </label>
+        {{ form.maiden_name|add_class:"form-control" }}
+        <span class="error">{{ form.maiden_name.errors }}</span>
       </div>
     </div>
     <div class="col-md-6 col-sm-6">
@@ -115,6 +125,79 @@ Edit Info
         </label>
         {{ form.hometown_state|add_class:"form-control" }}
         <span class="error">{{ form.hometown_state.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.in_dfw.name }}" class="form-label staff-only">
+          Currently in DFW?
+        </label>
+        {{ form.in_dfw|add_class:"form-control" }}
+        <span class="error">{{ form.in_dfw.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.current_city.name }}" class="form-label">
+          Current City (e.g. Richardson, TX)
+        </label>
+        {{ form.current_city|add_class:"form-control" }}
+        <span class="error">{{ form.current_city.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.mailing_address.name }}" class="form-label address-label">
+          Address
+          <input type="checkbox" id="checkbox_address" name="checkbox_address" value="true" class="visibility-checkbox"{% if mcuser|fieldhidden:'address' %} checked {% endif %}>
+        </label>
+        {{ form.mailing_address|add_class:"form-control" }}
+        <span class="error">{{ form.mailing_address.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.mailing_city.name }}" class="form-label address-label">
+          Address City
+        </label>
+        {{ form.mailing_city|add_class:"form-control" }}
+        <span class="error">{{ form.mailing_city.errors }}</span>
+      </div>
+    </div>
+      <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.mailing_state.name }}" class="form-label address-label">
+          Address State
+        </label>
+        {{ form.mailing_state|add_class:"form-control" }}
+        <span class="error">{{ form.mailing_state.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.mailing_zip.name }}" class="form-label address-label">
+          Address Zip Code
+        </label>
+        {{ form.mailing_zip|add_class:"form-control" }}
+        <span class="error">{{ form.mailing_zip.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.mailing_country.name }}" class="form-label address-label">
+          Address Country (if not USA)
+        </label>
+        {{ form.mailing_country|add_class:"form-control" }}
+        <span class="error">{{ form.mailing_country.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.mailing_address_type.name }}" class="form-label staff-only">
+          Address Type
+        </label>
+        {{ form.mailing_address_type|add_class:"form-control" }}
+        <span class="error">{{ form.mailing_address_type.errors }}</span>
       </div>
     </div>
     <div class="col-md-3 col-sm-6">
@@ -183,11 +266,85 @@ Edit Info
         <span class="error">{{ form.linkedin.errors }}</span>
       </div>
     </div>
+    {% if mcuser.is_alumni %}
+      <div class="col-md-6 col-sm-12">
+        <div class="form-group margin-sm">
+          <label for="id_{{ form.significant_other.name }}" class="form-label staff-only">
+            Significant other:
+          </label>
+          {{ form.significant_other|add_class:"form-control" }}
+          <span class="error">{{ form.significant_other.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <div class="form-group margin-sm">
+          <label for="id_{{ form.children.name }}" class="form-label staff-only">
+            Child(ren):
+          </label>
+          {{ form.children|add_class:"form-control" }}
+          <span class="error">{{ form.children.errors }}</span>
+        </div>
+      </div>
+      <div class="col-md-12 col-sm-12">
+        <div class="form-group margin-sm">
+          <label for="id_{{ form.personal_news.name }}" class="form-label staff-only">
+            Personal news:
+          </label>
+          {{ form.personal_news|add_class:"form-control" }}
+          <span class="error">{{ form.personal_news.errors }}</span>
+        </div>
+      </div>
+    {% endif %}
     <!--TODO: Replace this with something else later -->
     <div class="col-md-4 col-md-offset-4 col-sm-12 text-center margin-height-md">
       {{ form.pic }}
       <span class="error">{{ form.pic.errors }}</span>
     </div>
+    {% if user|has_role:'staff' %}
+      <div class="col-md-12 col-sm-12">
+        <h4>Staff edit only:</h4>
+        <hr>
+        <div class="row">
+          <div class="col-md-6 col-sm-6">
+            <div class="form-group margin-sm">
+              <label for="id_{{ form.right_after.name }}" class="form-label">
+                Right after McDermott:
+              </label>
+              {{ form.right_after|add_class:"form-control" }}
+              <span class="error">{{ form.right_after.errors }}</span>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6">
+            <div class="form-group margin-sm">
+              <label for="id_{{ form.ultimate.name }}" class="form-label">
+                Ultimately grad/prof:
+              </label>
+              {{ form.ultimate|add_class:"form-control" }}
+              <span class="error">{{ form.ultimate.errors }}</span>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-12">
+            <div class="form-group margin-sm">
+              <label for="id_{{ form.num_degrees.name }}" class="form-label">
+               # of Grad Degrees (completed+in-progress):
+              </label>
+              {{ form.num_degrees|add_class:"form-control" }}
+              <span class="error">{{ form.num_degrees.errors }}</span>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <div class="form-group margin-sm">
+              <label for="id_{{ form.married.name }}" class="form-label">
+                Married to another McDermott
+              </label>
+              {{ form.married }}
+              <span class="error">{{ form.married.errors }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
     <div class="col-md-12 col-sm-12 text-center">
       <br>
       <input class="btn btn-default" type="submit" value="SAVE" />
@@ -209,11 +366,17 @@ Edit Info
     $('.visibility-checkbox:checked').each(function() {
       var element = $(this).attr('id').replace('checkbox', 'id');
       var label = $('label[for=' + element + ']');
+      if($(this).attr('id') == 'checkbox_address') {
+        label = $('.address-label')
+      }
       label.addClass('staff-only');
     });
     $('.visibility-checkbox').change(function() {
       var element = $(this).attr('id').replace('checkbox', 'id');
       var label = $('label[for=' + element + ']');
+      if($(this).attr('id') == 'checkbox_address') {
+        label = $('.address-label')
+      }
       if($(this).is(':checked')) {
         label.addClass('staff-only');
       }

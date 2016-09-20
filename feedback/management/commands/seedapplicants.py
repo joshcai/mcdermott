@@ -147,7 +147,7 @@ class Command(BaseCommand):
           self.stdout.write('Could not find user %s for pic %s' % (scholar_name, f))
           continue
         extension = f.split('.')[-1]
-        file_name = '%s,%s-sp.%s' % (app.last_name, app.first_name, extension)
+        file_name = '%s,%s-fw.%s' % (app.last_name, app.first_name, extension)
         with open('tmp/%s' % f, 'rb') as img_file:
           app.actual_pic.save(file_name, File(img_file), save=True)
         app.save()

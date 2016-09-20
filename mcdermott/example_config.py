@@ -15,3 +15,7 @@ GITHUB_PASSWORD = 'password'
 GA_TRACKING_ID = 'Google Analytics Tracking ID'
 
 DEFAULT_PASSWORD = 'default password'
+
+GOOGLE_API_KEY = 'google api key'
+
+SLACK_TOKEN = 'slack token'

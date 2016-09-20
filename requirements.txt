@@ -1,3 +1,5 @@
+click==6.6
+decorator==4.0.10
 Django==1.8.6
 django-discover-runner==1.0
 django-floppyforms==1.4.1
@@ -7,15 +9,17 @@ django-unslashed==0.3.0
 django-watson==1.1.8
 django-widget-tweaks==1.4.1
 djangorestframework==3.1.3
+geocoder==1.16.3
 gunicorn==19.3.0
 Jinja2==2.7.3
 jsonfield==1.0.3
 MarkupSafe==0.23
 Pillow==2.9.0
-psycopg2==2.6.1
 python-memcached==1.54
+ratelim==0.1.6
 requests==2.8.0
 setproctitle==1.1.9
+slackclient==1.0.1
 six==1.10.0
 sorl-thumbnail==12.3
 xlwt==1.0.0

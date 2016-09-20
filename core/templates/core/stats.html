@@ -1,0 +1,16 @@
+{% extends "large_container.html" %}
+
+{% block title %}
+Stats
+{% endblock %}
+
+{% block inner_content %}
+
+<div>
+  <h5>Total number of scholars: {{ all_scholars_count }}</h5>
+  <h5>Total number of alumni: {{ alumni_count }}</h5>
+  <h5>Total number of current scholars: {{ current_count }}</h5>
+  <h5>Total number of grad degrees (completed+in-progress): {{ num_degrees }}</h5>
+  <h5>Number of <a href="{% url 'married' %}">McDermott marriages</a>: {{ marriage_count }}</h5>
+</div>
+{% endblock %}
