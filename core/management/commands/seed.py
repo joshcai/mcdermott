@@ -11,10 +11,7 @@ from core.models import Degree, Experience, McUser
 
 import requests
 
-try:
-  from mcdermott.config import DEFAULT_PASSWORD
-except ImportError:
-  from mcdermott.example_config import DEFAULT_PASSWORD
+from mcdermott.config import DEFAULT_PASSWORD
 from mcdermott.roles import Staff, Scholar, CurrentScholar, Dev, Selection
 
 def randomString():

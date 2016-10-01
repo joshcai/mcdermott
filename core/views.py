@@ -23,10 +23,7 @@ from models import McUser, Degree, Experience, StudyAbroad, Honor, City
 from serializers import UserSerializer
 from util import normalize_name, log_slack
 
-try:
-  from mcdermott.config import GA_TRACKING_ID, GOOGLE_API_KEY
-except ImportError:
-  from mcdermott.example_config import GA_TRACKING_ID, GOOGLE_API_KEY
+from mcdermott.config import GA_TRACKING_ID, GOOGLE_API_KEY
 
 DegreeFormSet = modelformset_factory(Degree, form=DegreeForm, extra=1, can_delete=True)
 ExperienceFormSet = modelformset_factory(Experience, form=ExperienceForm, extra=1, can_delete=True)
