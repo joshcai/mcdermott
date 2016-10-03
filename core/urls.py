@@ -16,7 +16,6 @@ urlpatterns = [
   url(r'^(\w+)/edit_abroad$', views.edit_abroad, name='edit_abroad'),
   url(r'^(\w+)/edit_honor$', views.edit_honor, name='edit_honor'),
   url(r'^export/(\w+)$', views.export_scholars, name='export_scholars'),
-  url(r'^add_user$', views.edit_account, name='add_user'),
   url(r'^edit_account$', views.edit_account, name='edit_account'),
   url(r'^directory$', views.scholars, name='scholars'),
   url(r'^scholars/class/(\d+)$', views.scholars_by_class, name='scholars_by_class'),
