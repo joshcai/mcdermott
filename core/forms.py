@@ -3,10 +3,13 @@ from django.contrib.auth.models import User
 import floppyforms as forms
 from functools import partial
 
+from django.core.exceptions import ValidationError
 from models import McUser, Degree, Experience, StudyAbroad, Honor
 
 DateInput = partial(forms.TextInput, {'class': 'datepicker'})
 
+TITLE_CHOICES = (('',''), ('Mr.', 'Mr.'), ('Mrs.', 'Mrs.'), ('Ms.', 'Ms.'), ('Dr.', 'Dr.'))
+  
 class ImageThumbnailInput(forms.ClearableFileInput):
   template_name = 'floppyforms/image_thumbnail.html'
 
@@ -14,6 +17,7 @@ class McUserForm(forms.ModelForm):
   class Meta:
     model = McUser
     fields = [
+        'title',
         'first_name',
         'real_name',
         'last_name',
@@ -59,6 +63,7 @@ class McUserForm(forms.ModelForm):
             choices=(('', ''),
                      ('Yes', 'Yes'),
                      ('No', 'No'))),
+        'title': forms.Select(choices=TITLE_CHOICES),
         'personal_news': forms.Textarea(attrs={'rows':4, 'cols':15}),
     }
 
@@ -67,6 +72,7 @@ class McUserStaffForm(forms.ModelForm):
   class Meta:
     model = McUser
     fields = [
+        'title',
         'first_name',
         'real_name',
         'last_name',
@@ -125,6 +131,7 @@ class McUserStaffForm(forms.ModelForm):
             choices=(('', ''),
                      ('grad', 'grad'),
                      ('prof', 'prof'))),
+        'title': forms.Select(choices=TITLE_CHOICES),
         'personal_news': forms.Textarea(attrs={'rows':4, 'cols':15}),
     }
 
@@ -209,10 +216,32 @@ class HonorForm(forms.ModelForm):
       'user': forms.HiddenInput(),
       'received_time': DateInput(),
     }
+
+
 class UserForm(forms.ModelForm):
+  new_password = forms.CharField(widget=forms.PasswordInput(), required=False)
+  new_password_confirm = forms.CharField(widget=forms.PasswordInput(), required=False)
+
   class Meta:
     model = User
     fields = [
       'username',
       'email',
     ]
+
+  def __init__(self, *args, **kwargs):
+    self.user = kwargs.pop('user', None)
+    super(UserForm, self).__init__(*args, **kwargs)
+
+  def clean(self):
+    cleaned_data = super(UserForm, self).clean()
+    new_password = cleaned_data.get('new_password')
+    new_password_confirm = cleaned_data.get('new_password_confirm')
+
+    if new_password != new_password_confirm:
+      raise ValidationError('Password fields did not match.')
+
+  def save(self, commit=True):
+    if self.cleaned_data['new_password']:
+      self.user.set_password(self.cleaned_data['new_password'])
+    return super(UserForm, self).save(commit=commit)

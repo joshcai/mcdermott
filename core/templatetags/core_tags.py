@@ -22,10 +22,6 @@ def displayphone(value):
   return '(%s) %s-%s' % (norm_value[:3], norm_value[3:6], norm_value[6:])
 
 @register.filter
-def removespaces(value):
-  return value.replace(' ', '').replace('\'', '')
-
-@register.filter
 def fieldhidden(value, field):
   # value is a McUser object
   return field in value.hidden_fields

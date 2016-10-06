@@ -13,11 +13,8 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import json
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-# Config options for production vs development
-try:
-  import config
-except ImportError:
-  import example_config as config
+# Config options
+import config
 
 #GitHub auth
 GITHUB_USERNAME = config.GITHUB_USERNAME

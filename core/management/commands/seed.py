@@ -11,10 +11,7 @@ from core.models import Degree, Experience, McUser
 
 import requests
 
-try:
-  from mcdermott.config import DEFAULT_PASSWORD
-except ImportError:
-  from mcdermott.example_config import DEFAULT_PASSWORD
+from mcdermott.config import DEFAULT_PASSWORD
 from mcdermott.roles import Staff, Scholar, CurrentScholar, Dev, Selection
 
 def randomString():
@@ -379,5 +376,6 @@ class Command(BaseCommand):
       self.add_user('atvaccaro', 'password', 'Andrew Vaccaro', 2013, email='andrew.vaccaro@utdallas.edu')
       self.add_user('hajieren', 'password', 'Hans Ajieren', 2014)
       self.add_user('dhruvn', 'password', 'Dhruv Narayanan', 2014)
+      self.add_user('testn', 'pwd', 'Test Narayanan', 2014)
       self.add_user('admin', 'password', 'Admin User', 2000, superuser=True,
                     email='admin@test.com')

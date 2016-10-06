@@ -1,0 +1,1 @@
+mogrify -path ~/Downloads/servers/pics -resize 60x60% -quality 80 jpg pics1/*

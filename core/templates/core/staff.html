@@ -35,7 +35,7 @@ Staff
       </div>
       <!-- Scholar quick info -->
       <div class="text-right">
-        <a class="no-dec" href ="/{{ scholar.first_name|removespaces }}{{ scholar.last_name|removespaces }}">
+        <a class="no-dec" href ="/{{ scholar.get_link_name }}">
           <h4>{{ scholar.get_full_name }}</h4>
         </a>
         <span style="font-size:16px;">

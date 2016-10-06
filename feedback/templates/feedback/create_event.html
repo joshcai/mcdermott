@@ -1,0 +1,51 @@
+{% extends "large_container.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %}
+Feedback - Create Event
+{% endblock %}
+
+{% block inner_content %}
+<div class="row">
+  <div class="col-md-12" id="messageContainer">
+    {% if messages %}
+      {% for message in messages %}
+        <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst|safe }}</div>
+      {% endfor %}
+    {% endif %}
+  </div>
+  {% if form.errors %}
+    There were errors!
+  {% endif %}
+  <form method="post" action="">
+  {% csrf_token %}
+
+    <div class="col-md-6 col-sm-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.full_name.name }}" class="form-label">
+          Full name (e.g. 'Sneak Peek 2016')
+        </label>
+        {{ form.full_name|add_class:"form-control" }}
+        <span class="error">{{ form.full_name.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.name.name }}" class="form-label">
+          Short name, used in url (e.g. 'sp2016')
+        </label>
+        {{ form.name|add_class:"form-control" }}
+        <span class="error">{{ form.name.errors }}</span>
+      </div>
+    </div>
+    <div class="col-md-12 col-sm-12 text-center">
+      <span class="">Finalists Weekend type: {{ form.fw }}</span>
+    </div>
+    <div class="col-md-12 col-sm-12 text-center">
+      <br>
+      <input class="btn btn-default" type="submit" value="SAVE" />
+    </div>
+  </form>
+</div>
+{% endblock %}

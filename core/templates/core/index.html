@@ -41,6 +41,8 @@ McDermott Network
       <a href="{% url 'feedback:index' 'fw2016' %}">Finalists' Weekend Feedback System</a>
       {% if user|has_role:'staff' %}
       <br>
+      <a href="{% url 'feedback:events' %}">Manage Feedback Events</a>
+      <br>
       <a href="{% url 'stats' %}">Stats</a>
       <br>
       <a href="{% url 'export_scholars' 'all' %}">Export All Scholars</a>
