@@ -23,10 +23,7 @@ from models import McUser, Degree, Experience, StudyAbroad, Honor, City
 from serializers import UserSerializer
 from util import normalize_name, log_slack
 
-try:
-  from mcdermott.config import GA_TRACKING_ID, GOOGLE_API_KEY
-except ImportError:
-  from mcdermott.example_config import GA_TRACKING_ID, GOOGLE_API_KEY
+from mcdermott.config import GA_TRACKING_ID, GOOGLE_API_KEY
 
 DegreeFormSet = modelformset_factory(Degree, form=DegreeForm, extra=1, can_delete=True)
 ExperienceFormSet = modelformset_factory(Experience, form=ExperienceForm, extra=1, can_delete=True)
@@ -36,7 +33,7 @@ HonorFormSet = modelformset_factory(Honor, form=HonorForm, extra=1, can_delete=T
 # Create your views here.
 def index(request):
   if request.user.is_authenticated() and not request.user.mcuser.activated:
-    log_slack('User `%s` activated' %request.user.username)
+    log_slack('User `%s` activated' % request.user.get_full_name())
     request.user.mcuser.activated = True
     request.user.mcuser.save()
   context = {
@@ -54,7 +51,7 @@ def update_last_updated(user):
 def edit_info(request, name):
   user_info = McUser.objects.get(norm_name=normalize_name(name))
   if not user_info.user.id == request.user.id and not has_permission(request.user, 'edit_all_info'):
-    return redirect('edit_info', request.user.mcuser.norm_name)
+    return redirect('edit_info', request.user.mcuser.get_link_name())
   if request.method == 'POST':
     if has_role(request.user, 'staff'):
       form = McUserStaffForm(request.POST, request.FILES, instance=user_info, prefix='base')
@@ -67,7 +64,7 @@ def edit_info(request, name):
       mcuser.save()
       messages.add_message(
         request, messages.SUCCESS,
-        'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[mcuser.norm_name]))
+        'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[mcuser.get_link_name()]))
       update_last_updated(user_info)
       return redirect('edit_info', user_info.norm_name)
   else:
@@ -96,7 +93,7 @@ def edit_edu(request, name):
       degrees_formset.save()
       messages.add_message(
         request, messages.SUCCESS,
-        'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[user_info.norm_name]))
+        'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[user_info.get_link_name()]))
       update_last_updated(user_info)
       return redirect('edit_edu', user_info.norm_name)
   else:
@@ -119,7 +116,7 @@ def edit_exp(request, name):
       experiences_formset.save()
       messages.add_message(
         request, messages.SUCCESS,
-        'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[user_info.norm_name]))
+        'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[user_info.get_link_name()]))
       update_last_updated(user_info)
       return redirect('edit_exp', user_info.norm_name)
   else:
@@ -142,7 +139,7 @@ def edit_abroad(request, name):
       study_abroad_formset.save()
       messages.add_message(
         request, messages.SUCCESS,
-        'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[user_info.norm_name]))
+        'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[user_info.get_link_name()]))
       update_last_updated(user_info)
       return redirect('edit_abroad', user_info.norm_name)
   else:
@@ -165,7 +162,7 @@ def edit_honor(request, name):
       honor_formset.save()
       messages.add_message(
         request, messages.SUCCESS,
-        'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[user_info.norm_name]))
+        'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[user_info.get_link_name()]))
       update_last_updated(user_info)
       return redirect('edit_honor', user_info.norm_name)
   else:
@@ -179,13 +176,9 @@ def edit_honor(request, name):
 @login_required
 def edit_account(request, name=None):
   if name and not has_role(request.user, ['staff', 'dev']):
-    return redirect('/edit_account')
+    return redirect('edit_account')
 
-  potential_success_message = 'Changes saved!'
-  if request.path == '/add_user':
-    potential_success_message = 'New user created!'
-    user = User()
-  elif name:
+  if name:
     user = McUser.objects.get(norm_name=normalize_name(name)).user
   else:
     user = request.user
@@ -194,39 +187,21 @@ def edit_account(request, name=None):
     user_form = UserForm(request.POST, instance=user, user=user)
     if user_form.is_valid():
       user_form.save()
-      messages.add_message(
-        request, messages.SUCCESS,
-        potential_success_message)
-      return render(request, 'core/edit_account.html', {})
+      messages.add_message(request, messages.SUCCESS, 'Changes saved!')
+      if name:
+        return redirect('edit_other_account', name)
+      return redirect('edit_account')
     else:
+      messages.add_message(request, messages.WARNING, 'Passwords do not match.')
       user_form = UserForm(instance=user, user=user)
   else:
     user_form = UserForm(instance=user, user=user)
   context = {
-    'form': user_form
+    'form': user_form,
   }
+  if name:
+    context['name'] = user.mcuser.get_full_name()
   return render(request, 'core/edit_account.html', context)
-
-def sign_up(request):
-  user_info = McUser.objects.get(norm_name=normalize_name(name))
-  if not user_info.user.id == request.user.id and not has_permission(request.user, 'edit_all_info'):
-    return redirect('edit_abroad', request.user.mcuser.norm_name)
-  study_abroad = StudyAbroad.objects.filter(user_id=user_info.id)
-  if request.method == 'POST':
-    study_abroad_formset = StudyAbroadFormSet(request.POST, queryset=study_abroad, initial=[{'user': user_info.id}])
-    if (study_abroad_formset.is_valid()):
-      study_abroad_formset.save()
-      messages.add_message(
-        request, messages.SUCCESS,
-        'Changes saved! Click <a href="%s">here</a> to view profile.' % reverse('profile', args=[user_info.norm_name]))
-      return redirect('edit_abroad', user_info.norm_name)
-  else:
-    study_abroad_formset = StudyAbroadFormSet(queryset=study_abroad, initial=[{'user': user_info.id}])
-  context = {
-      'study_abroad_formset': study_abroad_formset,
-      'mcuser': user_info
-      }
-  return render(request, 'core/edit_abroad.html', context)
 
 @login_required
 def scholars(request):
@@ -305,7 +280,7 @@ def search(request):
     }
   # go straight to scholar if only one result
   if len(scholars) == 1:
-    return redirect('profile', scholars[0].norm_name)
+    return redirect('profile', scholars[0].get_link_name())
   return render(request, 'core/scholars.html', context)
   
 def normalize_location(place):
@@ -446,7 +421,7 @@ def export_scholars(request, kind):
       max_degrees = scholar.degrees.count()
   book = Workbook()
   sheet1 = book.add_sheet('Scholars (%s)' % kind)
-  sheet1_headings = ['Class', 'First', 'Last', 'Married Name', 'McD Marriage', 'Right after McD', 'Ultimately grad/prof?',
+  sheet1_headings = ['Class', 'Title', 'First', 'Last', 'Married Name', 'McD Marriage', 'Right after McD', 'Ultimately grad/prof?',
                      '# Grad degrees (completed+in-progress)']
   for i in xrange(max_degrees):
     sheet1_headings.extend(['School #%d' % (i+1), 'Field #%d' % (i+1), 'Degree #%d' % (i+1)])
@@ -459,6 +434,7 @@ def export_scholars(request, kind):
   for i, scholar in enumerate(scholars):
     sheet1_fields = [
       scholar.class_year,
+      scholar.title,
       scholar.first_name,
       scholar.maiden_name if scholar.maiden_name else scholar.last_name,
       scholar.last_name if scholar.maiden_name else '',

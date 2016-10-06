@@ -3,7 +3,7 @@ venv/
 db.sqlite3
 *migrations
 media/
-mcdermott/config.py
+mcdermott/prod_config.py
 run/
 /static/
 *.xlsx

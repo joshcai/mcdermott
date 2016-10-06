@@ -13,7 +13,7 @@ class CoreTestCase(TestCase):
     self.user.mcuser.save()
 
   def login(self):
-    self.app.login(username='test', password='password')    
+    self.app.login(username='test', password='password')
 
   def testGetFullName(self):
     self.assertEqual(self.user.mcuser.get_full_name(), 'Test Name')
@@ -24,7 +24,7 @@ class CoreTestCase(TestCase):
   def testSearchRedirectIfOneResult(self):
     self.login()
     response = self.app.get('/search?q=Test')
-    self.assertRedirects(response, '/testname')
+    self.assertRedirects(response, '/TestName')
 
   def testSearchMoreThanOneResult(self):
     self.login()
@@ -42,8 +42,8 @@ class CoreTestCase(TestCase):
   def testReindexing(self):
     self.login()
     response = self.app.get('/search?q=Test')
-    self.assertRedirects(response, '/testname')
+    self.assertRedirects(response, '/TestName')
     self.user.mcuser.first_name = 'Foo'
     self.user.mcuser.save()
     response = self.app.get('/search?q=Foo')
-    self.assertRedirects(response, '/fooname')
+    self.assertRedirects(response, '/FooName')
