@@ -6,15 +6,15 @@ from core.models import McUser
 from core.util import normalize_name
 
 class Event(models.Model):
-  full_name = models.CharField(max_length=200, blank=True)
-  name = models.CharField(max_length=200, blank=True) # short name of event
+  full_name = models.CharField(max_length=200, blank=False)
+  name = models.CharField(max_length=200, blank=False) # short name of event
   fw = models.BooleanField(blank=False, null=False, default=False)
 
 # Create your models here.
 class Applicant(models.Model):
   """Model for an applicant."""
-  first_name = models.CharField(max_length=200, blank=True)
-  last_name = models.CharField(max_length=200, blank=True)
+  first_name = models.CharField(max_length=200, blank=False)
+  last_name = models.CharField(max_length=200, blank=False)
   norm_name = models.CharField(max_length=400, blank=True)
   hometown = models.CharField(max_length=200, blank=True)
   hometown_state_long = models.CharField(max_length=200, blank=True)

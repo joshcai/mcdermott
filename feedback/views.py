@@ -2,6 +2,7 @@ from functools import wraps
 from tempfile import NamedTemporaryFile
 
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.http import HttpResponse, Http404, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -14,7 +15,7 @@ from rolepermissions.verifications import has_role, has_permission
 from rolepermissions.decorators import has_role_decorator
 from xlwt import Workbook
 
-from forms import ApplicantForm, FeedbackForm, StateForm
+from forms import ApplicantForm, FeedbackForm, StateForm, EventForm
 from models import Applicant, Feedback, State, Event, Assignment, Favorite, Shortlist
 from templatetags.feedback_tags import *
 
@@ -32,6 +33,65 @@ def restrict_access(f):
   return wrapper
 
 # Create your views here.
+
+@login_required
+def events(request):
+  events = Event.objects.order_by('-id')
+  context = {
+      'events': events
+  }
+  return render(request, 'feedback/events.html', context)
+
+@login_required
+@has_role_decorator(['staff', 'dev'])
+def create_event(request):
+  event = Event()
+  if request.method == 'POST':
+    form = EventForm(request.POST, instance=event)
+    if (form.is_valid()):
+      e = form.save(commit=False)
+      if not Event.objects.filter(name=e.name).exists():
+        e.save()
+        return redirect('feedback:index', e.name)
+      messages.add_message(request, messages.WARNING, 'Event with that short name already exists.')
+  else:
+    form = EventForm(instance=event)
+  context = {
+      'form': form,
+  }
+  return render(request, 'feedback/create_event.html', context)
+  
+@login_required
+@has_role_decorator(['staff', 'dev'])
+def edit_event(request, event_name):
+  try:
+    event = Event.objects.get(name=event_name)
+  except Event.DoesNotExist:
+    raise Http404('Event does not exist')
+  if request.method == 'POST':
+    form = EventForm(request.POST, instance=event)
+    if (form.is_valid()):
+      e = form.save(commit=False)
+      events = Event.objects.filter(name=e.name)
+      # To allow editing the same event and keeping its short name.
+      alreadyExists = False
+      for ev in events:
+        if ev != event:
+          alreadyExists = True
+          break
+      if not alreadyExists:
+        e.save()
+        return redirect('feedback:index', e.name)
+      messages.add_message(request, messages.WARNING, 'Event with that short name already exists.')
+  else:
+    form = EventForm(instance=event)
+  context = {
+      'form': form,
+      'event_name': event_name,
+  }
+  return render(request, 'feedback/edit_event.html', context)
+
+
 @login_required
 @restrict_access
 def index_redirect(request):
@@ -41,6 +101,10 @@ def index_redirect(request):
 @login_required
 @restrict_access
 def index(request, event_name):
+  try:
+    event = Event.objects.get(name=event_name)
+  except Event.DoesNotExist:
+    raise Http404('Event does not exist')
   applicants = Applicant.objects.filter(event__name=event_name).order_by('first_name')
   assignments = [x.applicant for x in Assignment.objects.filter(scholar=request.user.mcuser)]
   favorites = [x.applicant for x in Favorite.objects.filter(scholar=request.user.mcuser)]
@@ -48,7 +112,6 @@ def index(request, event_name):
   if not has_role(request.user, ['staff', 'selection']):
     applicants = applicants.filter(attended=True)
   applicants = sorted(applicants, key=lambda a: a.get_full_name())
-  event = Event.objects.get(name=event_name)
   context = {
     'assignments': assignments,
     'favorites': favorites,

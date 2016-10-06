@@ -1,13 +1,22 @@
 import floppyforms as forms
 
 from core.models import McUser
-from models import Applicant, Feedback, State
+from models import Applicant, Feedback, State, Event
 
 class ImageThumbnailInput(forms.ClearableFileInput):
   template_name = 'floppyforms/image_thumbnail.html'
 
 class RadioNoULInput(forms.RadioSelect):
   template_name = 'floppyforms/radio_no_ul.html'
+  
+class EventForm(forms.ModelForm):
+  class Meta:
+    model = Event
+    fields =[
+      'full_name',
+      'name',
+      'fw',
+    ]
 
 class ApplicantForm(forms.ModelForm):
   class Meta:
