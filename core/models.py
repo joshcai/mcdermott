@@ -176,7 +176,7 @@ class Degree(models.Model):
   minor1 = models.CharField(max_length=200, blank=True)
   minor2 = models.CharField(max_length=200, blank=True)
 
-EXP_CHOICES = (('', ''), ('Research', 'Research'), ('Internship', 'Internship'),
+EXP_CHOICES = (('', ''), ('Job', 'Job'), ('Research', 'Research'), ('Internship', 'Internship'),
                ('Volunteer', 'Volunteer'), ('Clubs / Leadership', 'Clubs / Leadership'),
                ('Athletic', 'Athletic'), ('Other', 'Other'))
 
