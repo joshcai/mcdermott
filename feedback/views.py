@@ -233,7 +233,7 @@ def edit_applicant(request, event_name, name):
     if (form.is_valid()):
       app = form.save(commit=False)
       app.save()
-      log_slack('Applicant %s edited by %s' % (app.get_full_name(), request.user.mcuser.get_full_name()))
+      log_slack('Applicant %s/%s edited by %s' % (name, app.get_full_name(), request.user.mcuser.get_full_name()))
       return redirect('feedback:applicant_profile', event_name, app.norm_name)
   else:
     form = ApplicantForm(instance=applicant)
@@ -446,3 +446,4 @@ def export_fw(request, event_name):
     response = HttpResponse(f, content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = 'attachment; filename="%s.xls"' % event.full_name
     return response
+
