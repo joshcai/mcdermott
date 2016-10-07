@@ -33,7 +33,7 @@ HonorFormSet = modelformset_factory(Honor, form=HonorForm, extra=1, can_delete=T
 # Create your views here.
 def index(request):
   if request.user.is_authenticated() and not request.user.mcuser.activated:
-    log_slack('User `%s` activated' % request.user.get_full_name())
+    log_slack('User `%s` activated' % request.user.mcuser.get_full_name())
     request.user.mcuser.activated = True
     request.user.mcuser.save()
   context = {

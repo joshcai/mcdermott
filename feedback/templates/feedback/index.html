@@ -29,10 +29,8 @@ Feedback - Directory
 <div id="applicants-list">
   <div class="col-md-12 text-center">
     <h3 class="feedback-event-name">{{ event.full_name }}</h3>
-    {% if user|has_role:'staff' or user|has_role:'selection' %}
-      {% feedback_header 'directory' user event_name %}
-      <br>
-    {% endif %}
+    {% feedback_header 'directory' user event_name %}
+    <br>
     <div id="myModal" class="modal modal-fullscreen fade">
       <div class="modal-dialog">
         <div class="modal-content">

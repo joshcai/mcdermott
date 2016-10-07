@@ -7,7 +7,7 @@ from django.http import HttpResponse, Http404, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
-from core.util import normalize_name
+from core.util import normalize_name, log_slack
 from core.models import McUser
 
 from rolepermissions.shortcuts import grant_permission, revoke_permission
@@ -224,9 +224,6 @@ def favorite_applicant(request, event_name, name):
 
 @login_required
 def edit_applicant(request, event_name, name):
-  if not (has_permission(request.user, 'edit_applicants') or
-          has_role(request.user, ['staff', 'dev', 'selection'])):
-    raise Http404('Permission denied.')
   try:
     applicant = Applicant.objects.get(norm_name=normalize_name(name), event__name=event_name)
   except Applicant.DoesNotExist:
@@ -234,8 +231,10 @@ def edit_applicant(request, event_name, name):
   if request.method == 'POST':
     form = ApplicantForm(request.POST, request.FILES, instance=applicant)
     if (form.is_valid()):
-      form.save()
-      return redirect('feedback:applicant_profile', event_name, applicant.norm_name)
+      app = form.save(commit=False)
+      app.save()
+      log_slack('Applicant %s edited by %s' % (app.get_full_name(), request.user.mcuser.get_full_name()))
+      return redirect('feedback:applicant_profile', event_name, app.norm_name)
   else:
     form = ApplicantForm(instance=applicant)
   context = {
@@ -247,9 +246,6 @@ def edit_applicant(request, event_name, name):
 
 @login_required
 def add_applicant(request, event_name):
-  if not (has_permission(request.user, 'edit_applicants') or
-          has_role(request.user, ['staff', 'dev', 'selection'])):
-    raise Http404('Permission denied.')
   applicant = Applicant()
   if request.method == 'POST':
     form = ApplicantForm(request.POST, request.FILES, instance=applicant)
@@ -258,6 +254,7 @@ def add_applicant(request, event_name):
       event = Event.objects.get(name=event_name)
       app.event = event
       app.save()
+      log_slack('Applicant %s added by %s' % (app.get_full_name(), request.user.mcuser.get_full_name()))
       return redirect('feedback:applicant_profile', event_name, applicant.norm_name)
   else:
     form = ApplicantForm(instance=applicant)

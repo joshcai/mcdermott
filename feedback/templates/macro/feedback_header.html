@@ -12,11 +12,9 @@
       <a href="{% url 'feedback:applicant_table_ratings' event_name %}" >Ratings</a>
     </li>
   {% endif %}
-  {% if user|has_role:'staff' or user|has_role:'selection' or user|has_role:'dev' %}
-    <li role="presentation" class="{% if active == 'add' %}active{% endif %}">
-      <a {% if active != 'add' %} href="{% url 'feedback:add_applicant' event_name %}" {%endif %}>Add Applicant</a>
-    </li>
-  {% endif %}
+  <li role="presentation" class="{% if active == 'add' %}active{% endif %}">
+    <a {% if active != 'add' %} href="{% url 'feedback:add_applicant' event_name %}" {%endif %}>Add Applicant</a>
+  </li>
   {% if user|has_role:'staff' or user|has_role:'selection' %}
     <li role="presentation">
       <a href="{% url 'feedback:export' event_name %}" >Export to Excel</a>

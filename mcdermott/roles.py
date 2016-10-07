@@ -26,8 +26,8 @@ class Dev(AbstractUserRole):
   }
 
 class ApplicantEditor(AbstractUserRole):
-    avaliable_permissions = {
-    'edit_applicants': False
+  avaliable_permissions = {
+    'edit_applicants': True
   }
 
 class Selection(AbstractUserRole):
