@@ -45,6 +45,15 @@ Edit Info
     {% endfor %}
 
     <!-- Manual HTML for McUser form -->
+    <div class="col-md-12 margin-bot-md text-center">
+      <div class="form-group margin-sm">
+        {{ form.mentor }}
+        <label for="id_{{ form.mentor.name }}" class="form-label">
+          I would like to be a McDermott mentor.
+        </label>
+        <span class="error">{{ form.mentor.errors }}</span>
+      </div>
+    </div>
     <div class = "col-md-1 col-sm-1 col-sm-1">
       <div class="form-group margin-sm">
         <label for = "id_{{ form.title.name }}" class="form-label">

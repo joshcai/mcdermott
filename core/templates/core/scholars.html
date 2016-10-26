@@ -42,6 +42,11 @@ Directory
           {{ scholar.class_year }}
         {% endif %}
         </span>
+        {% if scholar.mentor %}
+        <p style="font-size:24px; color: #6321FF">
+          Mentor
+        </p>
+        {% endif %}
         <!-- Dropdown -->
         <!--
         <button type="button" class="btn btn-sm profile-show-btn" data-toggle="collapse" data-target="#{{ scholar.norm_name }}">More</button>

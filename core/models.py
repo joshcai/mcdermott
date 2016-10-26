@@ -37,9 +37,13 @@ class McUser(models.Model):
   last_name = models.CharField(max_length=200, blank=True)
   maiden_name = models.CharField(max_length=200, blank=True)
   title = models.CharField(max_length=200, blank=True)
+  mentor = models.BooleanField(default=False)
 
   # Real first name
   real_name = models.CharField(max_length=200, blank=True)
+
+  # Siblings; may need to fix this later
+  bigs = models.ManyToManyField('self', related_name='littles')
 
   # Gender
   GENDER_CHOICES = (('', ''), ('Male', 'Male'), ('Female', 'Female'))

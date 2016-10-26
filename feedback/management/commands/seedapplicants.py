@@ -96,6 +96,8 @@ class Command(BaseCommand):
 
   def handle(self, *args, **options):
     event_name = options['event_name'][0]
+    event = Event.objects.get_or_create(name=options['event_name'][0])[0]
+    self.stdout.write('Handling event %s' %event.name)
     if options['flush']:
       self.stdout.write('Removing all applicants in event %s...' % event_name)
       self.stdout.write('%s users in the database' % Applicant.objects.all().count())
@@ -108,12 +110,12 @@ class Command(BaseCommand):
         os.makedirs('tmp')
       with open(options['applicants'], 'rU') as csvfile:
         applicants = list(csv.reader(csvfile))
-        event = Event.objects.get_or_create(name=options['event_name'][0])[0]
         for applicant in applicants[1:]:
           self.add_applicant({key: value for (key, value) in zip(applicants[0], applicant)}, event_name)
     if options['testing']:
       for _ in xrange(10):
         applicant = Applicant()
+        applicant.event = event
         applicant.first_name = randomString(10)
         applicant.last_name = randomString(10)
         applicant.high_school = '%s High School ' % randomString(8)

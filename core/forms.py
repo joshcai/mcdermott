@@ -50,6 +50,7 @@ class McUserForm(forms.ModelForm):
         'significant_other',
         'children',
         'personal_news',
+        'mentor'
     ]
     widgets = {
         'id': forms.HiddenInput(),

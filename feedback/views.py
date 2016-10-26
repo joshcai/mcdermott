@@ -251,11 +251,13 @@ def add_applicant(request, event_name):
     form = ApplicantForm(request.POST, request.FILES, instance=applicant)
     if (form.is_valid()):
       app = form.save(commit=False)
-      event = Event.objects.get(name=event_name)
-      app.event = event
-      app.save()
-      log_slack('Applicant %s added by %s' % (app.get_full_name(), request.user.mcuser.get_full_name()))
-      return redirect('feedback:applicant_profile', event_name, applicant.norm_name)
+      if Applicant.objects.filter(norm_name=app.norm_name).exists():
+        messages.add_message(request, messages.WARNING, 'Applicant with that name already exists.')
+      else:
+        event = Event.objects.get(name=event_name)
+        app.event = event
+        app.save()
+        return redirect('feedback:applicant_profile', event_name, applicant.norm_name)
   else:
     form = ApplicantForm(instance=applicant)
   context = {
