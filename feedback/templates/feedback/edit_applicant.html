@@ -31,9 +31,7 @@ Feedback - Edit {{ applicant.get_full_name }}
         <label for="id_{{ form.last_name.name }}" class="form-label">
           Last name
         </label>
-        {% if user|has_role:'staff' %}
-          <span class="text-right pull-right">Attended: {{ form.attended }}</span>
-        {% endif %}
+  	<span class="text-right pull-right">Attended: {{ form.attended }}</span>
         {{ form.last_name|add_class:"form-control" }}
         <span class="error">{{ form.last_name.errors }}</span>
       </div>

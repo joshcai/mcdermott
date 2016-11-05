@@ -109,8 +109,6 @@ def index(request, event_name):
   assignments = [x.applicant for x in Assignment.objects.filter(scholar=request.user.mcuser)]
   favorites = [x.applicant for x in Favorite.objects.filter(scholar=request.user.mcuser)]
   shortlist = [x.applicant for x in Shortlist.objects.filter(scholar=request.user.mcuser)]
-  if not has_role(request.user, ['staff', 'selection']):
-    applicants = applicants.filter(attended=True)
   applicants = sorted(applicants, key=lambda a: a.get_full_name())
   context = {
     'assignments': assignments,
