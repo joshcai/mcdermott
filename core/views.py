@@ -23,6 +23,8 @@ from models import McUser, Degree, Experience, StudyAbroad, Honor, City
 from serializers import UserSerializer
 from util import normalize_name, log_slack
 
+from feedback.views import get_latest_event
+
 from mcdermott.config import GA_TRACKING_ID, GOOGLE_API_KEY
 
 DegreeFormSet = modelformset_factory(Degree, form=DegreeForm, extra=1, can_delete=True)
@@ -37,7 +39,8 @@ def index(request):
     request.user.mcuser.activated = True
     request.user.mcuser.save()
   context = {
-    'ga_tracking_id': GA_TRACKING_ID
+    'ga_tracking_id': GA_TRACKING_ID,
+    'latest_feedback_event': get_latest_event()
   }
   return render(request, 'core/index.html', context)
   

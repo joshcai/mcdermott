@@ -34,6 +34,10 @@ def restrict_access(f):
 
 # Create your views here.
 
+# Returns the full name of the latest feedback event
+def get_latest_event():
+  return Event.objects.latest('id').full_name
+
 @login_required
 def events(request):
   events = Event.objects.order_by('-id')
@@ -251,11 +255,12 @@ def add_applicant(request, event_name):
     form = ApplicantForm(request.POST, request.FILES, instance=applicant)
     if (form.is_valid()):
       app = form.save(commit=False)
-      event = Event.objects.get(name=event_name)
-      app.event = event
-      app.save()
-      log_slack('Applicant %s added by %s' % (app.get_full_name(), request.user.mcuser.get_full_name()))
-      return redirect('feedback:applicant_profile', event_name, applicant.norm_name)
+      if not Applicant.objects.filter(norm_name=app.norm_name).exists():
+        event = Event.objects.get(name=event_name)
+        app.event = event
+        app.save()
+        log_slack('Applicant %s added by %s' % (app.get_full_name(), request.user.mcuser.get_full_name()))
+        return redirect('feedback:applicant_profile', event_name, applicant.norm_name)
   else:
     form = ApplicantForm(instance=applicant)
   context = {
