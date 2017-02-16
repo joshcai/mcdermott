@@ -203,6 +203,25 @@ def shortlist_applicant(request, event_name, name):
 
 @login_required
 @csrf_exempt
+def interview_applicant(request, event_name, applicant_name, interviewer_name):
+  try:
+    applicant = Applicant.objects.get(norm_name=normalize_name(applicant_name), event__name=event_name)
+  except Applicant.DoesNotExist:
+    raise Http404('Applicant does not exist.')
+  try:
+    interviewer = McUser.objects.get(norm_name=normalize_name(applicant_name))
+  except McUser.DoesNotExist:
+    raise Http404('Applicant does not exist.')
+  if request.method == 'POST':
+    if applicant in request.user.mcuser.interviewees.all():
+      request.user.mcuser.interviewees.remove(applicant)
+    else:
+      request.user.mcuser.interviewees.add(applicant)
+    return JsonResponse({'msg': 'listed'})
+  return HttpResponse('Please POST')
+
+@login_required
+@csrf_exempt
 def favorite_applicant(request, event_name, name):
   try:
     applicant = Applicant.objects.get(norm_name=normalize_name(name), event__name=event_name)

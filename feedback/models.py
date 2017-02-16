@@ -24,6 +24,8 @@ class Applicant(models.Model):
   career = models.CharField(max_length=200, blank=True)
   group = models.CharField(max_length=200, blank=True)
 
+  interviewers = models.ManyToManyField(McUser, related_name='interviewees')
+
   event = models.ForeignKey(Event, null=True, blank=True, default=None)
 
   attended = models.BooleanField(blank=False, null=False, default=True)
@@ -87,3 +89,8 @@ class State(models.Model):
     (3, 'Prevent Feedback Update')
   )
   current = models.IntegerField(choices=STATE_CHOICES, null=False, blank=False, default=2)
+
+class InterviewFeedback(models.Model):
+  """Model for feedback from one interviewer on an applicant."""
+  interviewer = models.ForeignKey(McUser)
+  applicant = models.ForeignKey(Applicant)
