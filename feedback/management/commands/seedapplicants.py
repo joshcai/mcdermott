@@ -96,6 +96,11 @@ class Command(BaseCommand):
 
   def handle(self, *args, **options):
     event_name = options['event_name'][0]
+    try:
+      event = Event.objects.get(name=event_name) 
+    except Event.DoesNotExist:
+      self.stdout.write('event does not exist')
+      return
     if options['flush']:
       self.stdout.write('Removing all applicants in event %s...' % event_name)
       self.stdout.write('%s users in the database' % Applicant.objects.all().count())
@@ -120,6 +125,7 @@ class Command(BaseCommand):
         applicant.hometown = randomString(7)
         applicant.hometown_state = random.choice(US_STATES)[0]
         applicant.gender = random.choice(['Mr.', 'Ms.'])
+        applicant.event = event
         applicant.save()
         self.stdout.write('Created user %s' % applicant.get_full_name())
     if options['feedback']:

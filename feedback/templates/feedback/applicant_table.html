@@ -29,7 +29,7 @@ Feedback - Applicant Table
           <th>High School</th>
           <th>City</th>
           <th>State</th>
-          {% if user|has_role:'staff' or user|has_role:'selection' %}
+          {% if user|can_read_data_for:event_name %}
             <th>Rating</th>
             <th>Interest</th>
             <th>#</th>
@@ -48,7 +48,7 @@ Feedback - Applicant Table
             <td>{{ applicant.high_school }}</td>
             <td>{{ applicant.hometown }}</td>
             <td>{{ applicant.hometown_state }}</td>
-            {% if user|has_role:'staff' or user|has_role:'selection' %}
+            {% if user|can_read_data_for:event_name %}
               <td>{{ applicant|all_feedback|rating_average }}</td>
               <td>{{ applicant|all_feedback|interest_average }}</td>
               <td>{{ applicant|all_feedback|feedback_count }}</td>
@@ -68,7 +68,7 @@ $(document).ready(function(){
       "scrollCollapse": true,
       "paging": false,
       "scrollX": true,
-      {% if user|has_role:'staff' or user|has_role:'selection' %}
+      {% if user|can_read_data_for:event_name %}
       "columnDefs": [
         { "type": "num", targets: [6, 7, 8]  }
       ]

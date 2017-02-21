@@ -36,7 +36,11 @@ def restrict_access(f):
 
 # Returns the full name of the latest feedback event
 def get_latest_event():
-  return Event.objects.latest('id').full_name
+  try:
+    event = Event.objects.latest('id').full_name
+  except Event.DoesNotExist:
+    return
+  return event
 
 @login_required
 def events(request):
@@ -113,8 +117,6 @@ def index(request, event_name):
   assignments = [x.applicant for x in Assignment.objects.filter(scholar=request.user.mcuser)]
   favorites = [x.applicant for x in Favorite.objects.filter(scholar=request.user.mcuser)]
   shortlist = [x.applicant for x in Shortlist.objects.filter(scholar=request.user.mcuser)]
-  if not has_role(request.user, ['staff', 'selection']):
-    applicants = applicants.filter(attended=True)
   applicants = sorted(applicants, key=lambda a: a.get_full_name())
   context = {
     'assignments': assignments,
@@ -131,8 +133,6 @@ def index(request, event_name):
 @restrict_access
 def applicant_table(request, event_name):
   applicants = Applicant.objects.filter(event__name=event_name).order_by('first_name')
-  if not has_role(request.user, ['staff', 'selection']):
-    applicants = applicants.filter(attended=True)
   context = {
     'applicants': applicants,
     'event_name': event_name
@@ -143,8 +143,6 @@ def applicant_table(request, event_name):
 @restrict_access
 def applicant_table_ratings(request, event_name):
   applicants = Applicant.objects.filter(event__name=event_name).order_by('first_name')
-  if not has_role(request.user, ['staff', 'selection']):
-    applicants = applicants.filter(attended=True)
   context = {
     'applicants': applicants,
     'event_name': event_name
@@ -269,29 +267,6 @@ def add_applicant(request, event_name):
   }
   return render(request, 'feedback/add_applicant.html', context)
 
-@login_required
-def grant_permission(request, scholar_name):
-  if not has_role(request.user, ['staff', 'dev', 'selection']):
-    raise Http404('Permission denied.')
-  try:
-    mcuser = McUser.objects.get(norm_name=normalize_name(scholar_name))
-    ApplicantEditor.assign_role_to_user(mcuser.user)
-    grant_permission(mcuser.user, 'edit_applicants')
-    return redirect('feedback:index')
-  except McUser.DoesNotExist:
-    raise Http404('User does not exist')
-
-@login_required
-def revoke_permission(request, scholar_name):
-  if not has_role(request.user, ['staff', 'dev']):
-    raise Http404('Permission denied.')
-  try:
-    mcuser = McUser.objects.get(norm_name=normalize_name(scholar_name))
-  except McUser.DoesNotExist:
-    raise Http404('User does not exist')
-  revoke_permission(mcuser.user, 'edit_applicants')
-  return redirect('feedback:index')
-
 def get_state():
   try:
     state = State.objects.get()
@@ -318,8 +293,13 @@ def app_state(request):
   return render(request, 'feedback/edit_state.html', context)
 
 @login_required
-@has_role_decorator(['staff', 'selection'])
 def export(request, event_name):
+  try:
+    event = Event.objects.get(name=event_name)
+  except Event.DoesNotExist:
+    raise Http404('Event does not exist')
+  if not request.user.mcuser in event.staff.all():
+    raise Http404('Permission denied.')
   applicants = Applicant.objects.filter(event__name=event_name).order_by('last_name')
   book = Workbook()
   sheet1 = book.add_sheet('Rating Averages')
@@ -368,7 +348,6 @@ def export(request, event_name):
           sheet2.write(s2_line, j, field)
         s2_line += 1
 
-  event = Event.objects.get(name=event_name)
   with NamedTemporaryFile() as f:
     book.save(f)
     f.seek(0)
@@ -377,8 +356,13 @@ def export(request, event_name):
     return response
 
 @login_required
-@has_role_decorator(['staff', 'selection'])
 def export_fw(request, event_name):
+  try:
+    event = Event.objects.get(name=event_name)
+  except Event.DoesNotExist:
+    raise Http404('Event does not exist')
+  if not (request.user.mcuser in event.staff.all() or request.user.mcuser in event.selection.all()):
+    raise Http404('Permission denied.') 
   applicants = Applicant.objects.filter(event__name=event_name).order_by('last_name')
   book = Workbook()
   sheet1 = book.add_sheet('Rating Averages')
@@ -444,7 +428,6 @@ def export_fw(request, event_name):
           sheet2.write(s2_line, j, field)
         s2_line += 1
 
-  event = Event.objects.get(name=event_name)
   with NamedTemporaryFile() as f:
     book.save(f)
     f.seek(0)
