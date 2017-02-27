@@ -9,6 +9,8 @@ class Event(models.Model):
   full_name = models.CharField(max_length=200, blank=False)
   name = models.CharField(max_length=200, blank=False) # short name of event
   fw = models.BooleanField(blank=False, null=False, default=False)
+  staff = models.ManyToManyField(McUser, related_name='staff')
+  selection = models.ManyToManyField(McUser, related_name='selection')
 
 # Create your models here.
 class Applicant(models.Model):

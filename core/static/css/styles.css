@@ -497,3 +497,22 @@ a p.card-extra-info:hover {
     margin-top: 10px;
   }
 }
+
+.feedback-nav-link {
+  font-size: 22px;
+}
+
+.unclickable {
+  color: #666;
+}
+
+.unclickable:visited {
+  color: #666;
+  cursor:not-allowed;
+}
+
+.unclickable:hover {
+  color: #666;
+  cursor:not-allowed;
+}
+

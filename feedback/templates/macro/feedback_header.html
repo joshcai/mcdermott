@@ -1,3 +1,4 @@
+{% load feedback_tags %}
 {% load permission_tags %}
 
 <ul class="nav nav-pills directory-header text-center">
@@ -7,7 +8,7 @@
   <li role="presentation" class="{% if active == 'table' %}active{% endif %}">
     <a {% if active != 'table' %} href="{% url 'feedback:applicant_table' event_name %}" {%endif %}>Table</a>
   </li>
-  {% if user|has_role:'staff' or user|has_role:'selection' %}
+  {% if user|can_read_data_for:event_name %}
     <li role="presentation" class="{% if active == 'ratings' %}active{% endif%}">
       <a href="{% url 'feedback:applicant_table_ratings' event_name %}" >Ratings</a>
     </li>
@@ -15,12 +16,12 @@
   <li role="presentation" class="{% if active == 'add' %}active{% endif %}">
     <a {% if active != 'add' %} href="{% url 'feedback:add_applicant' event_name %}" {%endif %}>Add Applicant</a>
   </li>
-  {% if user|has_role:'staff' or user|has_role:'selection' %}
+  {% if user|can_read_data_for:event_name %}
     <li role="presentation">
       <a href="{% url 'feedback:export' event_name %}" >Export to Excel</a>
     </li>
   {% endif %}
-  {% if user|has_role:'staff' %}
+  {% if user|is_staff_for:event_name %}
     <li role="presentation">
       <a href="{% url 'feedback:app_state' %}" >App State</a>
     </li>

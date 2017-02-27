@@ -9,3 +9,4 @@ run/
 *.xlsx
 *.csv
 tmp/
+*.DS_Store

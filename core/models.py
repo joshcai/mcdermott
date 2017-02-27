@@ -110,8 +110,6 @@ class McUser(models.Model):
   children = models.CharField(max_length=200, blank=True)
   personal_news = models.CharField(max_length=2000, blank=True)
   num_degrees = models.IntegerField(default=0, null=True, blank=True)
-  # On Selection Committee
-  selection = models.BooleanField(default=False)
 
   def get_full_name(self):
     return '%s %s' % (self.first_name, self.last_name)

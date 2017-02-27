@@ -2,7 +2,7 @@ from django import template
 
 import random
 
-from feedback.models import Feedback, Favorite
+from feedback.models import Feedback, Favorite, Event
 
 register = template.Library()
 
@@ -60,3 +60,20 @@ def feedback_header(active, user, event_name):
 @register.filter
 def convert_attended(attended):
   return 'Yes' if attended else 'No'
+
+# works on the Django user, not McUser
+@register.filter
+def is_staff_for(user, event_name):
+  try:
+    event = Event.objects.get(name=event_name)
+  except Event.DoesNotExist:
+    return False
+  return user.mcuser in event.staff.all()
+
+@register.filter
+def can_read_data_for(user, event_name):
+  try:
+    event = Event.objects.get(name=event_name)
+  except Event.DoesNotExist:
+    return False
+  return user.mcuser in event.staff.all() or user.mcuser in event.selection.all()

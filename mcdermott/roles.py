@@ -29,8 +29,3 @@ class ApplicantEditor(AbstractUserRole):
   avaliable_permissions = {
     'edit_applicants': True
   }
-
-class Selection(AbstractUserRole):
-    avaliable_permissions = {
-    'edit_applicants': True
-  }
