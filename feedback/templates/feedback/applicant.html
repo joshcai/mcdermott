@@ -132,7 +132,7 @@ Feedback - {{ applicant.get_full_name }}
       </div>
       <br>
       <div class="col-md-12 text-center">
-        <a href="#" id="prev_link" class="btn btn-default" disabled>PREV</a>
+        <a href="#" id="prev_link" class="feedback-nav-link"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
         &nbsp;&nbsp;
         <a href="{% url 'feedback:index' event_name %}" class="btn btn-default">BACK</a>
         {% if state.current != 3 %}
@@ -140,7 +140,7 @@ Feedback - {{ applicant.get_full_name }}
           <input class="btn btn-default" type="submit" value="SAVE" />
         {% endif %}
         &nbsp;&nbsp;
-        <a href="#" id="next_link" class="btn btn-default" disabled>NEXT</a>
+        <a href="#" id="next_link" class="feedback-nav-link"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
       </div>
       <br>
     </div>
@@ -204,7 +204,6 @@ Feedback - {{ applicant.get_full_name }}
     });
   });
 
-
   $(document).ready(function(){
     var event_name = '{{event_name}}';
     var applicant = '{{applicant.norm_name}}';
@@ -215,11 +214,13 @@ Feedback - {{ applicant.get_full_name }}
     }
     if (index - 1 >= 0) {
       $('#prev_link').attr('href', buildLink(applicants[index-1]));
-      $('#prev_link').prop('disabled', false);
+    } else {
+      $('#prev_link').addClass('unclickable');
     }
     if (index + 1 < applicants.length) {
       $('#next_link').attr('href', buildLink(applicants[index+1]));
-      $('#next_link').prop('disabled', false);     
+    } else {
+      $('#next_link').addClass('unclickable');
     }
     {% if user|can_read_data_for:event_name %}
       $('#feedbackTable').DataTable({
