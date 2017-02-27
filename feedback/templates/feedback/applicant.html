@@ -9,13 +9,14 @@
 Feedback - {{ applicant.get_full_name }}
 {% endblock %}
 
+{% block additional_include %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.3/js.cookie.min.js"></script>
 {% if user|can_read_data_for:event_name %}
-  {% block additional_include %}
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/dataTables.bootstrap.min.css">
   <script src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>
-  {% endblock %}
 {% endif %}
+{% endblock %}
 
 {% block inner_content %}
 <div class="row">
@@ -131,11 +132,15 @@ Feedback - {{ applicant.get_full_name }}
       </div>
       <br>
       <div class="col-md-12 text-center">
+        <a href="#" id="prev_link" class="btn btn-default" disabled>PREV</a>
+        &nbsp;&nbsp;
         <a href="{% url 'feedback:index' event_name %}" class="btn btn-default">BACK</a>
         {% if state.current != 3 %}
           &nbsp;&nbsp;
           <input class="btn btn-default" type="submit" value="SAVE" />
         {% endif %}
+        &nbsp;&nbsp;
+        <a href="#" id="next_link" class="btn btn-default" disabled>NEXT</a>
       </div>
       <br>
     </div>
@@ -174,28 +179,13 @@ Feedback - {{ applicant.get_full_name }}
   {% endif %}
 </div>
 <script>
-  //For getting CSRF token
-  function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
-      var cookies = document.cookie.split(';');
-      for (var i = 0; i < cookies.length; i++) {
-        var cookie = jQuery.trim(cookies[i]);
-        if (cookie.substring(0, name.length + 1) == (name + '=')) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-  }
   $('#feedback_form').on('submit', function(event){
     event.preventDefault();
     $.ajax({
       url : window.location.href,
       type : "POST",
       data : { 
-        csrfmiddlewaretoken : getCookie('csrftoken'),
+        csrfmiddlewaretoken : Cookies.get('csrftoken'),
         rating: $('input[name=rating]:checked').val(),
         interest: $('input[name=interest]:checked').val(),
         comments : $('#id_comments').val(),
@@ -212,10 +202,26 @@ Feedback - {{ applicant.get_full_name }}
         console.log(xhr.status + ": " + xhr.responseText); 
       }
     });
-  });    
+  });
 
-  {% if user|can_read_data_for:event_name %}
-    $(document).ready(function(){
+
+  $(document).ready(function(){
+    var event_name = '{{event_name}}';
+    var applicant = '{{applicant.norm_name}}';
+    var applicants = JSON.parse(Cookies.get('applicants'));
+    var index = applicants.indexOf(applicant);
+    function buildLink(name) {
+      return '/feedback/' + event_name + '/applicant/' + name; 
+    }
+    if (index - 1 >= 0) {
+      $('#prev_link').attr('href', buildLink(applicants[index-1]));
+      $('#prev_link').prop('disabled', false);
+    }
+    if (index + 1 < applicants.length) {
+      $('#next_link').attr('href', buildLink(applicants[index+1]));
+      $('#next_link').prop('disabled', false);     
+    }
+    {% if user|can_read_data_for:event_name %}
       $('#feedbackTable').DataTable({
         "order": [[ 2, "desc" ]],
         "scrollY": "400px",
@@ -227,7 +233,7 @@ Feedback - {{ applicant.get_full_name }}
           { "orderable": false, "targets": 4 }
         ]
       });
-    });
-  {% endif %}
+    {% endif %}
+  });
 </script>
 {% endblock %}
