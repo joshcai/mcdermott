@@ -167,12 +167,9 @@ def applicant_profile(request, event_name, name):
     feedback.scholar = request.user.mcuser
   if request.method == 'POST':
     form = FeedbackForm(request.POST, instance=feedback)
-    print 'got form'
     if (form.is_valid()):
-      print 'form valid'
       form.save()
       if request.is_ajax():
-        print 'returning json'
         return JsonResponse({'msg': 'saved successfully'})
       return redirect('feedback:index', event_name)
   else:

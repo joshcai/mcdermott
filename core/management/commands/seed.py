@@ -12,7 +12,7 @@ from core.models import Degree, Experience, McUser
 import requests
 
 from mcdermott.config import DEFAULT_PASSWORD
-from mcdermott.roles import Staff, Scholar, CurrentScholar, Dev, Selection
+from mcdermott.roles import Staff, Scholar, CurrentScholar, Dev
 
 def randomString():
   return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))

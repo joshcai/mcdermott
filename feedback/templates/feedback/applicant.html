@@ -134,7 +134,7 @@ Feedback - {{ applicant.get_full_name }}
       <div class="col-md-12 text-center">
         <a href="#" id="prev_link" class="feedback-nav-link"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
         &nbsp;&nbsp;
-        <a href="{% url 'feedback:index' event_name %}" class="btn btn-default">BACK</a>
+        <a href="{% url 'feedback:index' event_name %}" class="btn btn-default">HOME</a>
         {% if state.current != 3 %}
           &nbsp;&nbsp;
           <input class="btn btn-default" type="submit" value="SAVE" />
@@ -217,7 +217,7 @@ Feedback - {{ applicant.get_full_name }}
     } else {
       $('#prev_link').addClass('unclickable');
     }
-    if (index + 1 < applicants.length) {
+    if (index != -1 && index + 1 < applicants.length) {
       $('#next_link').attr('href', buildLink(applicants[index+1]));
     } else {
       $('#next_link').addClass('unclickable');
