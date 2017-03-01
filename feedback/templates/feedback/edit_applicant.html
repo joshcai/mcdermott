@@ -31,9 +31,7 @@ Feedback - Edit {{ applicant.get_full_name }}
         <label for="id_{{ form.last_name.name }}" class="form-label">
           Last name
         </label>
-        {% if user|is_staff_for:event_name %}
           <span class="text-right pull-right">Attended: {{ form.attended }}</span>
-        {% endif %}
         {{ form.last_name|add_class:"form-control" }}
         <span class="error">{{ form.last_name.errors }}</span>
       </div>
