@@ -155,8 +155,6 @@ class Command(BaseCommand):
     user.mcuser.last_name = alumni['Last']
     user.mcuser.email = alumni['Email']
     user.mcuser.save()
-    if alumni['Selection'] == 'True':
-      Selection.assign_role_to_user(user)
     session = requests.session()
     url = 'http://mcdermott.org/password_reset'
     response = session.get(url)

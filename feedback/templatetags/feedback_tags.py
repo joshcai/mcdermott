@@ -34,24 +34,24 @@ def feedback_count(feedback):
 @register.filter
 def all_feedback(applicant):
   feedback = Feedback.objects.filter(applicant=applicant)
-  return [f for f in feedback if not f.scholar.selection]
+  return [f for f in feedback]
 
 @register.filter
 def alumni_filter(feedback):
-  return [f for f in feedback if (f.scholar.class_year < 2012 or f.scholar.class_year is None)]
+  return [f for f in feedback if (f.scholar.class_year < 2013 or f.scholar.class_year is None)]
 
 @register.filter
 def senior_filter(feedback):
-  return [f for f in feedback if f.scholar.class_year == 2012]
+  return [f for f in feedback if f.scholar.class_year == 2013]
 
 @register.filter
 def other_filter(feedback):
-  return [f for f in feedback if f.scholar.class_year > 2012]
+  return [f for f in feedback if f.scholar.class_year > 2013]
 
 @register.filter
 def favorite_filter(applicant):
   favs = Favorite.objects.filter(applicant=applicant)
-  return [f for f in favs if not f.scholar.selection]
+  return [f for f in favs]
 
 @register.inclusion_tag('macro/feedback_header.html')
 def feedback_header(active, user, event_name):
