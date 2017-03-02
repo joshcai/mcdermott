@@ -39,7 +39,7 @@ Feedback - {{ applicant.get_full_name }}
     &nbsp;&nbsp;
     <a href="#" id="next_link" class="feedback-nav-link"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
   </div>
-  <div id="save_status" class="text-center">
+  <div id="save_status" class="text-center" style="visibility: hidden;">
     Saving...
   </div>
   {% csrf_token %}
@@ -183,7 +183,7 @@ Feedback - {{ applicant.get_full_name }}
   $('#feedback_form').on('submit', function(event){
     event.preventDefault();
     $('#save_status').text('Saving...');
-    $('#save_status').show();
+    $('#save_status').css('visibility', 'visible');
     $.ajax({
       url : window.location.href,
       type : "POST",
@@ -210,7 +210,6 @@ Feedback - {{ applicant.get_full_name }}
   });
 
   $(document).ready(function(){
-    $('#save_status').hide();
     var event_name = '{{event_name}}';
     var applicant = '{{applicant.norm_name}}';
     var applicants = JSON.parse(Cookies.get('applicants'));
