@@ -28,6 +28,20 @@ Feedback - {{ applicant.get_full_name }}
     </h4>
   </div>
   <form method="post" action="" id="feedback_form">
+  <div class="margin-bot-md col-md-12 text-center">
+    <a href="#" id="prev_link" class="feedback-nav-link"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
+    &nbsp;&nbsp;
+    <a href="{% url 'feedback:index' event_name %}" class="btn btn-default">HOME</a>
+    {% if state.current != 3 %}
+      &nbsp;&nbsp;
+      <input class="btn btn-default" type="submit" value="SAVE" />
+    {% endif %}
+    &nbsp;&nbsp;
+    <a href="#" id="next_link" class="feedback-nav-link"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+  </div>
+  <div id="save_status" class="text-center">
+    Saving...
+  </div>
   {% csrf_token %}
   {% if form.errors %}
     There were errors!
@@ -130,19 +144,6 @@ Feedback - {{ applicant.get_full_name }}
           <span class="error">{{ form.comments.errors }}</span>
         </div>
       </div>
-      <br>
-      <div class="col-md-12 text-center">
-        <a href="#" id="prev_link" class="feedback-nav-link"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
-        &nbsp;&nbsp;
-        <a href="{% url 'feedback:index' event_name %}" class="btn btn-default">HOME</a>
-        {% if state.current != 3 %}
-          &nbsp;&nbsp;
-          <input class="btn btn-default" type="submit" value="SAVE" />
-        {% endif %}
-        &nbsp;&nbsp;
-        <a href="#" id="next_link" class="feedback-nav-link"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
-      </div>
-      <br>
     </div>
   </div>
   </form>
@@ -181,10 +182,12 @@ Feedback - {{ applicant.get_full_name }}
 <script>
   $('#feedback_form').on('submit', function(event){
     event.preventDefault();
+    $('#save_status').text('Saving...');
+    $('#save_status').show();
     $.ajax({
       url : window.location.href,
       type : "POST",
-      data : { 
+      data : {
         csrfmiddlewaretoken : Cookies.get('csrftoken'),
         rating: $('input[name=rating]:checked').val(),
         interest: $('input[name=interest]:checked').val(),
@@ -194,17 +197,20 @@ Feedback - {{ applicant.get_full_name }}
 
       // handle a successful response
       success : function(json) {
+        $('#save_status').text('Successfully saved!');
         console.log(json);
       },
 
       // handle a non-successful response
       error : function(xhr,errmsg,err) {
-        console.log(xhr.status + ": " + xhr.responseText); 
+        $('#save_status').text('Error saving.');
+        console.log(xhr.status + ": " + xhr.responseText);
       }
     });
   });
 
   $(document).ready(function(){
+    $('#save_status').hide();
     var event_name = '{{event_name}}';
     var applicant = '{{applicant.norm_name}}';
     var applicants = JSON.parse(Cookies.get('applicants'));
