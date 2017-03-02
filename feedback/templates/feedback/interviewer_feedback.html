@@ -82,6 +82,7 @@ Feedback - Interview Feedback
     {% form_element form.question_6 template.question_6 'col-md-12' %}
     {% form_element form.comments 'Additional Comments' 'col-md-12' %}
     {% form_element form.rating template.rating 'col-md-12' %}
+    <a href="{% url 'feedback:index' event_name %}" class="btn btn-default">HOME</a>
     <input class="btn btn-default" type="submit" value="SAVE" />
   </form>
 </div>

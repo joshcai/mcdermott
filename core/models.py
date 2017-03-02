@@ -144,6 +144,9 @@ class McUser(models.Model):
   def save(self, *args, **kwargs):
     self.norm_name = normalize_name(self.get_full_name())
     super(McUser, self).save(*args, **kwargs)
+
+  def __str__(self):
+    return self.get_full_name()
   
   def __lt__(self, other):
     # implement sorting function

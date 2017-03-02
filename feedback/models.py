@@ -44,6 +44,9 @@ class Applicant(models.Model):
     self.norm_name = normalize_name(self.get_full_name())
     super(Applicant, self).save(*args, **kwargs)
 
+  def __str__(self):
+    return self.get_full_name()
+
 class Assignment(models.Model):
   scholar = models.ForeignKey(McUser)
   applicant = models.ForeignKey(Applicant)
