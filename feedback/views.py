@@ -15,8 +15,9 @@ from rolepermissions.verifications import has_role, has_permission
 from rolepermissions.decorators import has_role_decorator
 from xlwt import Workbook
 
-from forms import ApplicantForm, FeedbackForm, StateForm, EventForm
-from models import Applicant, Feedback, State, Event, Assignment, Favorite, Shortlist
+import interviewer_form
+from forms import ApplicantForm, FeedbackForm, StateForm, EventForm, InterviewerFeedbackForm
+from models import Applicant, Feedback, State, Event, Assignment, Favorite, Shortlist, InterviewerFeedback
 from templatetags.feedback_tags import *
 
 from mcdermott.roles import ApplicantEditor
@@ -186,6 +187,35 @@ def applicant_profile(request, event_name, name):
       }
   return render(request, 'feedback/applicant.html', context)
 
+@login_required
+@restrict_access
+def interviewer_feedback(request, event_name, name):
+  try:
+    applicant = Applicant.objects.get(norm_name=normalize_name(name), event__name=event_name)
+  except Applicant.DoesNotExist:
+    raise Http404('Applicant does not exist.')
+  try:
+    feedback = InterviewerFeedback.objects.get(applicant=applicant, scholar=request.user.mcuser)
+  except InterviewerFeedback.DoesNotExist:
+    feedback = InterviewerFeedback()
+    feedback.applicant = applicant
+    feedback.scholar = request.user.mcuser
+  if request.method == 'POST':
+    form = InterviewerFeedbackForm(request.POST, instance=feedback)
+    if (form.is_valid()):
+      form.save()
+      return redirect('feedback:index', event_name)
+  else:
+    form = InterviewerFeedbackForm(instance=feedback)
+
+  context = {
+      'applicant': applicant,
+      'form': form,
+      'state': get_state(),
+      'template': interviewer_form.template,
+      'event_name': event_name,
+      }
+  return render(request, 'feedback/interviewer_feedback.html', context)
 
 @login_required
 @csrf_exempt

@@ -16,6 +16,7 @@ urlpatterns = [
   url(r'^(\w+)/favorite/applicant/(\w+)$', views.favorite_applicant, name='favorite_applicant'),
   url(r'^(\w+)/shortlist/applicant/(\w+)$', views.shortlist_applicant, name='shortlist_applicant'),
   url(r'^(\w+)/applicant/(\w+)$', views.applicant_profile, name='applicant_profile'),
+  url(r'^(\w+)/applicant/(\w+)/interview$', views.interviewer_feedback, name='interviewer_feedback'),
   url(r'^(\w+)/applicant/(\w+)/edit$', views.edit_applicant, name='edit_applicant'),
   url(r'^(\w+)/export$', views.export_fw, name='export'),
   url(r'^(\w+)$', views.index, name='index'),

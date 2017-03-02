@@ -57,6 +57,10 @@ def favorite_filter(applicant):
 def feedback_header(active, user, event_name):
   return {'active': active, 'user': user, 'event_name': event_name}
 
+@register.inclusion_tag('macro/form_element.html')
+def form_element(element, label, style, add_form_control=True):
+  return {'element': element, 'style': style, 'label': label, 'add_form_control': add_form_control}
+
 @register.filter
 def convert_attended(attended):
   return 'Yes' if attended else 'No'

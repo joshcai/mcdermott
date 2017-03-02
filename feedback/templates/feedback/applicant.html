@@ -122,7 +122,7 @@ Feedback - {{ applicant.get_full_name }}
           <label for="id_rating" class="form-label">
             Is this person a Scholar?
           </label>
-          {{ form.rating }}
+          {{ form.rating|add_class:"form-control" }}
           <span class="error">{{ form.rating.errors }}</span>
         </div>
       </div>
@@ -131,7 +131,7 @@ Feedback - {{ applicant.get_full_name }}
           <label for="id_interest" class="form-label">
             Does this person want to be a Scholar?
           </label>
-          {{ form.interest|add_class:"form-control disabled" }}
+          {{ form.interest|add_class:"form-control" }}
           <span class="error">{{ form.interest.errors }}</span>
         </div>
       </div>
@@ -198,7 +198,6 @@ Feedback - {{ applicant.get_full_name }}
       // handle a successful response
       success : function(json) {
         $('#save_status').text('Successfully saved!');
-        console.log(json);
       },
 
       // handle a non-successful response

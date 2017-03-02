@@ -1,0 +1,15 @@
+{% load widget_tweaks %}
+
+<div class="{{style}}">
+  <div class="form-group margin-sm">
+    <label for="id_{{ element.name }}" class="form-label">
+      {{ label }}
+    </label>
+    {% if add_form_control %}
+	    {{ element|add_class:"form-control" }}
+		{% else %}
+			{{ element }}
+    {% endif %}
+    <span class="error">{{ element.errors }}</span>
+  </div>
+</div>

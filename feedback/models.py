@@ -9,8 +9,9 @@ class Event(models.Model):
   full_name = models.CharField(max_length=200, blank=False)
   name = models.CharField(max_length=200, blank=False) # short name of event
   fw = models.BooleanField(blank=False, null=False, default=False)
-  staff = models.ManyToManyField(McUser, related_name='staff')
-  selection = models.ManyToManyField(McUser, related_name='selection')
+  staff = models.ManyToManyField(McUser, related_name='event_staff')
+  selection = models.ManyToManyField(McUser, related_name='event_selection')
+  interviewers = models.ManyToManyField(McUser, related_name='event_interviewer')
 
 # Create your models here.
 class Applicant(models.Model):
@@ -80,6 +81,45 @@ class Feedback(models.Model):
   interest = models.IntegerField(choices=INTEREST_CHOICES, null=True, blank=True, default=None)
 
   notes = models.TextField(blank=True)
+  comments = models.TextField(blank=True)
+
+class InterviewerFeedback(models.Model):
+  """Model for interviewer feedback from one scholar on an applicant."""
+  RATING_CHOICES = (
+      (5, 'Strong Yes'),
+      (4, 'Yes - little or no reservations'),
+      (3, 'Yes - some reservations'),
+      (2, 'No - significant reservations'),
+      (1, 'Strong No'),
+      (0, 'Could not tell based on interaction'),
+  )
+  scholar = models.ForeignKey(McUser)
+  applicant = models.ForeignKey(Applicant)
+  checkbox_1 = models.BooleanField(default=False)
+  checkbox_2 = models.BooleanField(default=False)
+  checkbox_3 = models.BooleanField(default=False)
+  checkbox_4 = models.BooleanField(default=False)
+  checkbox_5 = models.BooleanField(default=False)
+  checkbox_6 = models.BooleanField(default=False)
+  checkbox_7 = models.BooleanField(default=False)
+  checkbox_8 = models.BooleanField(default=False)
+  checkbox_9 = models.BooleanField(default=False)
+  checkbox_10 = models.BooleanField(default=False)
+  checkbox_11 = models.BooleanField(default=False)
+  checkbox_12 = models.BooleanField(default=False)
+  checkbox_13 = models.BooleanField(default=False)
+  checkbox_14 = models.BooleanField(default=False)
+  checkbox_15 = models.BooleanField(default=False)
+  checkbox_16 = models.BooleanField(default=False)
+  checkbox_17 = models.BooleanField(default=False)
+  checkbox_18 = models.BooleanField(default=False)
+  question_1 = models.TextField(blank=True)
+  question_2 = models.TextField(blank=True)
+  question_3 = models.TextField(blank=True)
+  question_4 = models.TextField(blank=True)
+  question_5 = models.TextField(blank=True)
+  question_6 = models.TextField(blank=True)
+  rating = models.IntegerField(choices=RATING_CHOICES, null=True, blank=True, default=None)
   comments = models.TextField(blank=True)
 
 class State(models.Model):
