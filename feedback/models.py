@@ -68,7 +68,7 @@ class Feedback(models.Model):
       (1, 'Strong No'),
       (0, 'Could not tell based on interaction'),
   )
-  rating = models.IntegerField(choices=RATING_CHOICES, null=True, blank=False, default=None)
+  rating = models.IntegerField(choices=RATING_CHOICES, null=True, blank=True, default=None)
 
   INTEREST_CHOICES = (
       (5, 'Absolutely'),
@@ -77,7 +77,7 @@ class Feedback(models.Model):
       (1, 'No'),
       (0, 'Could not tell based on interaction'),
   )
-  interest = models.IntegerField(choices=INTEREST_CHOICES, null=True, blank=False, default=None)
+  interest = models.IntegerField(choices=INTEREST_CHOICES, null=True, blank=True, default=None)
 
   notes = models.TextField(blank=True)
   comments = models.TextField(blank=True)

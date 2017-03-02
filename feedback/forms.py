@@ -41,6 +41,13 @@ class ApplicantForm(forms.ModelForm):
     }
 
 class FeedbackForm(forms.ModelForm):
+  def __init__(self, *args, **kwargs):
+    super(FeedbackForm, self).__init__(*args, **kwargs)
+
+    #strip out the '---------' option that is inserted b/c blank=True in the models
+    self.fields['rating'].choices = self.fields['rating'].choices[1:]
+    self.fields['interest'].choices = self.fields['interest'].choices[1:]
+
   class Meta:
     model = Feedback
     fields = [
