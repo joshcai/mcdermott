@@ -9,13 +9,14 @@
 Feedback - {{ applicant.get_full_name }}
 {% endblock %}
 
-{% if user|has_role:'staff' or user|has_role:'selection' %}
-  {% block additional_include %}
+{% block additional_include %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.3/js.cookie.min.js"></script>
+{% if user|can_read_data_for:event_name %}
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/dataTables.bootstrap.min.css">
   <script src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>
-  {% endblock %}
 {% endif %}
+{% endblock %}
 
 {% block inner_content %}
 <div class="row">
@@ -23,11 +24,33 @@ Feedback - {{ applicant.get_full_name }}
     <h4 class="margin-bot-md">
       {{ applicant.gender }}
       {{ applicant.get_full_name }}
-      {% if user|has_role:'staff' or user|has_role:'dev' %}
-        <a href="{% url 'feedback:edit_applicant' event_name applicant.norm_name %}" class="btn btn-default btn-sm profile-show-btn"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;&nbsp;Edit</a>
-      {% endif %}
+      <a href="{% url 'feedback:edit_applicant' event_name applicant.norm_name %}" class="btn btn-default btn-sm profile-show-btn"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;&nbsp;Edit</a>
     </h4>
   </div>
+  {% if is_interviewer %}
+  <div class="col-md-12 text-center">
+    <h3><a href="{{ survey_link }}" target="_blank">Link to interviewer feedback form</a></h3>
+  </div>
+  {% endif %}
+  <form method="post" action="" id="feedback_form">
+  <div class="margin-bot-md col-md-12 text-center">
+    <a href="#" id="prev_link" class="feedback-nav-link"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
+    &nbsp;&nbsp;
+    <a href="{% url 'feedback:index' event_name %}" class="btn btn-default">HOME</a>
+    {% if state.current != 3 and not is_interviewer %}
+      &nbsp;&nbsp;
+      <input class="btn btn-default" type="submit" value="SAVE" />
+    {% endif %}
+    &nbsp;&nbsp;
+    <a href="#" id="next_link" class="feedback-nav-link"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+  </div>
+  <div id="save_status" class="text-center" style="visibility: hidden;">
+    Saving...
+  </div>
+  {% csrf_token %}
+  {% if form.errors %}
+    There were errors!
+  {% endif %}
   <div class="col-md-6">
     <div class="row">
       <div class="text-center">
@@ -68,7 +91,7 @@ Feedback - {{ applicant.get_full_name }}
               <span class="error">{{ form.notes.errors }}</span>
             </div>
           </div>
-        {% if user|has_role:'staff' %}
+        {% if user|is_staff_for:event_name %}
           <table class="table table-striped table-hover margin-top-lg">
             <tbody>
               <tr>
@@ -99,51 +122,37 @@ Feedback - {{ applicant.get_full_name }}
   </div>
   <div class="col-md-6">
     <div class="row">
-      <form method="post" action="">
-        {% csrf_token %}
-        {% if form.errors %}
-          There were errors!
-        {% endif %}
-        <div class="col-md-12">
-          <div class="form-group">
-            <label for="id_rating" class="form-label">
-              Is this person a Scholar?
-            </label>
-            {{ form.rating }}
-            <span class="error">{{ form.rating.errors }}</span>
-          </div>
+      <div class="col-md-12">
+        <div class="form-group">
+          <label for="id_rating" class="form-label">
+            Is this person a Scholar?
+          </label>
+          {{ form.rating|add_class:"form-control" }}
+          <span class="error">{{ form.rating.errors }}</span>
         </div>
-        <div class="col-md-12">
-          <div class="form-group">
-            <label for="id_interest" class="form-label">
-              Does this person want to be a Scholar?
-            </label>
-            {{ form.interest|add_class:"form-control disabled" }}
-            <span class="error">{{ form.interest.errors }}</span>
-          </div>
+      </div>
+      <div class="col-md-12">
+        <div class="form-group">
+          <label for="id_interest" class="form-label">
+            Does this person want to be a Scholar?
+          </label>
+          {{ form.interest|add_class:"form-control" }}
+          <span class="error">{{ form.interest.errors }}</span>
         </div>
-        <div class="col-md-12">
-          <div class="form-group">
-            <label for="id_comments" class="form-label">
-              Additional comments (especially about personality, soft skills):
-            </label>
-            {{ form.comments|add_class:"form-control" }}
-            <span class="error">{{ form.comments.errors }}</span>
-          </div>
+      </div>
+      <div class="col-md-12">
+        <div class="form-group">
+          <label for="id_comments" class="form-label">
+            Additional comments (especially about personality, soft skills):
+          </label>
+          {{ form.comments|add_class:"form-control" }}
+          <span class="error">{{ form.comments.errors }}</span>
         </div>
-        <br>
-        <div class="col-md-12 text-center">
-          <a href="{% url 'feedback:index' event_name %}" class="btn btn-default">BACK</a>
-          {% if state.current != 3 %}
-            &nbsp;&nbsp;
-            <input class="btn btn-default" type="submit" value="SAVE" />
-          {% endif %}
-        </div>
-        <br>
-      </form>
+      </div>
     </div>
   </div>
-  {% if user|has_role:'staff' or user|has_role:'selection' %}
+  </form>
+  {% if user|can_read_data_for:event_name %}
     <div class="col-md-12">
       <h4>Feedback</h4>
         <div class="table-responsive">
@@ -175,9 +184,54 @@ Feedback - {{ applicant.get_full_name }}
     </div>
   {% endif %}
 </div>
-{% if user|has_role:'staff' or user|has_role:'selection' %}
-  <script>
+<script>
+  $('#feedback_form').on('submit', function(event){
+    event.preventDefault();
+    $('#save_status').text('Saving...');
+    $('#save_status').css('visibility', 'visible');
+    $.ajax({
+      url : window.location.href,
+      type : "POST",
+      data : {
+        csrfmiddlewaretoken : Cookies.get('csrftoken'),
+        rating: $('input[name=rating]:checked').val(),
+        interest: $('input[name=interest]:checked').val(),
+        comments : $('#id_comments').val(),
+        notes: $('#id_notes').val(),
+      },
+
+      // handle a successful response
+      success : function(json) {
+        $('#save_status').text('Successfully saved!');
+      },
+
+      // handle a non-successful response
+      error : function(xhr,errmsg,err) {
+        $('#save_status').text('Error saving.');
+        console.log(xhr.status + ": " + xhr.responseText);
+      }
+    });
+  });
+
   $(document).ready(function(){
+    var event_name = '{{event_name}}';
+    var applicant = '{{applicant.norm_name}}';
+    var applicants = JSON.parse(Cookies.get('applicants'));
+    var index = applicants.indexOf(applicant);
+    function buildLink(name) {
+      return '/feedback/' + event_name + '/applicant/' + name; 
+    }
+    if (index - 1 >= 0) {
+      $('#prev_link').attr('href', buildLink(applicants[index-1]));
+    } else {
+      $('#prev_link').addClass('unclickable');
+    }
+    if (index != -1 && index + 1 < applicants.length) {
+      $('#next_link').attr('href', buildLink(applicants[index+1]));
+    } else {
+      $('#next_link').addClass('unclickable');
+    }
+    {% if user|can_read_data_for:event_name %}
       $('#feedbackTable').DataTable({
         "order": [[ 2, "desc" ]],
         "scrollY": "400px",
@@ -189,7 +243,7 @@ Feedback - {{ applicant.get_full_name }}
           { "orderable": false, "targets": 4 }
         ]
       });
+    {% endif %}
   });
-  </script>
-{% endif %}
+</script>
 {% endblock %}

@@ -4,9 +4,12 @@ db.sqlite3
 *migrations
 media/
 mcdermott/prod_config.py
+feedback/prod_interviewer_form.py
 run/
 /static/
 *.xlsx
 *.csv
 tmp/
+.idea/
+*.DS_Store
 .idea/

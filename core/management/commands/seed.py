@@ -12,7 +12,7 @@ from core.models import Degree, Experience, McUser
 import requests
 
 from mcdermott.config import DEFAULT_PASSWORD
-from mcdermott.roles import Staff, Scholar, CurrentScholar, Dev, Selection
+from mcdermott.roles import Staff, Scholar, CurrentScholar, Dev
 
 def randomString():
   return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
@@ -155,8 +155,6 @@ class Command(BaseCommand):
     user.mcuser.last_name = alumni['Last']
     user.mcuser.email = alumni['Email']
     user.mcuser.save()
-    if alumni['Selection'] == 'True':
-      Selection.assign_role_to_user(user)
     session = requests.session()
     url = 'http://mcdermott.org/password_reset'
     response = session.get(url)
@@ -373,7 +371,8 @@ class Command(BaseCommand):
       Dev.assign_role_to_user(josh)
       staff = self.add_user('staff', 'password', 'Staff User', 2012)
       Staff.assign_role_to_user(staff)
-      self.add_user('atvaccaro', 'password', 'Andrew Vaccaro', 2013, email='andrew.vaccaro@utdallas.edu')
+      andrew = self.add_user('atvaccaro', 'password', 'Andrew Vaccaro', 2013, email='andrew.vaccaro@utdallas.edu')
+      Dev.assign_role_to_user(andrew)
       self.add_user('hajieren', 'password', 'Hans Ajieren', 2014)
       self.add_user('dhruvn', 'password', 'Dhruv Narayanan', 2014)
       self.add_user('testn', 'pwd', 'Test Narayanan', 2014)

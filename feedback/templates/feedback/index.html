@@ -13,6 +13,7 @@ Feedback - Directory
 
 {% block additional_include %}
 <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.3/js.cookie.min.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -29,27 +30,8 @@ Feedback - Directory
 <div id="applicants-list">
   <div class="col-md-12 text-center">
     <h3 class="feedback-event-name">{{ event.full_name }}</h3>
-    {% if user|has_role:'staff' or user|has_role:'selection' %}
-      {% feedback_header 'directory' user event_name %}
-      <br>
-    {% endif %}
-    <div id="myModal" class="modal modal-fullscreen fade">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&close;</button>
-            <h4 class="modal-title">Modal title</h4>
-          </div>
-          <div class="modal-body">
-            <iframe src="fw2016/applicant/abbyplump" style="zoom:0.60" width="99.6%" height="250" frameborder="0"></iframe>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    {% feedback_header 'directory' user event_name %}
+    <br>
     <div class="row">
       <div class="col-md-3">
         <input style="padding-left: 10px" class="search form-control search-bar" placeholder="Search" />
@@ -210,7 +192,7 @@ $('.female-filter').on('click', function() {
   });
 });
 
-$(".favorite-star").click(function(e) {
+$('.favorite-star').click(function(e) {
   var fav_node = $(this);
   var link = "{% url 'feedback:favorite_applicant' event_name 'replace' %}";
   link = link.replace('replace', $(this).data("name"));
@@ -245,10 +227,24 @@ $(".shortlist-elm").click(function(e) {
 
 });
 
-  $(function() {
-    $(".search-bar").focus();
-    $('[data-toggle="tooltip"]').tooltip();
-  });
+function normalize_name(name) {
+  return name.replace(/\W+/g, "").toLowerCase();
+};
+
+function setApplicantsCookie() {
+  var applicants = userList.visibleItems.map( el => normalize_name(el._values.name));
+  Cookies.set('applicants', applicants);
+};
+
+userList.on("updated", function(updated) {
+  setApplicantsCookie();
+});
+
+$(function() {
+  setApplicantsCookie();
+  $(".search-bar").focus();
+  $('[data-toggle="tooltip"]').tooltip();
+});
 
 </script>
 {% endblock %}

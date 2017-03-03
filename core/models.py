@@ -110,8 +110,6 @@ class McUser(models.Model):
   children = models.CharField(max_length=200, blank=True)
   personal_news = models.CharField(max_length=2000, blank=True)
   num_degrees = models.IntegerField(default=0, null=True, blank=True)
-  # On Selection Committee
-  selection = models.BooleanField(default=False)
 
   def get_full_name(self):
     return '%s %s' % (self.first_name, self.last_name)
@@ -146,6 +144,9 @@ class McUser(models.Model):
   def save(self, *args, **kwargs):
     self.norm_name = normalize_name(self.get_full_name())
     super(McUser, self).save(*args, **kwargs)
+
+  def __str__(self):
+    return self.get_full_name()
   
   def __lt__(self, other):
     # implement sorting function
@@ -176,7 +177,7 @@ class Degree(models.Model):
   minor1 = models.CharField(max_length=200, blank=True)
   minor2 = models.CharField(max_length=200, blank=True)
 
-EXP_CHOICES = (('', ''), ('Research', 'Research'), ('Internship', 'Internship'),
+EXP_CHOICES = (('', ''), ('Job', 'Job'), ('Research', 'Research'), ('Internship', 'Internship'),
                ('Volunteer', 'Volunteer'), ('Clubs / Leadership', 'Clubs / Leadership'),
                ('Athletic', 'Athletic'), ('Other', 'Other'))
 

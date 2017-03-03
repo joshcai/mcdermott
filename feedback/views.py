@@ -7,7 +7,7 @@ from django.http import HttpResponse, Http404, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
-from core.util import normalize_name
+from core.util import normalize_name, log_slack
 from core.models import McUser
 
 from rolepermissions.shortcuts import grant_permission, revoke_permission
@@ -15,8 +15,9 @@ from rolepermissions.verifications import has_role, has_permission
 from rolepermissions.decorators import has_role_decorator
 from xlwt import Workbook
 
-from forms import ApplicantForm, FeedbackForm, StateForm, EventForm
-from models import Applicant, Feedback, State, Event, Assignment, Favorite, Shortlist
+import interviewer_form
+from forms import ApplicantForm, FeedbackForm, StateForm, EventForm, InterviewerFeedbackForm
+from models import Applicant, Feedback, State, Event, Assignment, Favorite, Shortlist, InterviewerFeedback
 from templatetags.feedback_tags import *
 
 from mcdermott.roles import ApplicantEditor
@@ -33,6 +34,14 @@ def restrict_access(f):
   return wrapper
 
 # Create your views here.
+
+# Returns the full name of the latest feedback event
+def get_latest_event():
+  try:
+    event = Event.objects.latest('id').full_name
+  except Event.DoesNotExist:
+    return
+  return event
 
 @login_required
 def events(request):
@@ -109,8 +118,6 @@ def index(request, event_name):
   assignments = [x.applicant for x in Assignment.objects.filter(scholar=request.user.mcuser)]
   favorites = [x.applicant for x in Favorite.objects.filter(scholar=request.user.mcuser)]
   shortlist = [x.applicant for x in Shortlist.objects.filter(scholar=request.user.mcuser)]
-  if not has_role(request.user, ['staff', 'selection']):
-    applicants = applicants.filter(attended=True)
   applicants = sorted(applicants, key=lambda a: a.get_full_name())
   context = {
     'assignments': assignments,
@@ -127,8 +134,6 @@ def index(request, event_name):
 @restrict_access
 def applicant_table(request, event_name):
   applicants = Applicant.objects.filter(event__name=event_name).order_by('first_name')
-  if not has_role(request.user, ['staff', 'selection']):
-    applicants = applicants.filter(attended=True)
   context = {
     'applicants': applicants,
     'event_name': event_name
@@ -139,8 +144,6 @@ def applicant_table(request, event_name):
 @restrict_access
 def applicant_table_ratings(request, event_name):
   applicants = Applicant.objects.filter(event__name=event_name).order_by('first_name')
-  if not has_role(request.user, ['staff', 'selection']):
-    applicants = applicants.filter(attended=True)
   context = {
     'applicants': applicants,
     'event_name': event_name
@@ -158,6 +161,10 @@ def applicant_profile(request, event_name, name):
   except Applicant.DoesNotExist:
     raise Http404('Applicant does not exist.')
   try:
+    event = Event.objects.get(name=event_name)
+  except Event.DoesNotExist:
+    raise Http404('Event does not exist')
+  try:
     feedback = Feedback.objects.get(applicant=applicant, scholar=request.user.mcuser)
   except Feedback.DoesNotExist:
     feedback = Feedback()
@@ -167,10 +174,13 @@ def applicant_profile(request, event_name, name):
     form = FeedbackForm(request.POST, instance=feedback)
     if (form.is_valid()):
       form.save()
+      if request.is_ajax():
+        return JsonResponse({'msg': 'saved successfully'})
       return redirect('feedback:index', event_name)
   else:
     form = FeedbackForm(instance=feedback)
   all_feedback = Feedback.objects.filter(applicant=applicant)
+  is_interviewer = request.user.mcuser in event.interviewers.all()
 
   context = {
       'feedback': all_feedback,
@@ -178,10 +188,41 @@ def applicant_profile(request, event_name, name):
       'form': form,
       'state': get_state(),
       'event_name': event_name,
+      'survey_link': event.survey_link,
+      'is_interviewer': is_interviewer,
       'favorited': favorited(request.user.mcuser, applicant)
       }
   return render(request, 'feedback/applicant.html', context)
 
+@login_required
+@restrict_access
+def interviewer_feedback(request, event_name, name):
+  try:
+    applicant = Applicant.objects.get(norm_name=normalize_name(name), event__name=event_name)
+  except Applicant.DoesNotExist:
+    raise Http404('Applicant does not exist.')
+  try:
+    feedback = InterviewerFeedback.objects.get(applicant=applicant, scholar=request.user.mcuser)
+  except InterviewerFeedback.DoesNotExist:
+    feedback = InterviewerFeedback()
+    feedback.applicant = applicant
+    feedback.scholar = request.user.mcuser
+  if request.method == 'POST':
+    form = InterviewerFeedbackForm(request.POST, instance=feedback)
+    if (form.is_valid()):
+      form.save()
+      return redirect('feedback:index', event_name)
+  else:
+    form = InterviewerFeedbackForm(instance=feedback)
+
+  context = {
+      'applicant': applicant,
+      'form': form,
+      'state': get_state(),
+      'template': interviewer_form.template,
+      'event_name': event_name,
+      }
+  return render(request, 'feedback/interviewer_feedback.html', context)
 
 @login_required
 @csrf_exempt
@@ -243,9 +284,6 @@ def favorite_applicant(request, event_name, name):
 
 @login_required
 def edit_applicant(request, event_name, name):
-  if not (has_permission(request.user, 'edit_applicants') or
-          has_role(request.user, ['staff', 'dev', 'selection'])):
-    raise Http404('Permission denied.')
   try:
     applicant = Applicant.objects.get(norm_name=normalize_name(name), event__name=event_name)
   except Applicant.DoesNotExist:
@@ -253,8 +291,10 @@ def edit_applicant(request, event_name, name):
   if request.method == 'POST':
     form = ApplicantForm(request.POST, request.FILES, instance=applicant)
     if (form.is_valid()):
-      form.save()
-      return redirect('feedback:applicant_profile', event_name, applicant.norm_name)
+      app = form.save(commit=False)
+      app.save()
+      log_slack('Applicant %s/%s edited by %s' % (name, app.get_full_name(), request.user.mcuser.get_full_name()))
+      return redirect('feedback:applicant_profile', event_name, app.norm_name)
   else:
     form = ApplicantForm(instance=applicant)
   context = {
@@ -266,18 +306,17 @@ def edit_applicant(request, event_name, name):
 
 @login_required
 def add_applicant(request, event_name):
-  if not (has_permission(request.user, 'edit_applicants') or
-          has_role(request.user, ['staff', 'dev', 'selection'])):
-    raise Http404('Permission denied.')
   applicant = Applicant()
   if request.method == 'POST':
     form = ApplicantForm(request.POST, request.FILES, instance=applicant)
     if (form.is_valid()):
       app = form.save(commit=False)
-      event = Event.objects.get(name=event_name)
-      app.event = event
-      app.save()
-      return redirect('feedback:applicant_profile', event_name, applicant.norm_name)
+      if not Applicant.objects.filter(norm_name=app.norm_name).exists():
+        event = Event.objects.get(name=event_name)
+        app.event = event
+        app.save()
+        log_slack('Applicant %s added by %s' % (app.get_full_name(), request.user.mcuser.get_full_name()))
+        return redirect('feedback:applicant_profile', event_name, applicant.norm_name)
   else:
     form = ApplicantForm(instance=applicant)
   context = {
@@ -285,29 +324,6 @@ def add_applicant(request, event_name):
       'event_name': event_name
   }
   return render(request, 'feedback/add_applicant.html', context)
-
-@login_required
-def grant_permission(request, scholar_name):
-  if not has_role(request.user, ['staff', 'dev', 'selection']):
-    raise Http404('Permission denied.')
-  try:
-    mcuser = McUser.objects.get(norm_name=normalize_name(scholar_name))
-    ApplicantEditor.assign_role_to_user(mcuser.user)
-    grant_permission(mcuser.user, 'edit_applicants')
-    return redirect('feedback:index')
-  except McUser.DoesNotExist:
-    raise Http404('User does not exist')
-
-@login_required
-def revoke_permission(request, scholar_name):
-  if not has_role(request.user, ['staff', 'dev']):
-    raise Http404('Permission denied.')
-  try:
-    mcuser = McUser.objects.get(norm_name=normalize_name(scholar_name))
-  except McUser.DoesNotExist:
-    raise Http404('User does not exist')
-  revoke_permission(mcuser.user, 'edit_applicants')
-  return redirect('feedback:index')
 
 def get_state():
   try:
@@ -335,8 +351,13 @@ def app_state(request):
   return render(request, 'feedback/edit_state.html', context)
 
 @login_required
-@has_role_decorator(['staff', 'selection'])
 def export(request, event_name):
+  try:
+    event = Event.objects.get(name=event_name)
+  except Event.DoesNotExist:
+    raise Http404('Event does not exist')
+  if not request.user.mcuser in event.staff.all():
+    raise Http404('Permission denied.')
   applicants = Applicant.objects.filter(event__name=event_name).order_by('last_name')
   book = Workbook()
   sheet1 = book.add_sheet('Rating Averages')
@@ -385,7 +406,6 @@ def export(request, event_name):
           sheet2.write(s2_line, j, field)
         s2_line += 1
 
-  event = Event.objects.get(name=event_name)
   with NamedTemporaryFile() as f:
     book.save(f)
     f.seek(0)
@@ -394,8 +414,13 @@ def export(request, event_name):
     return response
 
 @login_required
-@has_role_decorator(['staff', 'selection'])
 def export_fw(request, event_name):
+  try:
+    event = Event.objects.get(name=event_name)
+  except Event.DoesNotExist:
+    raise Http404('Event does not exist')
+  # if not (request.user.mcuser in event.staff.all() or request.user.mcuser in event.selection.all()):
+  #   raise Http404('Permission denied.')
   applicants = Applicant.objects.filter(event__name=event_name).order_by('last_name')
   book = Workbook()
   sheet1 = book.add_sheet('Rating Averages')
@@ -461,10 +486,10 @@ def export_fw(request, event_name):
           sheet2.write(s2_line, j, field)
         s2_line += 1
 
-  event = Event.objects.get(name=event_name)
   with NamedTemporaryFile() as f:
     book.save(f)
     f.seek(0)
     response = HttpResponse(f, content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = 'attachment; filename="%s.xls"' % event.full_name
     return response
+

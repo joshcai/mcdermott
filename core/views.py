@@ -23,6 +23,8 @@ from models import McUser, Degree, Experience, StudyAbroad, Honor, City
 from serializers import UserSerializer
 from util import normalize_name, log_slack
 
+from feedback.views import get_latest_event
+
 from mcdermott.config import GA_TRACKING_ID, GOOGLE_API_KEY
 
 DegreeFormSet = modelformset_factory(Degree, form=DegreeForm, extra=1, can_delete=True)
@@ -33,11 +35,12 @@ HonorFormSet = modelformset_factory(Honor, form=HonorForm, extra=1, can_delete=T
 # Create your views here.
 def index(request):
   if request.user.is_authenticated() and not request.user.mcuser.activated:
-    log_slack('User `%s` activated' % request.user.get_full_name())
+    log_slack('User `%s` activated' % request.user.mcuser.get_full_name())
     request.user.mcuser.activated = True
     request.user.mcuser.save()
   context = {
-    'ga_tracking_id': GA_TRACKING_ID
+    'ga_tracking_id': GA_TRACKING_ID,
+    'latest_feedback_event': get_latest_event()
   }
   return render(request, 'core/index.html', context)
   

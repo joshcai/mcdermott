@@ -71,6 +71,10 @@ class Command(BaseCommand):
     app.hometown = applicant.get('City', '')
     app.hometown_state_long = applicant.get('State Long', '')
     app.hometown_state = applicant.get('State', '')
+    if app.hometown_state_long and not app.hometown_state:
+      app.hometown_state = state_short.get(app.hometown_state_long, '')
+    if app.hometown_state and not app.hometown_state_long:
+      app.hometown_state_long = state_long.get(app.hometown_state, '')
     app.gender = applicant.get('Title', '')
     app.career = applicant.get('Career', '')
     app.major = ', '.join(applicant.get('Major', '').split(','))
@@ -96,6 +100,11 @@ class Command(BaseCommand):
 
   def handle(self, *args, **options):
     event_name = options['event_name'][0]
+    try:
+      event = Event.objects.get(name=event_name) 
+    except Event.DoesNotExist:
+      self.stdout.write('event does not exist')
+      return
     if options['flush']:
       self.stdout.write('Removing all applicants in event %s...' % event_name)
       self.stdout.write('%s users in the database' % Applicant.objects.all().count())
@@ -120,6 +129,7 @@ class Command(BaseCommand):
         applicant.hometown = randomString(7)
         applicant.hometown_state = random.choice(US_STATES)[0]
         applicant.gender = random.choice(['Mr.', 'Ms.'])
+        applicant.event = event
         applicant.save()
         self.stdout.write('Created user %s' % applicant.get_full_name())
     if options['feedback']:
@@ -153,3 +163,110 @@ class Command(BaseCommand):
         app.save()
         self.stdout.write('Saved pic %s for %s' % (f, scholar_name))
 
+state_short = {
+  'Alabama': 'AL',
+  'Alaska': 'AK',
+  'Arizona': 'AZ',
+  'Arkansas': 'AR',
+  'California': 'CA',
+  'Colorado': 'CO',
+  'Connecticut': 'CT',
+  'District Of Columbia': 'DC',
+  'Delaware': 'DE',
+  'Florida': 'FL',
+  'Georgia': 'GA',
+  'Hawaii': 'HI',
+  'Idaho': 'ID',
+  'Illinois': 'IL',
+  'Indiana': 'IN',
+  'Iowa': 'IA',
+  'Kansas': 'KS',
+  'Kentucky': 'KY',
+  'Louisiana': 'LA',
+  'Maine': 'ME',
+  'Maryland': 'MD',
+  'Massachusetts': 'MA',
+  'Michigan': 'MI',
+  'Minnesota': 'MN',
+  'Mississippi': 'MS',
+  'Missouri': 'MO',
+  'Montana': 'MT',
+  'Nebraska': 'NE',
+  'Nevada': 'NV',
+  'New Hampshire': 'NH',
+  'New Jersey': 'NJ',
+  'New Mexico': 'NM',
+  'New York': 'NY',
+  'North Carolina': 'NC',
+  'North Dakota': 'ND',
+  'Ohio': 'OH',
+  'Oklahoma': 'OK',
+  'Oregon': 'OR',
+  'Pennsylvania': 'PA',
+  'Rhode Island': 'RI',
+  'South Carolina': 'SC',
+  'South Dakota': 'SD',
+  'Tennessee': 'TN',
+  'Texas': 'TX',
+  'Utah': 'UT',
+  'Vermont': 'VT',
+  'Virginia': 'VA',
+  'Washington': 'WA',
+  'West Virginia': 'WV',
+  'Wisconsin': 'WI',
+  'Wyoming': 'WY',
+}
+
+state_long = {
+  'AL':  'Alabama',
+  'AK':  'Alaska',
+  'AZ':  'Arizona',
+  'AR':  'Arkansas',
+  'CA':  'California',
+  'CO':  'Colorado',
+  'CT':  'Connecticut',
+  'DE':  'Delaware',
+  'DC':  'District Of Columbia',
+  'FL':  'Florida',
+  'GA':  'Georgia',
+  'HI':  'Hawaii',
+  'ID':  'Idaho',
+  'IL':  'Illinois',
+  'IN':  'Indiana',
+  'IA':  'Iowa',
+  'KS':  'Kansas',
+  'KY':  'Kentucky',
+  'LA':  'Louisiana',
+  'ME':  'Maine',
+  'MD':  'Maryland',
+  'MA':  'Massachusetts',
+  'MI':  'Michigan',
+  'MN':  'Minnesota',
+  'MS':  'Mississippi',
+  'MO':  'Missouri',
+  'MT':  'Montana',
+  'NE':  'Nebraska',
+  'NV':  'Nevada',
+  'NH':  'New Hampshire',
+  'NJ':  'New Jersey',
+  'NM':  'New Mexico',
+  'NY':  'New York',
+  'NC':  'North Carolina',
+  'ND':  'North Dakota',
+  'OH':  'Ohio',
+  'OK':  'Oklahoma',
+  'OR':  'Oregon',
+  'PA':  'Pennsylvania',
+  'RI':  'Rhode Island',
+  'SC':  'South Carolina',
+  'SD':  'South Dakota',
+  'TN':  'Tennessee',
+  'TX':  'Texas',
+  'UT':  'Utah',
+  'VT':  'Vermont',
+  'VA':  'Virginia',
+  'WA':  'Washington',
+  'WV':  'West Virginia',
+  'WI':  'Wisconsin',
+  'WY':  'Wyoming',
+}
