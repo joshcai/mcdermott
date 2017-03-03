@@ -39,6 +39,15 @@ Feedback - Edit Event
         <span class="error">{{ form.name.errors }}</span>
       </div>
     </div>
+    <div class="col-md-6 col-sm-6">
+      <div class="form-group margin-sm">
+        <label for="id_{{ form.survey_link.name }}" class="form-label">
+          Survey link (eg. Qualtrics)
+        </label>
+        {{ form.survey_link|add_class:"form-control" }}
+        <span class="error">{{ form.survey_link.errors }}</span>
+      </div>
+    </div>
     <div class="col-md-12 col-sm-12 text-center">
       <span class="">Finalists Weekend type: {{ form.fw }}</span>
     </div>

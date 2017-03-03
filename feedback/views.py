@@ -161,6 +161,10 @@ def applicant_profile(request, event_name, name):
   except Applicant.DoesNotExist:
     raise Http404('Applicant does not exist.')
   try:
+    event = Event.objects.get(name=event_name)
+  except Event.DoesNotExist:
+    raise Http404('Event does not exist')
+  try:
     feedback = Feedback.objects.get(applicant=applicant, scholar=request.user.mcuser)
   except Feedback.DoesNotExist:
     feedback = Feedback()
@@ -176,6 +180,7 @@ def applicant_profile(request, event_name, name):
   else:
     form = FeedbackForm(instance=feedback)
   all_feedback = Feedback.objects.filter(applicant=applicant)
+  is_interviewer = request.user.mcuser in event.interviewers.all()
 
   context = {
       'feedback': all_feedback,
@@ -183,6 +188,8 @@ def applicant_profile(request, event_name, name):
       'form': form,
       'state': get_state(),
       'event_name': event_name,
+      'survey_link': event.survey_link,
+      'is_interviewer': is_interviewer,
       'favorited': favorited(request.user.mcuser, applicant)
       }
   return render(request, 'feedback/applicant.html', context)
@@ -393,8 +400,8 @@ def export_fw(request, event_name):
     event = Event.objects.get(name=event_name)
   except Event.DoesNotExist:
     raise Http404('Event does not exist')
-  if not (request.user.mcuser in event.staff.all() or request.user.mcuser in event.selection.all()):
-    raise Http404('Permission denied.') 
+  # if not (request.user.mcuser in event.staff.all() or request.user.mcuser in event.selection.all()):
+  #   raise Http404('Permission denied.')
   applicants = Applicant.objects.filter(event__name=event_name).order_by('last_name')
   book = Workbook()
   sheet1 = book.add_sheet('Rating Averages')

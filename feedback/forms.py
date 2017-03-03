@@ -16,6 +16,7 @@ class EventForm(forms.ModelForm):
       'full_name',
       'name',
       'fw',
+      'survey_link'
     ]
 
 class ApplicantForm(forms.ModelForm):

@@ -12,6 +12,7 @@ class Event(models.Model):
   staff = models.ManyToManyField(McUser, related_name='event_staff')
   selection = models.ManyToManyField(McUser, related_name='event_selection')
   interviewers = models.ManyToManyField(McUser, related_name='event_interviewer')
+  survey_link = models.CharField(max_length=200, blank=True)
 
 # Create your models here.
 class Applicant(models.Model):
