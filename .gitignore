@@ -11,3 +11,4 @@ run/
 *.csv
 tmp/
 *.DS_Store
+.idea/
