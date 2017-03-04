@@ -181,6 +181,7 @@ def applicant_profile(request, event_name, name):
     form = FeedbackForm(instance=feedback)
   all_feedback = Feedback.objects.filter(applicant=applicant)
   is_interviewer = request.user.mcuser in event.interviewers.all()
+  is_assigned = Assignment.objects.filter(scholar=request.user.mcuser, applicant=applicant).exists()
 
   context = {
       'feedback': all_feedback,
@@ -189,7 +190,7 @@ def applicant_profile(request, event_name, name):
       'state': get_state(),
       'event_name': event_name,
       'survey_link': event.survey_link,
-      'is_interviewer': is_interviewer,
+      'is_interviewer': is_interviewer and is_assigned,
       'favorited': favorited(request.user.mcuser, applicant)
       }
   return render(request, 'feedback/applicant.html', context)
