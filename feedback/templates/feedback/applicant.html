@@ -161,6 +161,7 @@ Feedback - {{ applicant.get_full_name }}
               <tr>
                 <th>First</th>
                 <th>Last</th>
+                <th>Year</th>
                 <th>Rating</th>
                 <th>Interest</th>
                 <th>Comments</th>
@@ -172,6 +173,7 @@ Feedback - {{ applicant.get_full_name }}
                     <tr>
                       <td><a href="{% url 'profile' f.scholar.norm_name %}">{{ f.scholar.first_name }}</a></td>
                       <td><a href="{% url 'profile' f.scholar.norm_name %}">{{ f.scholar.last_name }}</a></td>
+                      <td>{{ f.scholar.class_year }}</td>
                       <td>{% if f.rating %}{{ f.rating }}{% endif %}</td>
                       <td>{% if f.interest %}{{ f.interest }}{% endif %}</td>
                       <td>{{ f.comments }}</td>
@@ -233,14 +235,14 @@ Feedback - {{ applicant.get_full_name }}
     }
     {% if user|can_read_data_for:event_name %}
       $('#feedbackTable').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 3, "desc" ]],
         "scrollY": "400px",
         "scrollCollapse": true,
         "paging": false,
         "scrollX": true,
         "columnDefs": [
-          { "type": "num", "targets": [2, 3]  },
-          { "orderable": false, "targets": 4 }
+          { "type": "num", "targets": [3, 4]  },
+          { "orderable": false, "targets": 5 }
         ]
       });
     {% endif %}
