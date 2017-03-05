@@ -37,7 +37,7 @@ Feedback - {{ applicant.get_full_name }}
     <a href="#" id="prev_link" class="feedback-nav-link"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
     &nbsp;&nbsp;
     <a href="{% url 'feedback:index' event_name %}" class="btn btn-default">HOME</a>
-    {% if state.current != 3 and not is_interviewer %}
+    {% if state.current != 3 %}
       &nbsp;&nbsp;
       <input class="btn btn-default" type="submit" value="SAVE" />
     {% endif %}

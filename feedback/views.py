@@ -256,7 +256,7 @@ def favorite_applicant(request, event_name, name):
       fav.delete()
       return JsonResponse({'msg': 'unstarred'})
     except Favorite.DoesNotExist:
-      favs = Favorite.objects.filter(scholar=request.user.mcuser)
+      favs = Favorite.objects.filter(scholar=request.user.mcuser, applicant__event__name=event_name)
       if favs.count() < 5:
         fav = Favorite(applicant=applicant, scholar=request.user.mcuser)
         fav.save()
@@ -401,8 +401,8 @@ def export_fw(request, event_name):
     event = Event.objects.get(name=event_name)
   except Event.DoesNotExist:
     raise Http404('Event does not exist')
-  # if not (request.user.mcuser in event.staff.all() or request.user.mcuser in event.selection.all()):
-  #   raise Http404('Permission denied.')
+  if not (request.user.mcuser in event.staff.all() or request.user.mcuser in event.selection.all()):
+    raise Http404('Permission denied.')
   applicants = Applicant.objects.filter(event__name=event_name).order_by('last_name')
   book = Workbook()
   sheet1 = book.add_sheet('Rating Averages')
