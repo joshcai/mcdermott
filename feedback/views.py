@@ -256,7 +256,7 @@ def favorite_applicant(request, event_name, name):
       fav.delete()
       return JsonResponse({'msg': 'unstarred'})
     except Favorite.DoesNotExist:
-      favs = Favorite.objects.filter(scholar=request.user.mcuser)
+      favs = Favorite.objects.filter(scholar=request.user.mcuser, applicant__event__name=event_name)
       if favs.count() < 5:
         fav = Favorite(applicant=applicant, scholar=request.user.mcuser)
         fav.save()
