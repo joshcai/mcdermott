@@ -43,6 +43,8 @@ McDermott Network
       {% endif %}
       {% if user|has_role:'staff' %}
       <br>
+      <a href="{% url 'latest_edits' %}">View times since last edits</a>
+      <br>
       <a href="{% url 'feedback:events' %}">Manage Feedback Events</a>
       <br>
       <a href="{% url 'stats' %}">Stats</a>

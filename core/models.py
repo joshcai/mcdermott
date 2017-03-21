@@ -97,6 +97,7 @@ class McUser(models.Model):
   right_after = models.CharField(max_length=200, blank=True)
   ultimate = models.CharField(max_length=200, blank=True)
   updated_alumni_info = models.CharField(max_length=200, blank=True)
+  last_edited_by = models.CharField(max_length=200, blank=True)
   updated_alumni_ppt = models.CharField(max_length=200, blank=True)
   mailing_address = models.CharField(max_length=200, blank=True)
   mailing_city = models.CharField(max_length=200, blank=True)

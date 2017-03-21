@@ -1,0 +1,31 @@
+{% extends "large_container.html" %}
+
+{% load core_tags %}
+{% load permission_tags %}
+{% load thumbnail %}
+
+{% block title %}
+Latest Edits
+{% endblock %}
+
+{% block inner_content %}
+<div class="col-md-10 col-md-offset-1 well">
+  <div class="table-responsive">
+    <table class="table table-striped table-hover dt-responsive" width="100%">
+      <tr>
+        <th>User</th>
+        <th>Last edited on</th>
+        <th>Last edited by</th>
+      </tr>
+    {% for user in users %}
+      <tr>
+        <td>{{ user.user.username }}</td>
+        <td>{{ user.updated_alumni_info }}</td>
+        <td>{{ user.last_edited_by }}</td>
+      </tr>
+    {% endfor %}
+    </table>
+  </div>
+</div>
+
+{% endblock %}
