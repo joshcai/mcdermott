@@ -104,7 +104,10 @@ def edit_event(request, event_name):
 @login_required
 @restrict_access
 def index_redirect(request):
-  latest_event = Event.objects.latest('id')
+  try:
+    latest_event = Event.objects.latest('id')
+  except Event.DoesNotExist:
+    raise Http404('No events found.')
   return redirect('feedback:index', latest_event.name)
 
 @login_required
