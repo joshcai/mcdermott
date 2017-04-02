@@ -288,8 +288,7 @@ def search(request):
   return render(request, 'core/scholars.html', context)
   
 def normalize_location(place):
-  split = place.split(' ')
-  return ' '.join([x.lower() for x in split if x.isalnum()])
+  return ''.join([x.lower() for x in place if x.isalnum() or x == ' '])
   
 def get_location_geocoded(city_norm, city_real):
   geo_real = '' # send this to geocoder if one of the special cases
@@ -313,18 +312,32 @@ def get_scholar_locations(request):
   all_scholars = McUser.objects.exclude(class_year__isnull=True)
   loc_users = {}
   loc_to_full_name = {}
+  # We use this to dedupe cities with the same coordinates.
+  geoloc_to_city = defaultdict(list)
   
   for user in sorted(all_scholars):
     if not user.current_city:
       continue
+
     location = normalize_location(user.current_city)
     if location not in loc_to_full_name:
       loc_to_full_name[location] = user.current_city
       loc_users[user.current_city] = {}
-      loc_users[user.current_city]['location'] = get_location_geocoded(location, user.current_city)
+      geoloc = get_location_geocoded(location, user.current_city)
+      loc_users[user.current_city]['location'] = geoloc
       loc_users[user.current_city]['scholars'] = []
+      geoloc_to_city[geoloc].append(user.current_city)
     # This makes sure only one real city name gets used as key.
     loc_users[loc_to_full_name[location]]['scholars'].append(user.get_full_name_with_year())
+
+  # This is needed to merge locations that have the same exact coordinates, since they will overlap in the map display.
+  for cities in geoloc_to_city.values():
+    if len(cities) <= 1:
+      continue
+    base_city = cities[0]
+    for city in cities[1:]:
+      loc_users[base_city]['scholars'].extend(loc_users[city]['scholars'])
+      del loc_users[city]
     
   return JsonResponse(loc_users, safe=False)
     
