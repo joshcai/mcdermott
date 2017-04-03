@@ -288,7 +288,10 @@ def search(request):
   return render(request, 'core/scholars.html', context)
   
 def normalize_location(place):
-  return ''.join([x.lower() for x in place if x.isalnum() or x == ' '])
+  place = ''.join([x.lower() for x in place if x.isalnum() or x == ' ']) 
+  place = place.lstrip().rstrip()
+  return ' '.join([x for x in place.split(' ') if x != ''])
+
   
 def get_location_geocoded(city_norm, city_real):
   geo_real = '' # send this to geocoder if one of the special cases

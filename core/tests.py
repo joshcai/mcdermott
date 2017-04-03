@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 
+from views import normalize_location
+
 
 class CoreTestCase(TestCase):
 
@@ -47,3 +49,18 @@ class CoreTestCase(TestCase):
     self.user.mcuser.save()
     response = self.app.get('/search?q=Foo')
     self.assertRedirects(response, '/FooName')
+
+class OtherTestCase(TestCase):
+
+  def testNormalizeLocation(self):
+    testCases = (
+      ('richardson', 'richardson'),
+      ('RichardSon', 'richardson'),
+      ('Richardson TX', 'richardson tx'),
+      ('Richardson TX ', 'richardson tx'),
+      ('Richardson    TX ', 'richardson tx'),
+      ('  Richardson,  TX', 'richardson tx'),
+      ('  Richardson!, TX@   hello world', 'richardson tx hello world')
+    )
+    for test in testCases:
+      self.assertEqual(normalize_location(test[0]), test[1])
