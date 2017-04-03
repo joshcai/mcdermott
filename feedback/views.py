@@ -426,8 +426,7 @@ def export_fw(request, event_name):
 
   for i, applicant in enumerate(applicants):
     #Get all the feedback on an applicant ordered by descending rating
-    feedbacks_with_selection = Feedback.objects.filter(applicant=applicant).order_by('-rating')
-    feedbacks = [f for f in feedbacks_with_selection if not f.scholar.selection]
+    feedbacks = Feedback.objects.filter(applicant=applicant).order_by('-rating')
     sheet1_fields = (
       applicant.gender,
       applicant.last_name,
@@ -456,7 +455,7 @@ def export_fw(request, event_name):
     for j, field in enumerate(sheet1_fields):
       sheet1.write(i+1, j, field)
 
-    for feedback in feedbacks_with_selection:
+    for feedback in feedbacks:
       commenter = feedback.scholar
       if feedback.rating or feedback.interest or feedback.comments:
         sheet2_fields = (
