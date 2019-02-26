@@ -4,13 +4,12 @@
 {% load widget_tweaks %}
 
 {% block title %}
-Issues
+Make a suggestion
 {% endblock %}
 
 {% block inner_content %}
 <div class="text-center">
-  <h4>Submit an issue or feature request</h4>
-  <p>Your submission will be anonymous.</p>
+  <h4>Make a suggestion to improve the Program</h4>
   {% if messages %}
     {% for message in messages %}
       <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message|capfirst|safe }}</div>
@@ -34,6 +33,12 @@ Issues
         </label>
         {{ form.body|add_class:"form-control" }}
         <span class="errors">{{ form.body.errors }}</span>
+      </div>
+      <div class="form-group margin-sm">
+        <input type="checkbox" id="anonymous" name="anonymous" checked>
+        <label for="anonymous" class="form-label">
+          Yes, I would like to submit this anonymously
+        </label>
       </div>
       <div class="text-center">
         <input type="submit" value="Submit" class="btn btn-default">
